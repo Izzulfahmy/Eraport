@@ -1,1 +1,219 @@
-tes
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eraport</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background-color: #f4f4f4;
+        }
+        /* Halaman Login */
+        #login-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .btn-login {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        /* Halaman Dashboard */
+        #dashboard-page {
+            display: none;
+            height: 100vh;
+        }
+        .navbar {
+            background-color: #ffffff;
+            height: 60px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            position: relative;
+        }
+        .profile-logo {
+            width: 40px;
+            height: 40px;
+            background-color: #6c757d;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 55px;
+            right: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+        }
+        .dropdown-menu button {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+        .dropdown-menu button:hover {
+            background-color: #f8f9fa;
+        }
+        .show {
+            display: block !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-page">
+        <div class="login-container">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password">
+            </div>
+            <button class="btn-login" onclick="handleLogin()">Login</button>
+        </div>
+    </div>
+
+    <div id="dashboard-page">
+        <nav class="navbar">
+            <div class="profile-logo" onclick="toggleDropdown()">
+                A
+            </div>
+            <div class="dropdown-menu" id="profileDropdown">
+                <button onclick="handleLogout()">Logout</button>
+            </div>
+        </nav>
+    </div>
+
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+
+        // Konfigurasi Firebase Anda
+        const firebaseConfig = {
+            apiKey: "AIzaSyCBXA1Atpm8LpDSdAr02OEvuADP2bUT9Gk",
+            authDomain: "eraport-87687.firebaseapp.com",
+            projectId: "eraport-87687",
+            storageBucket: "eraport-87687.firebasestorage.app",
+            messagingSenderId: "879847959076",
+            appId: "1:879847959076:web:51ca5db07bb4724b7e06b1",
+            measurementId: "G-NWCTMGHZEV"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+        // Fungsi Cek Status Login Saat Refresh
+        window.addEventListener('DOMContentLoaded', () => {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') {
+                showDashboard();
+            } else {
+                showLogin();
+            }
+        });
+
+        // Handler Login
+        window.handleLogin = function() {
+            const userInp = document.getElementById('username').value;
+            const passInp = document.getElementById('password').value;
+
+            if (userInp === 'admin' && passInp === 'admin') {
+                localStorage.setItem('isLoggedIn', 'true');
+                showDashboard();
+            } else {
+                alert('Username atau Password salah');
+            }
+        }
+
+        // Handler Logout
+        window.handleLogout = function() {
+            localStorage.removeItem('isLoggedIn');
+            document.getElementById('profileDropdown').classList.remove('show');
+            showLogin();
+        }
+
+        // Toggle Dropdown Menu
+        window.toggleDropdown = function() {
+            const dropdown = document.getElementById('profileDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Navigasi Tampilan
+        function showDashboard() {
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('dashboard-page').style.display = 'block';
+            // Clear inputs
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function showLogin() {
+            document.getElementById('login-page').style.display = 'flex';
+            document.getElementById('dashboard-page').style.display = 'none';
+        }
+
+        // Menutup dropdown jika klik di luar area profil
+        window.onclick = function(event) {
+            if (!event.target.matches('.profile-logo')) {
+                const dropdowns = document.getElementsByClassName("dropdown-menu");
+                for (let i = 0; i < dropdowns.length; i++) {
+                    const openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
