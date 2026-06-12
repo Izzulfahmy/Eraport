@@ -110,7 +110,6 @@
             font-weight: bold;
             color: #555;
         }
-        .form-group input[type="text"],
         .form-group input[type="file"] {
             width: 100%;
             padding: 10px;
@@ -128,6 +127,10 @@
         }
         .btn-action:hover {
             background-color: #0056b3;
+        }
+        .btn-action:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -148,100 +151,36 @@
     </nav>
 
     <div class="container">
-        
         <div class="card">
-            <h3>Konfigurasi Google Drive</h3>
+            <h3>Upload Gambar ke Supabase Storage</h3>
             <div class="form-group">
-                <label for="gdrive-link">Link Folder GDrive</label>
-                <input type="text" id="gdrive-link" placeholder="Masukkan URL atau ID folder Google Drive">
-            </div>
-            <button class="btn-action" onclick="saveGDriveLink()">Simpan Konfigurasi</button>
-        </div>
-
-        <div class="card">
-            <h3>Upload Gambar</h3>
-            <div class="form-group">
-                <label for="file-input">Pilih File / Gambar</label>
+                <label for="file-input">Pilih File Gambar</label>
                 <input type="file" id="file-input" accept="image/*">
             </div>
-            <button class="btn-action" onclick="handleUpload()">Upload</button>
+            <button class="btn-action" id="uploadBtn" onclick="handleUpload()">Mulai Upload</button>
         </div>
-
     </div>
 
-    <script type="module">
-        // Import Firebase modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-        // Konfigurasi Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyCBXA1Atpm8LpDSdAr02OEvuADP2bUT9Gk",
-            authDomain: "eraport-87687.firebaseapp.com",
-            projectId: "eraport-87687",
-            storageBucket: "eraport-87687.firebasestorage.app",
-            messagingSenderId: "879847959076",
-            appId: "1:879847959076:web:51ca5db07bb4724b7e06b1",
-            measurementId: "G-NWCTMGHZEV"
-        };
+    <script>
+        const SUPABASE_URL = "https://geasyybkirgydfcevpsr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlYXN5eWJraXJneWRmY2V2cHNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNjY2MTUsImV4cCI6MjA5Njg0MjYxNX0.KULKYjkcyp9yLpoTMHG4bjKmNV2HBn1COHj3FLZMbK4";
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        const clientSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Proteksi Halaman: Cek status login session saat dimuat
-        window.addEventListener('DOMContentLoaded', async () => {
+        // Proteksi Halaman
+        window.addEventListener('DOMContentLoaded', () => {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             if (isLoggedIn !== 'true') {
-                // Jika belum login, tendang kembali ke index.html
                 window.location.href = "index.html";
-                return;
             }
-            
-            // Muat link GDrive yang tersimpan sebelumnya di Firestore jika ada
-            await loadGDriveLink();
         });
 
-        // Fungsi Memuat Link GDrive dari Firestore
-        async function loadGDriveLink() {
-            try {
-                const configDocRef = doc(db, "settings", "gdrive_config");
-                const configSnap = await getDoc(configDocRef);
-                
-                if (configSnap.exists()) {
-                    document.getElementById('gdrive-link').value = configSnap.data().folderLink || '';
-                }
-            } catch (error) {
-                console.error("Gagal memuat konfigurasi GDrive: ", error);
-            }
-        }
-
-        // Fungsi Menyimpan Link Folder GDrive ke Firestore
-        window.saveGDriveLink = async function() {
-            const linkInp = document.getElementById('gdrive-link').value.trim();
-
-            if (linkInp === "") {
-                alert("Kolom link tidak boleh kosong");
-                return;
-            }
-
-            try {
-                // Menyimpan konfigurasi link folder ke collection 'settings' document 'gdrive_config'
-                await setDoc(doc(db, "settings", "gdrive_config"), {
-                    folderLink: linkInp,
-                    updatedAt: serverTimestamp()
-                }, { merge: true });
-
-                alert("Link folder Google Drive berhasil disimpan!");
-            } catch (error) {
-                console.error("Gagal menyimpan konfigurasi GDrive: ", error);
-                alert("Gagal menyimpan ke database.");
-            }
-        }
-
-        // Fungsi Proses Penanganan Upload File Gambar
-        window.handleUpload = function() {
+        // Fungsi Unggah Gambar Ke Supabase Storage dan Mengisi Tabel Database
+        window.handleUpload = async function() {
             const fileInput = document.getElementById('file-input');
+            const uploadBtn = document.getElementById('uploadBtn');
             
             if (fileInput.files.length === 0) {
                 alert("Silakan pilih file gambar terlebih dahulu.");
@@ -249,25 +188,67 @@
             }
 
             const file = fileInput.files[0];
-            alert(`File "${file.name}" siap diproses untuk di-upload ke folder Google Drive yang telah dikonfigurasi.`);
-            
-            // Catatan: Proses upload langsung ke Google Drive API memerlukan penanganan token OAuth2/Service Account
-            // Form ini dipersiapkan untuk integrasi endpoint tersebut sesuai perintah dasar Anda.
+            const fileExt = file.name.split('.').pop();
+            // Membuat nama file acak unik di storage agar tidak bentrok
+            const fileName = `${Date.now()}_${Math.floor(Math.random() * 1000)}.${fileExt}`;
+            const currentUser = localStorage.getItem('username') || 'Unknown';
+
+            try {
+                uploadBtn.disabled = true;
+                uploadBtn.innerText = "Mengupload...";
+
+                // 1. Upload file fisik ke Supabase Storage Bucket bernama 'images'
+                const { data: storageData, error: storageError } = await clientSupabase
+                    .storage
+                    .from('images')
+                    .upload(fileName, file);
+
+                if (storageError) throw storageError;
+
+                // 2. Dapatkan URL Public dari file yang berhasil diupload
+                const { data: urlData } = clientSupabase
+                    .storage
+                    .from('images')
+                    .getPublicUrl(fileName);
+
+                const publicUrl = urlData.publicUrl;
+
+                // 3. Simpan link URL public tersebut ke dalam tabel database 'uploaded_images'
+                const { error: dbError } = await clientSupabase
+                    .from('uploaded_images')
+                    .insert([
+                        { 
+                            image_url: publicUrl, 
+                            file_name: file.name, 
+                            uploaded_by: currentUser 
+                        }
+                    ]);
+
+                if (dbError) throw dbError;
+
+                alert("Gambar berhasil diupload dan disimpan ke database Supabase!");
+                fileInput.value = ''; // Reset form input file
+                
+            } catch (error) {
+                console.error("Proses upload gagal:", error);
+                alert("Gagal mengupload gambar. Pastikan Bucket 'images' di Supabase Storage sudah di-set ke Public.");
+            } finally {
+                uploadBtn.disabled = false;
+                uploadBtn.innerText = "Mulai Upload";
+            }
         }
 
-        // Handler Logout
         window.handleLogout = function() {
             localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
             window.location.href = "index.html";
         }
 
-        // Toggle Dropdown Menu Profil
         window.toggleDropdown = function() {
             const dropdown = document.getElementById('profileDropdown');
             dropdown.classList.toggle('show');
         }
 
-        // Menutup dropdown jika klik di luar area profil
         window.onclick = function(event) {
             if (!event.target.matches('.profile-logo')) {
                 const dropdowns = document.getElementsByClassName("dropdown-menu");

@@ -64,6 +64,7 @@
         #dashboard-page {
             display: none;
             height: 100vh;
+            overflow-y: auto;
         }
         .navbar {
             background-color: #ffffff;
@@ -133,6 +134,39 @@
         .show {
             display: block !important;
         }
+        /* Dashboard Content Gallery */
+        .dashboard-content {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .dashboard-content h3 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .image-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .image-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+        .image-info {
+            padding: 10px;
+            font-size: 12px;
+            color: #666;
+            border-top: 1px solid #eee;
+        }
     </style>
 </head>
 <body>
@@ -181,19 +215,21 @@
                 </div>
             </div>
         </nav>
+        <div class="dashboard-content">
+            <h3>Daftar Gambar Terupload</h3>
+            <div class="image-grid" id="imageGallery">
+                </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <script>
-        // Konfigurasi Supabase Anda
         const SUPABASE_URL = "https://geasyybkirgydfcevpsr.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlYXN5eWJraXJneWRmY2V2cHNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNjY2MTUsImV4cCI6MjA5Njg0MjYxNX0.KULKYjkcyp9yLpoTMHG4bjKmNV2HBn1COHj3FLZMbK4";
 
-        // Inisialisasi Supabase Client menggunakan objek global dari library CDN
         const clientSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Fungsi Utama Saat Website Dimuat
         window.addEventListener('DOMContentLoaded', async () => {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             if (isLoggedIn === 'true') {
@@ -202,7 +238,6 @@
             }
 
             try {
-                // Periksa apakah sudah ada user terdaftar di tabel 'users'
                 const { data, error } = await clientSupabase
                     .from('users')
                     .select('username')
@@ -221,7 +256,6 @@
             }
         });
 
-        // Handler Event Tombol Enter
         window.handleRegisterKeyPress = function(event) {
             if (event.key === 'Enter') {
                 handleRegister();
@@ -234,7 +268,6 @@
             }
         }
 
-        // Proses Register Admin ke Supabase
         window.handleRegister = async function() {
             const userInp = document.getElementById('reg-username').value.trim();
             const passInp = document.getElementById('reg-password').value;
@@ -259,11 +292,10 @@
                 showLogin();
             } catch (error) {
                 console.error("Gagal melakukan registrasi di Supabase:", error);
-                alert("Gagal menyimpan data ke database. Pastikan tabel 'users' sudah dibuat di SQL Editor Supabase.");
+                alert("Gagal menyimpan data ke database.");
             }
         }
 
-        // Proses Login User / Admin via Supabase
         window.handleLogin = async function() {
             const userInp = document.getElementById('username').value.trim();
             const passInp = document.getElementById('password').value;
@@ -283,13 +315,13 @@
                 if (error) throw error;
 
                 if (data && data.password === passInp) {
-                    // Update timestamp last_login di Supabase
                     await clientSupabase
                         .from('users')
                         .update({ last_login: new Date().toISOString() })
                         .eq('username', userInp);
 
                     localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('username', userInp); // Simpan session nama user
                     showDashboard();
                 } else {
                     alert('Username atau Password salah');
@@ -300,20 +332,52 @@
             }
         }
 
-        // Handler Logout
+        // Fungsi Membaca dan Menampilkan Gambar di Dashboard
+        async function loadImages() {
+            const gallery = document.getElementById('imageGallery');
+            gallery.innerHTML = '';
+            
+            try {
+                const { data, error } = await clientSupabase
+                    .from('uploaded_images')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (data && data.length > 0) {
+                    data.forEach(img => {
+                        const card = document.createElement('div');
+                        card.className = 'image-card';
+                        card.innerHTML = `
+                            <img src="${img.image_url}" alt="${img.file_name}">
+                            <div class="image-info">
+                                <strong>File:</strong> ${img.file_name}<br>
+                                <strong>By:</strong> ${img.uploaded_by}
+                            </div>
+                        `;
+                        gallery.appendChild(card);
+                    });
+                } else {
+                    gallery.innerHTML = '<p style="color: #999;">Belum ada gambar yang diupload.</p>';
+                }
+            } catch (error) {
+                console.error("Gagal memuat daftar gambar:", error);
+            }
+        }
+
         window.handleLogout = function() {
             localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('username');
             document.getElementById('profileDropdown').classList.remove('show');
             showLogin();
         }
 
-        // Toggle Dropdown Menu
         window.toggleDropdown = function() {
             const dropdown = document.getElementById('profileDropdown');
             dropdown.classList.toggle('show');
         }
 
-        // Fungsi Navigasi Tampilan Layar
         function showRegister() {
             document.getElementById('register-page').style.display = 'flex';
             document.getElementById('login-page').style.display = 'none';
@@ -332,9 +396,9 @@
             document.getElementById('dashboard-page').style.display = 'block';
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
+            loadImages(); // Panggil data gambar saat masuk dashboard
         }
 
-        // Menutup dropdown jika klik di luar area profil
         window.onclick = function(event) {
             if (!event.target.matches('.profile-logo')) {
                 const dropdowns = document.getElementsByClassName("dropdown-menu");
