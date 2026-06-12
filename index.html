@@ -136,7 +136,7 @@
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-        import { getFirestore, doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // Konfigurasi Firebase Anda
         const firebaseConfig = {
@@ -173,27 +173,35 @@
 
         // Handler Login
         window.handleLogin = async function() {
-            const userInp = document.getElementById('username').value;
+            const userInp = document.getElementById('username').value.trim();
             const passInp = document.getElementById('password').value;
 
-            if (userInp === 'admin' && passInp === 'admin') {
-                try {
-                    // Menyimpan/memperbarui informasi user ke Firestore di dalam collection 'users'
-                    // Akun admin dinamai 'administrator' pada field role atau username sesuai perintah
-                    await setDoc(doc(db, "users", "admin"), {
-                        username: "admin",
-                        role: "administrator",
+            if (userInp === "" || passInp === "") {
+                alert("Username dan Password tidak boleh kosong");
+                return;
+            }
+
+            try {
+                // Mengambil data user berdasarkan ID Document (username) langsung dari Firestore
+                const userDocRef = doc(db, "users", userInp);
+                const userDocSnap = await getDoc(userDocRef);
+
+                // Memeriksa apakah dokumen user ada dan password-nya cocok
+                if (userDocSnap.exists() && userDocSnap.data().password === passInp) {
+                    
+                    // Jika login berhasil, kita hanya memperbarui data 'lastLogin' saja
+                    await updateDoc(userDocRef, {
                         lastLogin: serverTimestamp()
-                    }, { merge: true });
+                    });
 
                     localStorage.setItem('isLoggedIn', 'true');
                     showDashboard();
-                } catch (error) {
-                    console.error("Gagal menyimpan data ke Firestore: ", error);
-                    alert("Terjadi kesalahan sistem database.");
+                } else {
+                    alert('Username atau Password salah');
                 }
-            } else {
-                alert('Username atau Password salah');
+            } catch (error) {
+                console.error("Gagal melakukan autentikasi Firestore: ", error);
+                alert("Terjadi kesalahan koneksi database.");
             }
         }
 
