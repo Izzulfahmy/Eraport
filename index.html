@@ -136,7 +136,7 @@
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-        import { getFirestore, doc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // Konfigurasi Firebase Anda
         const firebaseConfig = {
@@ -154,8 +154,33 @@
         const analytics = getAnalytics(app);
         const db = getFirestore(app);
 
-        // Fungsi Cek Status Login Saat Refresh
-        window.addEventListener('DOMContentLoaded', () => {
+        // Fungsi Inisialisasi Otomatis Data Admin Saat Website Pertama Kali Dimuat
+        async function initAdminAccount() {
+            try {
+                const adminDocRef = doc(db, "users", "admin");
+                const adminSnap = await getDoc(adminDocRef);
+
+                // Jika dokumen admin belum ada sama sekali di Firestore, buat otomatis
+                if (!adminSnap.exists()) {
+                    await setDoc(adminDocRef, {
+                        username: "admin",
+                        password: "admin",
+                        role: "administrator",
+                        createdAt: serverTimestamp()
+                    });
+                    console.log("Akun administrator default berhasil dibuat di Firestore.");
+                }
+            } catch (error) {
+                console.error("Gagal melakukan cek/inisialisasi akun admin default: ", error);
+            }
+        }
+
+        // Fungsi Utama Saat Halaman Dimuat
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Jalankan seeding akun admin secara background/asynchronous
+            await initAdminAccount();
+
+            // Cek Status Login Session
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             if (isLoggedIn === 'true') {
                 showDashboard();
@@ -182,14 +207,14 @@
             }
 
             try {
-                // Mengambil data user berdasarkan ID Document (username) langsung dari Firestore
+                // Memeriksa langsung data ke Firestore berdasarkan ID dokumen yang diketik
                 const userDocRef = doc(db, "users", userInp);
                 const userDocSnap = await getDoc(userDocRef);
 
-                // Memeriksa apakah dokumen user ada dan password-nya cocok
+                // Validasi keberadaan user dan kecocokan password
                 if (userDocSnap.exists() && userDocSnap.data().password === passInp) {
                     
-                    // Jika login berhasil, kita hanya memperbarui data 'lastLogin' saja
+                    // Perbarui timestamp login terakhir
                     await updateDoc(userDocRef, {
                         lastLogin: serverTimestamp()
                     });
