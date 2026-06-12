@@ -134,6 +134,7 @@
             display: block !important;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -183,31 +184,16 @@
         </nav>
     </div>
 
-    <script type="module">
-        // Import Firebase modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, limit, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <script>
+        // Konfigurasi Supabase Anda
+        const SUPABASE_URL = "https://geasyybkirgydfcevpsr.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlYXN5eWJraXJneWRmY2V2cHNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNjY2MTUsImV4cCI6MjA5Njg0MjYxNX0.KULKYjkcyp9yLpoTMHG4bjKmNV2HBn1COHj3FLZMbK4";
 
-        // Konfigurasi Firebase Anda
-        const firebaseConfig = {
-            apiKey: "AIzaSyCBXA1Atpm8LpDSdAr02OEvuADP2bUT9Gk",
-            authDomain: "eraport-87687.firebaseapp.com",
-            projectId: "eraport-87687",
-            storageBucket: "eraport-87687.firebasestorage.app",
-            messagingSenderId: "879847959076",
-            appId: "1:879847959076:web:51ca5db07bb4724b7e06b1",
-            measurementId: "G-NWCTMGHZEV"
-        };
+        // Inisialisasi Supabase Client
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const db = getFirestore(app);
-
-        // Fungsi Utama untuk Memeriksa Keberadaan Admin Saat Website Dimuat
+        // Fungsi Utama Saat Website Dimuat
         window.addEventListener('DOMContentLoaded', async () => {
-            // Cek Status Login Session terlebih dahulu
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             
             if (isLoggedIn === 'true') {
@@ -216,70 +202,69 @@
             }
 
             try {
-                // Memeriksa apakah sudah ada data dokumen di dalam collection 'users'
-                const usersRef = collection(db, "users");
-                const q = query(usersRef, limit(1));
-                const querySnapshot = await getDocs(q);
+                // Periksa apakah sudah ada user terdaftar di tabel 'users'
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('username')
+                    .limit(1);
 
-                if (!querySnapshot.empty) {
-                    // Jika sudah ada minimal satu user/admin terdaftar, tampilkan halaman login
+                if (error) throw error;
+
+                if (data && data.length > 0) {
                     showLogin();
                 } else {
-                    // Jika database benar-benar kosong, tampilkan halaman register admin
                     showRegister();
                 }
             } catch (error) {
-                console.error("Gagal memeriksa database Firestore: ", error);
+                console.error("Gagal memeriksa database Supabase:", error);
                 alert("Terjadi kesalahan koneksi ke database.");
-                showLogin(); // Fallback keamanan ke halaman login
+                showLogin();
             }
         });
 
-        // Handler Event Tombol Enter pada Halaman Register
+        // Handler Event Tombol Enter
         window.handleRegisterKeyPress = function(event) {
             if (event.key === 'Enter') {
                 handleRegister();
             }
         }
 
-        // Handler Event Tombol Enter pada Halaman Login
         window.handleLoginKeyPress = function(event) {
             if (event.key === 'Enter') {
                 handleLogin();
             }
         }
 
-        // Proses Register Akun Admin Pertama Kali
+        // Proses Register Admin ke Supabase
         window.handleRegister = async function() {
             const userInp = document.getElementById('reg-username').value.trim();
             const passInp = document.getElementById('reg-password').value;
 
             if (userInp === "" || passInp.trim() === "") {
-                alert("Username dan Password untuk Administrator tidak boleh kosong");
+                alert("Username dan Password tidak boleh kosong");
                 return;
             }
 
             try {
-                // Menggunakan username inputan custom sebagai Document ID di Firestore
-                const adminDocRef = doc(db, "users", userInp);
-                await setDoc(adminDocRef, {
-                    username: userInp,
-                    password: passInp,
-                    role: "administrator",
-                    createdAt: serverTimestamp()
-                });
+                const { error } = await supabase
+                    .from('users')
+                    .insert([
+                        { username: userInp, password: passInp, role: 'administrator' }
+                    ]);
+
+                if (error) throw error;
 
                 alert("Akun Administrator berhasil dibuat! Silakan login.");
                 document.getElementById('reg-username').value = '';
                 document.getElementById('reg-password').value = '';
                 showLogin();
             } catch (error) {
-                console.error("Gagal membuat akun administrator di Firestore: ", error);
+                console.error("Gagal melakukan registrasi di Supabase:", error);
                 alert("Gagal menyimpan data ke database.");
             }
         }
 
-        // Proses Login User / Admin
+        // Proses Login User / Admin via Supabase
         window.handleLogin = async function() {
             const userInp = document.getElementById('username').value.trim();
             const passInp = document.getElementById('password').value;
@@ -290,14 +275,20 @@
             }
 
             try {
-                const userDocRef = doc(db, "users", userInp);
-                const userDocSnap = await getDoc(userDocRef);
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('username', userInp)
+                    .maybeSingle();
 
-                if (userDocSnap.exists() && userDocSnap.data().password === passInp) {
-                    // Perbarui timestamp login terakhir
-                    await updateDoc(userDocRef, {
-                        lastLogin: serverTimestamp()
-                    });
+                if (error) throw error;
+
+                if (data && data.password === passInp) {
+                    // Update timestamp last_login di Supabase
+                    await supabase
+                        .from('users')
+                        .update({ last_login: new Date().toISOString() })
+                        .eq('username', userInp);
 
                     localStorage.setItem('isLoggedIn', 'true');
                     showDashboard();
@@ -305,7 +296,7 @@
                     alert('Username atau Password salah');
                 }
             } catch (error) {
-                console.error("Gagal melakukan autentikasi Firestore: ", error);
+                console.error("Gagal melakukan login di Supabase:", error);
                 alert("Terjadi kesalahan koneksi database.");
             }
         }
@@ -340,7 +331,6 @@
             document.getElementById('register-page').style.display = 'none';
             document.getElementById('login-page').style.display = 'none';
             document.getElementById('dashboard-page').style.display = 'block';
-            // Bersihkan input teks login
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
         }
