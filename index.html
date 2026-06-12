@@ -14,20 +14,25 @@
         body {
             background-color: #f4f4f4;
         }
-        /* Halaman Login */
-        #login-page {
-            display: flex;
+        /* Container Form (Login & Register) */
+        .auth-page {
+            display: none;
             justify-content: center;
             align-items: center;
             height: 100vh;
         }
-        .login-container {
+        .auth-container {
             background: white;
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             width: 100%;
             max-width: 400px;
+        }
+        .auth-container h2 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
         }
         .form-group {
             margin-bottom: 15px;
@@ -42,7 +47,7 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        .btn-login {
+        .btn-submit {
             width: 100%;
             padding: 10px;
             background-color: #007bff;
@@ -50,6 +55,10 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-submit:hover {
+            background-color: #0056b3;
         }
         /* Halaman Dashboard */
         #dashboard-page {
@@ -107,17 +116,33 @@
 </head>
 <body>
 
-    <div id="login-page">
-        <div class="login-container">
+    <div id="register-page" class="auth-page">
+        <div class="auth-container">
+            <h2>Register Administrator</h2>
+            <div class="form-group">
+                <label for="reg-username">Username</label>
+                <input type="text" id="reg-username" value="admin" disabled style="background-color: #e9ecef; cursor: not-allowed;">
+            </div>
+            <div class="form-group">
+                <label for="reg-password">Password</label>
+                <input type="password" id="reg-password" onkeydown="handleRegisterKeyPress(event)">
+            </div>
+            <button class="btn-submit" onclick="handleRegister()">Buat Akun Admin</button>
+        </div>
+    </div>
+
+    <div id="login-page" class="auth-page">
+        <div class="auth-container">
+            <h2>Login</h2>
             <div class="form-group">
                 <label for="username">Username</label>
-                <input type="text" id="username" onkeydown="handleKeyPress(event)">
+                <input type="text" id="username" onkeydown="handleLoginKeyPress(event)">
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" id="password" onkeydown="handleKeyPress(event)">
+                <input type="password" id="password" onkeydown="handleLoginKeyPress(event)">
             </div>
-            <button class="btn-login" onclick="handleLogin()">Login</button>
+            <button class="btn-submit" onclick="handleLogin()">Login</button>
         </div>
     </div>
 
@@ -154,49 +179,77 @@
         const analytics = getAnalytics(app);
         const db = getFirestore(app);
 
-        // Fungsi Inisialisasi Otomatis Data Admin Saat Website Pertama Kali Dimuat
-        async function initAdminAccount() {
+        // Fungsi Utama untuk Memeriksa Keberadaan Admin Saat Website Dimuat
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Cek Status Login Session terlebih dahulu
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            
+            if (isLoggedIn === 'true') {
+                showDashboard();
+                return;
+            }
+
             try {
+                // Periksa apakah dokumen admin sudah ada di Firestore
                 const adminDocRef = doc(db, "users", "admin");
                 const adminSnap = await getDoc(adminDocRef);
 
-                // Jika dokumen admin belum ada sama sekali di Firestore, buat otomatis
-                if (!adminSnap.exists()) {
-                    await setDoc(adminDocRef, {
-                        username: "admin",
-                        password: "admin",
-                        role: "administrator",
-                        createdAt: serverTimestamp()
-                    });
-                    console.log("Akun administrator default berhasil dibuat di Firestore.");
+                if (adminSnap.exists()) {
+                    // Jika data admin sudah ada, tampilkan halaman login
+                    showLogin();
+                } else {
+                    // Jika data admin belum ada sama sekali, tampilkan halaman register
+                    showRegister();
                 }
             } catch (error) {
-                console.error("Gagal melakukan cek/inisialisasi akun admin default: ", error);
-            }
-        }
-
-        // Fungsi Utama Saat Halaman Dimuat
-        window.addEventListener('DOMContentLoaded', async () => {
-            // Jalankan seeding akun admin secara background/asynchronous
-            await initAdminAccount();
-
-            // Cek Status Login Session
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (isLoggedIn === 'true') {
-                showDashboard();
-            } else {
-                showLogin();
+                console.error("Gagal memeriksa database Firestore: ", error);
+                alert("Terjadi kesalahan koneksi ke database.");
+                showLogin(); // Fallback keamanan ke halaman login
             }
         });
 
-        // Handler Event Tombol Enter
-        window.handleKeyPress = function(event) {
+        // Handler Event Tombol Enter pada Halaman Register
+        window.handleRegisterKeyPress = function(event) {
+            if (event.key === 'Enter') {
+                handleRegister();
+            }
+        }
+
+        // Handler Event Tombol Enter pada Halaman Login
+        window.handleLoginKeyPress = function(event) {
             if (event.key === 'Enter') {
                 handleLogin();
             }
         }
 
-        // Handler Login
+        // Proses Register Akun Admin Pertama Kali
+        window.handleRegister = async function() {
+            const passInp = document.getElementById('reg-password').value;
+
+            if (passInp.trim() === "") {
+                alert("Password untuk Administrator tidak boleh kosong");
+                return;
+            }
+
+            try {
+                const adminDocRef = doc(db, "users", "admin");
+                await setDoc(adminDocRef, {
+                    username: "admin",
+                    password: passInp,
+                    role: "administrator",
+                    createdAt: serverTimestamp()
+                });
+
+                alert("Akun Administrator berhasil dibuat! Silakan login.");
+                document.getElementById('reg-password').value = '';
+                showLogin();
+            } catch (error) {
+                console.error("Gagal membuat akun administrator di Firestore: ", error);
+                alert("Gagal menyimpan data ke database.");
+            }
+        }
+
+        // Proses Login User / Admin
         window.handleLogin = async function() {
             const userInp = document.getElementById('username').value.trim();
             const passInp = document.getElementById('password').value;
@@ -207,13 +260,10 @@
             }
 
             try {
-                // Memeriksa langsung data ke Firestore berdasarkan ID dokumen yang diketik
                 const userDocRef = doc(db, "users", userInp);
                 const userDocSnap = await getDoc(userDocRef);
 
-                // Validasi keberadaan user dan kecocokan password
                 if (userDocSnap.exists() && userDocSnap.data().password === passInp) {
-                    
                     // Perbarui timestamp login terakhir
                     await updateDoc(userDocRef, {
                         lastLogin: serverTimestamp()
@@ -243,18 +293,26 @@
             dropdown.classList.toggle('show');
         }
 
-        // Navigasi Tampilan
-        function showDashboard() {
+        // Fungsi Navigasi Tampilan Layar
+        function showRegister() {
+            document.getElementById('register-page').style.display = 'flex';
             document.getElementById('login-page').style.display = 'none';
-            document.getElementById('dashboard-page').style.display = 'block';
-            // Clear inputs
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
+            document.getElementById('dashboard-page').style.display = 'none';
         }
 
         function showLogin() {
+            document.getElementById('register-page').style.display = 'none';
             document.getElementById('login-page').style.display = 'flex';
             document.getElementById('dashboard-page').style.display = 'none';
+        }
+
+        function showDashboard() {
+            document.getElementById('register-page').style.display = 'none';
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('dashboard-page').style.display = 'block';
+            // Bersihkan input teks login
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
         }
 
         // Menutup dropdown jika klik di luar area profil
