@@ -16,7 +16,7 @@
         }
         /* Container Form (Login & Register) */
         .auth-page {
-            display: none; /* Default tersembunyi, akan diatur oleh JS */
+            display: none;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -190,19 +190,11 @@
         const SUPABASE_URL = "https://geasyybkirgydfcevpsr.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlYXN5eWJraXJneWRmY2V2cHNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNjY2MTUsImV4cCI6MjA5Njg0MjYxNX0.KULKYjkcyp9yLpoTMHG4bjKmNV2HBn1COHj3FLZMbK4";
 
-        let supabase;
+        // Inisialisasi Supabase Client menggunakan objek global dari library CDN
+        const clientSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         // Fungsi Utama Saat Website Dimuat
         window.addEventListener('DOMContentLoaded', async () => {
-            // Pastikan library Supabase sudah termuat sempurna
-            if (typeof supabaseClient !== 'undefined' || window.supabase) {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            } else {
-                alert("Gagal memuat library Supabase. Periksa koneksi internet Anda.");
-                showLogin();
-                return;
-            }
-
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             if (isLoggedIn === 'true') {
                 showDashboard();
@@ -211,7 +203,7 @@
 
             try {
                 // Periksa apakah sudah ada user terdaftar di tabel 'users'
-                const { data, error } = await supabase
+                const { data, error } = await clientSupabase
                     .from('users')
                     .select('username')
                     .limit(1);
@@ -225,7 +217,6 @@
                 }
             } catch (error) {
                 console.error("Gagal memeriksa database Supabase:", error);
-                // Jika koneksi tabel bermasalah (misal tabel belum dibuat), arahkan ke login sebagai fallback
                 showLogin();
             }
         });
@@ -254,7 +245,7 @@
             }
 
             try {
-                const { error } = await supabase
+                const { error } = await clientSupabase
                     .from('users')
                     .insert([
                         { username: userInp, password: passInp, role: 'administrator' }
@@ -283,7 +274,7 @@
             }
 
             try {
-                const { data, error } = await supabase
+                const { data, error } = await clientSupabase
                     .from('users')
                     .select('*')
                     .eq('username', userInp)
@@ -293,7 +284,7 @@
 
                 if (data && data.password === passInp) {
                     // Update timestamp last_login di Supabase
-                    await supabase
+                    await clientSupabase
                         .from('users')
                         .update({ last_login: new Date().toISOString() })
                         .eq('username', userInp);
@@ -329,7 +320,6 @@
             document.getElementById('dashboard-page').style.display = 'none';
         }
 
-        // Menampilkan Halaman Login dan memastikan element pembungkus terlihat
         function showLogin() {
             document.getElementById('register-page').style.display = 'none';
             document.getElementById('login-page').style.display = 'flex';
