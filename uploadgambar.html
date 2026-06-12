@@ -169,7 +169,6 @@
 
         const clientSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // Proteksi Halaman
         window.addEventListener('DOMContentLoaded', () => {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             if (isLoggedIn !== 'true') {
@@ -177,7 +176,6 @@
             }
         });
 
-        // Fungsi Unggah Gambar Ke Supabase Storage dan Mengisi Tabel Database
         window.handleUpload = async function() {
             const fileInput = document.getElementById('file-input');
             const uploadBtn = document.getElementById('uploadBtn');
@@ -189,7 +187,6 @@
 
             const file = fileInput.files[0];
             const fileExt = file.name.split('.').pop();
-            // Membuat nama file acak unik di storage agar tidak bentrok
             const fileName = `${Date.now()}_${Math.floor(Math.random() * 1000)}.${fileExt}`;
             const currentUser = localStorage.getItem('username') || 'Unknown';
 
@@ -197,7 +194,7 @@
                 uploadBtn.disabled = true;
                 uploadBtn.innerText = "Mengupload...";
 
-                // 1. Upload file fisik ke Supabase Storage Bucket bernama 'images'
+                // 1. Upload ke Supabase Storage
                 const { data: storageData, error: storageError } = await clientSupabase
                     .storage
                     .from('images')
@@ -205,7 +202,7 @@
 
                 if (storageError) throw storageError;
 
-                // 2. Dapatkan URL Public dari file yang berhasil diupload
+                // 2. Ambil URL Publik gambar
                 const { data: urlData } = clientSupabase
                     .storage
                     .from('images')
@@ -213,7 +210,7 @@
 
                 const publicUrl = urlData.publicUrl;
 
-                // 3. Simpan link URL public tersebut ke dalam tabel database 'uploaded_images'
+                // 3. Simpan data record ke database Supabase
                 const { error: dbError } = await clientSupabase
                     .from('uploaded_images')
                     .insert([
@@ -226,12 +223,12 @@
 
                 if (dbError) throw dbError;
 
-                alert("Gambar berhasil diupload dan disimpan ke database Supabase!");
-                fileInput.value = ''; // Reset form input file
+                alert("Gambar berhasil diupload ke Supabase!");
+                fileInput.value = '';
                 
             } catch (error) {
                 console.error("Proses upload gagal:", error);
-                alert("Gagal mengupload gambar. Pastikan Bucket 'images' di Supabase Storage sudah di-set ke Public.");
+                alert("Gagal mengupload gambar. Pastikan Bucket 'images' di Supabase Storage sudah dibuat dan di-set ke Public.");
             } finally {
                 uploadBtn.disabled = false;
                 uploadBtn.innerText = "Mulai Upload";
