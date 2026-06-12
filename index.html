@@ -134,7 +134,7 @@
         .show {
             display: block !important;
         }
-        /* Dashboard Content Gallery */
+        /* Gallery */
         .dashboard-content {
             padding: 20px;
             max-width: 1200px;
@@ -321,7 +321,7 @@
                         .eq('username', userInp);
 
                     localStorage.setItem('isLoggedIn', 'true');
-                    localStorage.setItem('username', userInp); // Simpan session nama user
+                    localStorage.setItem('username', userInp);
                     showDashboard();
                 } else {
                     alert('Username atau Password salah');
@@ -332,7 +332,6 @@
             }
         }
 
-        // Fungsi Membaca dan Menampilkan Gambar di Dashboard
         async function loadImages() {
             const gallery = document.getElementById('imageGallery');
             gallery.innerHTML = '';
@@ -396,7 +395,7 @@
             document.getElementById('dashboard-page').style.display = 'block';
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
-            loadImages(); // Panggil data gambar saat masuk dashboard
+            loadImages();
         }
 
         window.onclick = function(event) {
