@@ -16,7 +16,7 @@
         }
         /* Container Form (Login & Register) */
         .auth-page {
-            display: none;
+            display: none; /* Default tersembunyi, akan diatur oleh JS */
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -134,7 +134,6 @@
             display: block !important;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -184,18 +183,27 @@
         </nav>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <script>
         // Konfigurasi Supabase Anda
         const SUPABASE_URL = "https://geasyybkirgydfcevpsr.supabase.co";
         const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlYXN5eWJraXJneWRmY2V2cHNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNjY2MTUsImV4cCI6MjA5Njg0MjYxNX0.KULKYjkcyp9yLpoTMHG4bjKmNV2HBn1COHj3FLZMbK4";
 
-        // Inisialisasi Supabase Client
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let supabase;
 
         // Fungsi Utama Saat Website Dimuat
         window.addEventListener('DOMContentLoaded', async () => {
+            // Pastikan library Supabase sudah termuat sempurna
+            if (typeof supabaseClient !== 'undefined' || window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            } else {
+                alert("Gagal memuat library Supabase. Periksa koneksi internet Anda.");
+                showLogin();
+                return;
+            }
+
             const isLoggedIn = localStorage.getItem('isLoggedIn');
-            
             if (isLoggedIn === 'true') {
                 showDashboard();
                 return;
@@ -217,7 +225,7 @@
                 }
             } catch (error) {
                 console.error("Gagal memeriksa database Supabase:", error);
-                alert("Terjadi kesalahan koneksi ke database.");
+                // Jika koneksi tabel bermasalah (misal tabel belum dibuat), arahkan ke login sebagai fallback
                 showLogin();
             }
         });
@@ -260,7 +268,7 @@
                 showLogin();
             } catch (error) {
                 console.error("Gagal melakukan registrasi di Supabase:", error);
-                alert("Gagal menyimpan data ke database.");
+                alert("Gagal menyimpan data ke database. Pastikan tabel 'users' sudah dibuat di SQL Editor Supabase.");
             }
         }
 
@@ -321,6 +329,7 @@
             document.getElementById('dashboard-page').style.display = 'none';
         }
 
+        // Menampilkan Halaman Login dan memastikan element pembungkus terlihat
         function showLogin() {
             document.getElementById('register-page').style.display = 'none';
             document.getElementById('login-page').style.display = 'flex';
