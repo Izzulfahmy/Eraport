@@ -121,7 +121,7 @@
             <h2>Register Administrator</h2>
             <div class="form-group">
                 <label for="reg-username">Username</label>
-                <input type="text" id="reg-username" value="admin" disabled style="background-color: #e9ecef; cursor: not-allowed;">
+                <input type="text" id="reg-username" placeholder="Masukkan username admin" onkeydown="handleRegisterKeyPress(event)">
             </div>
             <div class="form-group">
                 <label for="reg-password">Password</label>
@@ -161,7 +161,7 @@
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, limit, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // Konfigurasi Firebase Anda
         const firebaseConfig = {
@@ -190,15 +190,16 @@
             }
 
             try {
-                // Periksa apakah dokumen admin sudah ada di Firestore
-                const adminDocRef = doc(db, "users", "admin");
-                const adminSnap = await getDoc(adminDocRef);
+                // Memeriksa apakah sudah ada data dokumen di dalam collection 'users'
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, limit(1));
+                const querySnapshot = await getDocs(q);
 
-                if (adminSnap.exists()) {
-                    // Jika data admin sudah ada, tampilkan halaman login
+                if (!querySnapshot.empty) {
+                    // Jika sudah ada minimal satu user/admin terdaftar, tampilkan halaman login
                     showLogin();
                 } else {
-                    // Jika data admin belum ada sama sekali, tampilkan halaman register
+                    // Jika database benar-benar kosong, tampilkan halaman register admin
                     showRegister();
                 }
             } catch (error) {
@@ -224,23 +225,26 @@
 
         // Proses Register Akun Admin Pertama Kali
         window.handleRegister = async function() {
+            const userInp = document.getElementById('reg-username').value.trim();
             const passInp = document.getElementById('reg-password').value;
 
-            if (passInp.trim() === "") {
-                alert("Password untuk Administrator tidak boleh kosong");
+            if (userInp === "" || passInp.trim() === "") {
+                alert("Username dan Password untuk Administrator tidak boleh kosong");
                 return;
             }
 
             try {
-                const adminDocRef = doc(db, "users", "admin");
+                // Menggunakan username inputan custom sebagai Document ID di Firestore
+                const adminDocRef = doc(db, "users", userInp);
                 await setDoc(adminDocRef, {
-                    username: "admin",
+                    username: userInp,
                     password: passInp,
                     role: "administrator",
                     createdAt: serverTimestamp()
                 });
 
                 alert("Akun Administrator berhasil dibuat! Silakan login.");
+                document.getElementById('reg-username').value = '';
                 document.getElementById('reg-password').value = '';
                 showLogin();
             } catch (error) {
