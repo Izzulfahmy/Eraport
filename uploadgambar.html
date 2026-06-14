@@ -152,7 +152,7 @@
 
     <div class="container">
         <div class="card">
-            <h3>Upload Gambar ke Firebase Storage</h3>
+            <h3>Upload Gambar ke Google Drive</h3>
             <div class="form-group">
                 <label for="file-input">Pilih File Gambar</label>
                 <input type="file" id="file-input" accept="image/*">
@@ -165,7 +165,6 @@
         // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         // Konfigurasi Firebase Anda
         const firebaseConfig = {
@@ -178,10 +177,12 @@
             measurementId: "G-NWCTMGHZEV"
         };
 
+        // URL Google Apps Script Executable Anda
+        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxONM0d9Bo05nOmAPvSCLzpficqQb-PQyk1mr12VUfkX9ZUYe8UojOJ_80WBkj-SoIB/exec";
+
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app);
 
         // Proteksi Halaman
         window.addEventListener('DOMContentLoaded', () => {
@@ -191,7 +192,7 @@
             }
         });
 
-        // Fungsi Unggah Gambar Ke Firebase Storage dan Mengisi Cloud Firestore
+        // Fungsi Unggah Gambar Ke Google Drive via Apps Script & Simpan Metadata ke Firestore
         window.handleUpload = async function() {
             const fileInput = document.getElementById('file-input');
             const uploadBtn = document.getElementById('uploadBtn');
@@ -202,38 +203,53 @@
             }
 
             const file = fileInput.files[0];
-            const fileExt = file.name.split('.').pop();
-            // Membuat nama file acak unik agar berkas di storage tidak tumpang tindih
-            const uniqueFileName = `images/${Date.now()}_${Math.floor(Math.random() * 1000)}.${fileExt}`;
             const currentUser = localStorage.getItem('username') || 'Unknown';
 
             try {
                 uploadBtn.disabled = true;
-                uploadBtn.innerText = "Mengupload...";
+                uploadBtn.innerText = "Mengupload ke Google Drive...";
 
-                // 1. Membuat referensi path lokasi penyimpanan berkas di Firebase Storage
-                const storageRef = ref(storage, uniqueFileName);
+                // 1. Membaca berkas file dan mengubahnya menjadi format teks Base64
+                const base64Data = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = (error) => reject(error);
+                    reader.readAsDataURL(file);
+                });
 
-                // 2. Unggah berkas fisik gambar (bytes data) ke Firebase Storage
-                await uploadBytes(storageRef, file);
+                // 2. Mengirim data JSON ke Google Apps Script Web App
+                const response = await fetch(APPS_SCRIPT_URL, {
+                    method: "POST",
+                    mode: "cors",
+                    headers: {
+                        "Content-Type": "text/plain;charset=utf-8"
+                    },
+                    body: JSON.stringify({
+                        base64: base64Data,
+                        fileName: file.name
+                    })
+                });
 
-                // 3. Mengambil URL publik agar gambar dapat diakses secara langsung di browser
-                const downloadUrl = await getDownloadURL(storageRef);
+                const result = await response.json();
 
-                // 4. Simpan record metadata gambar ke Cloud Firestore database di collection 'uploaded_images'
+                if (result.status !== "success") {
+                    throw new Error(result.message || "Gagal memproses di Google Apps Script.");
+                }
+
+                // 3. Simpan link direct URL Google Drive yang dikembalikan ke Cloud Firestore
                 await addDoc(collection(db, "uploaded_images"), {
-                    imageUrl: downloadUrl,
+                    imageUrl: result.imageUrl,
                     fileName: file.name,
                     uploadedBy: currentUser,
                     createdAt: serverTimestamp()
                 });
 
-                alert("Gambar berhasil diupload ke Firebase!");
-                fileInput.value = ''; // Reset pilihan berkas pada form
+                alert("Gambar berhasil diupload dan disimpan ke Google Drive!");
+                fileInput.value = ''; // Reset input berkas
                 
             } catch (error) {
                 console.error("Proses upload gagal:", error);
-                alert("Gagal mengupload gambar. Pastikan Rules pada Firebase Storage dan Cloud Firestore Anda sudah mengizinkan akses tulis (write).");
+                alert("Gagal mengupload gambar ke Google Drive. Pastikan konfigurasi Deployment Apps Script disetel ke 'Anyone'.");
             } finally {
                 uploadBtn.disabled = false;
                 uploadBtn.innerText = "Mulai Upload";
