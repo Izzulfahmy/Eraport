@@ -14,7 +14,6 @@
         body {
             background-color: #f4f4f4;
         }
-        /* Container Form (Login & Register) */
         .auth-page {
             display: none;
             justify-content: center;
@@ -60,7 +59,6 @@
         .btn-submit:hover {
             background-color: #0056b3;
         }
-        /* Halaman Dashboard */
         #dashboard-page {
             display: none;
             height: 100vh;
@@ -134,7 +132,6 @@
         .show {
             display: block !important;
         }
-        /* Gallery Dashboard */
         .dashboard-content {
             padding: 20px;
             max-width: 1200px;
@@ -207,9 +204,7 @@
                 <a href="uploadgambar.html" class="btn-menu">Upload Gambar</a>
             </div>
             <div class="nav-right">
-                <div class="profile-logo" onclick="toggleDropdown()">
-                    A
-                </div>
+                <div class="profile-logo" onclick="toggleDropdown()">A</div>
                 <div class="dropdown-menu" id="profileDropdown">
                     <button onclick="handleLogout()">Logout</button>
                 </div>
@@ -217,18 +212,15 @@
         </nav>
         <div class="dashboard-content">
             <h3>Daftar Gambar Terupload</h3>
-            <div class="image-grid" id="imageGallery">
-                </div>
+            <div class="image-grid" id="imageGallery"></div>
         </div>
     </div>
 
     <script type="module">
-        // Import Firebase modules
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, limit, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // Konfigurasi Firebase Anda
         const firebaseConfig = {
             apiKey: "AIzaSyCBXA1Atpm8LpDSdAr02OEvuADP2bUT9Gk",
             authDomain: "eraport-87687.firebaseapp.com",
@@ -239,15 +231,12 @@
             measurementId: "G-NWCTMGHZEV"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const db = getFirestore(app);
 
-        // Fungsi Utama Saat Website Dimuat
         window.addEventListener('DOMContentLoaded', async () => {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
-            
             if (isLoggedIn === 'true') {
                 showDashboard();
                 return;
@@ -269,20 +258,14 @@
             }
         });
 
-        // Handler Event Tombol Enter
         window.handleRegisterKeyPress = function(event) {
-            if (event.key === 'Enter') {
-                handleRegister();
-            }
+            if (event.key === 'Enter') handleRegister();
         }
 
         window.handleLoginKeyPress = function(event) {
-            if (event.key === 'Enter') {
-                handleLogin();
-            }
+            if (event.key === 'Enter') handleLogin();
         }
 
-        // Proses Register Akun ke Firestore
         window.handleRegister = async function() {
             const userInp = document.getElementById('reg-username').value.trim();
             const passInp = document.getElementById('reg-password').value;
@@ -311,7 +294,6 @@
             }
         }
 
-        // Proses Login via Firestore
         window.handleLogin = async function() {
             const userInp = document.getElementById('username').value.trim();
             const passInp = document.getElementById('password').value;
@@ -326,10 +308,7 @@
                 const userDocSnap = await getDoc(userDocRef);
 
                 if (userDocSnap.exists() && userDocSnap.data().password === passInp) {
-                    await updateDoc(userDocRef, {
-                        lastLogin: serverTimestamp()
-                    });
-
+                    await updateDoc(userDocRef, { lastLogin: serverTimestamp() });
                     localStorage.setItem('isLoggedIn', 'true');
                     localStorage.setItem('username', userInp);
                     showDashboard();
@@ -342,7 +321,6 @@
             }
         }
 
-        // Fungsi Membaca dan Menampilkan Gambar dari Firestore
         async function loadImages() {
             const gallery = document.getElementById('imageGallery');
             gallery.innerHTML = '';
@@ -355,15 +333,11 @@
                 if (!querySnapshot.empty) {
                     querySnapshot.forEach((doc) => {
                         const img = doc.data();
-                        
-                        // Validasi pengaman agar tidak memicu error 'undefined' jika ada field yang kosong di Firestore
                         if (img && img.imageUrl) {
                             const card = document.createElement('div');
                             card.className = 'image-card';
-                            
-                            // Ditambahkan atribut crossorigin="anonymous" agar render eksternal image dari Googleusercontent lancar
                             card.innerHTML = `
-                                <img src="${img.imageUrl}" alt="${img.fileName || 'Image'}" crossorigin="anonymous">
+                                <img src="${img.imageUrl}" alt="${img.fileName || 'Image'}">
                                 <div class="image-info">
                                     <strong>File:</strong> ${img.fileName || 'No Name'}<br>
                                     <strong>By:</strong> ${img.uploadedBy || 'Unknown'}
@@ -377,11 +351,10 @@
                 }
             } catch (error) {
                 console.error("Gagal memuat daftar gambar:", error);
-                gallery.innerHTML = '<p style="color: red;">Gagal memuat gambar. Pastikan format dokumen Firestore valid.</p>';
+                gallery.innerHTML = '<p style="color: red;">Gagal memuat gambar.</p>';
             }
         }
 
-        // Handler Logout
         window.handleLogout = function() {
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('username');
@@ -389,13 +362,10 @@
             showLogin();
         }
 
-        // Toggle Dropdown Menu
         window.toggleDropdown = function() {
-            const dropdown = document.getElementById('profileDropdown');
-            dropdown.classList.toggle('show');
+            document.getElementById('profileDropdown').classList.toggle('show');
         }
 
-        // Navigasi Layar Tampilan
         function showRegister() {
             document.getElementById('register-page').style.display = 'flex';
             document.getElementById('login-page').style.display = 'none';
@@ -417,7 +387,6 @@
             loadImages();
         }
 
-        // Menutup dropdown jika klik di luar area profil
         window.onclick = function(event) {
             if (!event.target.matches('.profile-logo')) {
                 const dropdowns = document.getElementsByClassName("dropdown-menu");
