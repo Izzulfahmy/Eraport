@@ -133,7 +133,6 @@
             border-radius: 4px;
             white-space: nowrap;
             cursor: pointer;
-            /* Properti animasi transition ditiadakan agar perubahan warna menu instan/statis */
         }
         .nav-item:hover {
             background-color: #f1f5f9;
@@ -419,7 +418,7 @@
             }
         }
 
-        window.switchMenu = function(menuName, element) {
+        window.switchMenu = async function(menuName, element) {
             const items = document.querySelectorAll('.nav-item');
             items.forEach(item => item.classList.remove('active'));
             element.classList.add('active');
@@ -430,9 +429,64 @@
                 case 'beranda':
                     contentArea.innerHTML = `<h3>Beranda</h3><p>Ini adalah halaman utama dashboard Panel Administrator Eraport.</p>`;
                     break;
+                    
                 case 'profil-sekolah':
-                    contentArea.innerHTML = `<h3>Profil Sekolah</h3><p>Halaman kelola identitas sekolah, NPSN, alamat, dan akreditasi lembaga.</p>`;
+                    contentArea.innerHTML = `<p style="color: #999;">Memuat data profil sekolah...</p>`;
+                    try {
+                        const res = await fetch('profilsekolah.html');
+                        if (!res.ok) throw new Error("File profilsekolah.html tidak ditemukan");
+                        const htmlContent = await res.text();
+                        contentArea.innerHTML = htmlContent;
+
+                        const docRef = doc(db, "pengaturan", "profil_sekolah");
+                        const docSnap = await getDoc(docRef);
+                        
+                        if (docSnap.exists()) {
+                            const data = docSnap.data();
+                            Object.keys(data).forEach(key => {
+                                const inputEl = document.getElementById(key);
+                                if (inputEl) inputEl.value = data[key];
+                            });
+                        }
+                    } catch (err) {
+                        console.error("Gagal memuat halaman profil:", err);
+                        contentArea.innerHTML = `<p style="color: red;">Gagal memuat halaman profil sekolah. Pastikan file 'profilsekolah.html' berada di folder yang sama.</p>`;
+                    }
+
+                    window.simpanProfilSekolah = async function(event) {
+                        event.preventDefault();
+                        const btn = event.target.querySelector('.btn-save');
+                        btn.disabled = true;
+                        btn.innerText = "Menyimpan...";
+
+                        const fields = [
+                            'nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 
+                            'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 
+                            'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah', 'alamat_lengkap', 
+                            'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 
+                            'latitude', 'longitude', 'no_telp', 'fax', 'no_wa', 'email_sekolah', 
+                            'website', 'medsos'
+                        ];
+
+                        const payload = {};
+                        fields.forEach(field => {
+                            const el = document.getElementById(field);
+                            if (el) payload[field] = el.value;
+                        });
+
+                        try {
+                            await setDoc(doc(db, "pengaturan", "profil_sekolah"), payload);
+                            alert("Data Profil Sekolah berhasil diperbarui di Firestore!");
+                        } catch (error) {
+                            console.error("Gagal menyimpan ke Firestore:", error);
+                            alert("Gagal menyimpan data ke database.");
+                        } finally {
+                            btn.disabled = false;
+                            btn.innerText = "Simpan Perubahan";
+                        }
+                    };
                     break;
+
                 case 'tahun-pelajaran':
                     contentArea.innerHTML = `<h3>Tahun Pelajaran</h3><p>Pengaturan tahun ajaran aktif dan semester (Ganjil / Genap).</p>`;
                     break;

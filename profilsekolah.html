@@ -1,0 +1,205 @@
+<style>
+    .profile-container {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+    }
+    .section-title {
+        font-size: 18px;
+        color: #007bff;
+        border-bottom: 2px solid #e0e0e0;
+        padding-bottom: 8px;
+        margin-bottom: 15px;
+        font-weight: bold;
+    }
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 15px 20px;
+    }
+    .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    .form-field label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #555;
+    }
+    .form-field input, .form-field select {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        background-color: #fff;
+    }
+    .form-field input:focus, .form-field select:focus {
+        border-color: #007bff;
+        outline: none;
+    }
+    .btn-save-container {
+        margin-top: 10px;
+        display: flex;
+        justify-content: flex-end;
+    }
+    .btn-save {
+        padding: 12px 24px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    .btn-save:hover {
+        background-color: #218838;
+    }
+    
+    /* Optimasi khusus layar HP */
+    @media (max-width: 480px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+        .btn-save {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="profile-container">
+    <form id="formProfilSekolah" onsubmit="simpanProfilSekolah(event)">
+        
+        <div class="section-title">1. Data Administrasi dan Legalitas</div>
+        <div class="form-grid">
+            <div class="form-field">
+                <label>Nama Resmi Sekolah</label>
+                <input type="text" id="nama_sekolah" required>
+            </div>
+            <div class="form-field">
+                <label>NPSN (Nomor Pokok Sekolah Nasional)</label>
+                <input type="text" id="npsn" required>
+            </div>
+            <div class="form-field">
+                <label>NSS / NDS</label>
+                <input type="text" id="nss_nds">
+            </div>
+            <div class="form-field">
+                <label>Status Sekolah</label>
+                <select id="status_sekolah">
+                    <option value="Negeri">Negeri</option>
+                    <option value="Swasta">Swasta</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label>Bentuk Satuan Pendidikan (Jenjang)</label>
+                <input type="text" id="jenjang" placeholder="Contoh: SD / SMP / SMA">
+            </div>
+            <div class="form-field">
+                <label>Status Kepemilikan</label>
+                <select id="status_kepemilikan">
+                    <option value="Pemerintah">Pemerintah</option>
+                    <option value="Yayasan">Yayasan</option>
+                    <option value="Pribadi">Pribadi</option>
+                </select>
+            </div>
+            <div class="form-field">
+                <label>Nama Pemilik / Yayasan</label>
+                <input type="text" id="nama_pemilik">
+            </div>
+            <div class="form-field">
+                <label>SK Pendirian Sekolah (Nomor & Tanggal)</label>
+                <input type="text" id="sk_pendirian">
+            </div>
+            <div class="form-field">
+                <label>SK Izin Operasional (Nomor & Tanggal)</label>
+                <input type="text" id="sk_operasional">
+            </div>
+            <div class="form-field">
+                <label>Tanggal Berdiri / SK Operasional</label>
+                <input type="date" id="tgl_berdiri">
+            </div>
+            <div class="form-field">
+                <label>Status Akreditasi (Peringkat, No SK, Masa Berlaku)</label>
+                <input type="text" id="status_akreditasi" placeholder="Contoh: A, No: 123/BAN-SM, Berlaku s/d 2030">
+            </div>
+            <div class="form-field">
+                <label>Nomor Pokok Wajib Pajak (NPWP)</label>
+                <input type="text" id="npwp_sekolah">
+            </div>
+        </div>
+
+        <div class="section-title" style="margin-top: 25px;">2. Data Lokasi dan Geografis</div>
+        <div class="form-grid">
+            <div class="form-field">
+                <label>Alamat Lengkap (Jalan, No, RT/RW)</label>
+                <input type="text" id="alamat_lengkap" required>
+            </div>
+            <div class="form-field">
+                <label>Dusun / Kampung</label>
+                <input type="text" id="dusun">
+            </div>
+            <div class="form-field">
+                <label>Desa / Kelurahan</label>
+                <input type="text" id="desa" required>
+            </div>
+            <div class="form-field">
+                <label>Kecamatan</label>
+                <input type="text" id="kecamatan" required>
+            </div>
+            <div class="form-field">
+                <label>Kabupaten / Kota</label>
+                <input type="text" id="kabupaten" required>
+            </div>
+            <div class="form-field">
+                <label>Provinsi</label>
+                <input type="text" id="provinsi" required>
+            </div>
+            <div class="form-field">
+                <label>Kode Pos</label>
+                <input type="text" id="kode_pos">
+            </div>
+            <div class="form-field">
+                <label>Garis Lintang (Latitude)</label>
+                <input type="text" id="latitude" placeholder="Contoh: -8.172483">
+            </div>
+            <div class="form-field">
+                <label>Garis Bujur (Longitude)</label>
+                <input type="text" id="longitude" placeholder="Contoh: 113.698342">
+            </div>
+        </div>
+
+        <div class="section-title" style="margin-top: 25px;">3. Data Kontak dan Media Resmi</div>
+        <div class="form-grid">
+            <div class="form-field">
+                <label>Nomor Telepon</label>
+                <input type="text" id="no_telp">
+            </div>
+            <div class="form-field">
+                <label>Nomor Faksimile (Fax)</label>
+                <input type="text" id="fax">
+            </div>
+            <div class="form-field">
+                <label>WhatsApp / Kontak Humas</label>
+                <input type="text" id="no_wa">
+            </div>
+            <div class="form-field">
+                <label>Alamat Email Resmi</label>
+                <input type="email" id="email_sekolah">
+            </div>
+            <div class="form-field">
+                <label>Situs Web Resmi (Website)</label>
+                <input type="url" id="website" placeholder="https://sekolah.sch.id">
+            </div>
+            <div class="form-field">
+                <label>Media Sosial (Instagram, YT, FB, TikTok)</label>
+                <input type="text" id="medsos" placeholder="Contoh: IG: @sekolah, YT: @sekolahTV">
+            </div>
+        </div>
+
+        <div class="btn-save-container">
+            <button type="submit" class="btn-save">Simpan Perubahan</button>
+        </div>
+    </form>
+</div>
