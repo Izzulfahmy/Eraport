@@ -112,7 +112,7 @@
             white-space: nowrap;
         }
         
-        /* Navigasi Menu Horizontal */
+        /* Navigasi Menu Horizontal - Statis Tanpa Animasi */
         .nav-menu {
             display: flex;
             list-style: none;
@@ -131,9 +131,9 @@
             font-size: 14px;
             font-weight: 500;
             border-radius: 4px;
-            transition: all 0.2s ease;
             white-space: nowrap;
             cursor: pointer;
+            /* Properti animasi transition ditiadakan agar perubahan warna menu instan/statis */
         }
         .nav-item:hover {
             background-color: #f1f5f9;
@@ -152,7 +152,7 @@
             position: relative;
         }
         .profile-logo {
-            width: 32px; /* Dikecilkan sedikit agar serasi dengan teks brand */
+            width: 32px;
             height: 32px;
             background-color: #6c757d;
             border-radius: 50%;
@@ -222,13 +222,12 @@
         @media (max-width: 768px) {
             .navbar {
                 padding: 10px 15px;
-                height: auto; /* Mengikuti tinggi konten tumpukan */
+                height: auto;
                 flex-direction: column;
                 align-items: stretch;
                 gap: 8px;
             }
             
-            /* Baris Pertama Mobile: Menjaga "Eraport Admin" & Logo Akun sejajar di paling atas */
             .nav-header-top {
                 display: flex;
                 justify-content: space-between;
@@ -247,7 +246,6 @@
                 font-size: 16px;
             }
             
-            /* Menyesuaikan ukuran tombol logo profil agar pas dengan teks brand mobile */
             .profile-logo {
                 width: 28px;
                 height: 28px;
@@ -258,7 +256,6 @@
                 top: 35px;
             }
             
-            /* Baris Kedua Mobile: Menu slide horizontal berada tepat di bawahnya */
             .nav-menu {
                 width: 100%;
                 padding-bottom: 4px;
@@ -378,12 +375,12 @@
         const analytics = getAnalytics(app);
         const db = getFirestore(app);
 
+        // Eksekusi penataan layout mobile secara instan sebelum halaman ditampilkan utuh
+        adjustMobileLayout();
+        window.addEventListener('resize', adjustMobileLayout);
+
         window.addEventListener('DOMContentLoaded', async () => {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
-            
-            // Penanganan posisi elemen khusus layout mobile secara dinamis saat dimuat
-            adjustMobileLayout();
-            window.addEventListener('resize', adjustMobileLayout);
 
             if (isLoggedIn === 'true') {
                 showDashboard();
@@ -406,7 +403,6 @@
             }
         });
 
-        // Fungsi manipulasi DOM demi memindahkan tombol profil ke baris paling atas saat mode HP aktif
         function adjustMobileLayout() {
             const headerTop = document.querySelector('.nav-header-top');
             const navRight = document.querySelector('.nav-right');
