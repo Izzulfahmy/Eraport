@@ -254,7 +254,6 @@
             }
 
             try {
-                // Periksa NoSQL Firestore apakah sudah ada dokumen di collection 'users'
                 const usersRef = collection(db, "users");
                 const q = query(usersRef, limit(1));
                 const querySnapshot = await getDocs(q);
@@ -356,22 +355,29 @@
                 if (!querySnapshot.empty) {
                     querySnapshot.forEach((doc) => {
                         const img = doc.data();
-                        const card = document.createElement('div');
-                        card.className = 'image-card';
-                        card.innerHTML = `
-                            <img src="${img.imageUrl}" alt="${img.fileName}">
-                            <div class="image-info">
-                                <strong>File:</strong> ${img.fileName}<br>
-                                <strong>By:</strong> ${img.uploadedBy}
-                            </div>
-                        `;
-                        gallery.appendChild(card);
+                        
+                        // Validasi pengaman agar tidak memicu error 'undefined' jika ada field yang kosong di Firestore
+                        if (img && img.imageUrl) {
+                            const card = document.createElement('div');
+                            card.className = 'image-card';
+                            
+                            // Ditambahkan atribut crossorigin="anonymous" agar render eksternal image dari Googleusercontent lancar
+                            card.innerHTML = `
+                                <img src="${img.imageUrl}" alt="${img.fileName || 'Image'}" crossorigin="anonymous">
+                                <div class="image-info">
+                                    <strong>File:</strong> ${img.fileName || 'No Name'}<br>
+                                    <strong>By:</strong> ${img.uploadedBy || 'Unknown'}
+                                </div>
+                            `;
+                            gallery.appendChild(card);
+                        }
                     });
                 } else {
                     gallery.innerHTML = '<p style="color: #999;">Belum ada gambar yang diupload.</p>';
                 }
             } catch (error) {
                 console.error("Gagal memuat daftar gambar:", error);
+                gallery.innerHTML = '<p style="color: red;">Gagal memuat gambar. Pastikan format dokumen Firestore valid.</p>';
             }
         }
 
