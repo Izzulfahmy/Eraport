@@ -358,7 +358,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, limit, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc, limit, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCBXA1Atpm8LpDSdAr02OEvuADP2bUT9Gk",
@@ -374,7 +374,6 @@
         const analytics = getAnalytics(app);
         const db = getFirestore(app);
 
-        // Eksekusi penataan layout mobile secara instan sebelum halaman ditampilkan utuh
         adjustMobileLayout();
         window.addEventListener('resize', adjustMobileLayout);
 
@@ -434,7 +433,7 @@
                     contentArea.innerHTML = `<p style="color: #999;">Memuat data profil sekolah...</p>`;
                     try {
                         const res = await fetch('profilsekolah.html');
-                        if (!res.ok) throw new Error("File profilsekolah.html tidak ditemukan");
+                        if (!res.ok) throw new Error();
                         const htmlContent = await res.text();
                         contentArea.innerHTML = htmlContent;
 
@@ -449,8 +448,7 @@
                             });
                         }
                     } catch (err) {
-                        console.error("Gagal memuat halaman profil:", err);
-                        contentArea.innerHTML = `<p style="color: red;">Gagal memuat halaman profil sekolah. Pastikan file 'profilsekolah.html' berada di folder yang sama.</p>`;
+                        contentArea.innerHTML = `<p style="color: red;">Gagal memuat halaman profil sekolah.</p>`;
                     }
 
                     window.simpanProfilSekolah = async function(event) {
@@ -476,10 +474,9 @@
 
                         try {
                             await setDoc(doc(db, "pengaturan", "profil_sekolah"), payload);
-                            alert("Data Profil Sekolah berhasil diperbarui di Firestore!");
+                            alert("Data Profil Sekolah berhasil diperbarui!");
                         } catch (error) {
-                            console.error("Gagal menyimpan ke Firestore:", error);
-                            alert("Gagal menyimpan data ke database.");
+                            alert("Gagal menyimpan data.");
                         } finally {
                             btn.disabled = false;
                             btn.innerText = "Simpan Perubahan";
@@ -487,11 +484,159 @@
                     };
                     break;
 
+                case 'guru':
+                    contentArea.innerHTML = `<p style="color: #999;">Memuat Modul Pendidik...</p>`;
+                    try {
+                        const res = await fetch('guru.html');
+                        if (!res.ok) throw new Error();
+                        contentArea.innerHTML = await res.text();
+                        
+                        // Jalankan fungsi load list guru dari firestore
+                        loadDaftarGuru();
+                    } catch (err) {
+                        contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul guru. Pastikan file 'guru.html' ada di direktori.</p>`;
+                    }
+
+                    // --- LOGIKA CRUD MODUL GURU DI SEBELAH SINI ---
+                    window.bukaFormGuru = function() {
+                        document.getElementById('viewTabelGuru').style.display = 'none';
+                        document.getElementById('viewFormGuru').style.display = 'block';
+                        document.getElementById('formGuru').reset();
+                        document.getElementById('guru_id_hidden').value = '';
+                        document.getElementById('formGuruTitle').innerText = "Tambah Data Guru Baru";
+                    };
+
+                    window.kembaliKeTabelGuru = function() {
+                        document.getElementById('viewFormGuru').style.display = 'none';
+                        document.getElementById('viewTabelGuru').style.display = 'block';
+                        loadDaftarGuru();
+                    };
+
+                    async function loadDaftarGuru() {
+                        const tbody = document.getElementById('tbodyGuru');
+                        if(!tbody) return;
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#999;">Mengambil data...</td></tr>';
+                        
+                        try {
+                            const q = query(collection(db, "teachers"), orderBy("createdAt", "desc"));
+                            const snap = await getDocs(q);
+                            tbody.innerHTML = '';
+                            
+                            if(snap.empty) {
+                                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#999;">Belum ada data guru terdaftar.</td></tr>';
+                                return;
+                            }
+                            
+                            let index = 1;
+                            snap.forEach((doc) => {
+                                const teacher = doc.data();
+                                const id = doc.id;
+                                const identitas = (teacher.nuptk || teacher.nip) ? `${teacher.nuptk || '-'} / ${teacher.nip || '-'}` : '-';
+                                const namaLengkapFull = `${teacher.gelar_depan ? teacher.gelar_depan + ' ' : ''}${teacher.nama_lengkap}${teacher.gelar_belakang ? ', ' + teacher.gelar_belakang : ''}`;
+                                
+                                const tr = document.createElement('tr');
+                                tr.innerHTML = `
+                                    <td>${index++}</td>
+                                    <td>${identitas}</td>
+                                    <td><strong>${namaLengkapFull}</strong></td>
+                                    <td>${teacher.jabatan || '-'}</td>
+                                    <td><span style="padding:4px 8px; font-size:12px; border-radius:4px; font-weight:bold; background-color:${teacher.status_keaktifan === 'Aktif' ? '#d4edda; color:#155724;' : '#fff3cd; color:#856404;'}">${teacher.status_keaktifan || 'Aktif'}</span></td>
+                                    <td>
+                                        <div class="btn-group-actions">
+                                            <button class="btn-edit" onclick="editGuru('${id}')">Edit</button>
+                                            <button class="btn-delete" onclick="hapusGuru('${id}')">Hapus</button>
+                                        </div>
+                                    </td>
+                                `;
+                                tbody.appendChild(tr);
+                            });
+                        } catch (err) {
+                            console.error(err);
+                            tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Gagal memuat list guru.</td></tr>';
+                        }
+                    }
+
+                    window.simpanDataGuru = async function(event) {
+                        event.preventDefault();
+                        const btn = document.getElementById('btnSimpanGuru');
+                        btn.disabled = true;
+                        btn.innerText = "Memproses...";
+
+                        const fields = [
+                            'nama_lengkap', 'gelar_depan', 'gelar_belakang', 'nik', 'jenis_kelamin',
+                            'tempat_lahir', 'tanggal_lahir', 'agama', 'gol_darah', 'status_pernikahan',
+                            'nuptk', 'nip', 'niy_nigk', 'status_kepegawaian', 'jabatan',
+                            'pangkat_golongan', 'tmt_pengangkatan', 'sk_pengangkatan', 'lembaga_pengangkat', 'npwp',
+                            'tingkat_pendidikan', 'gelar_akademik', 'jurusan', 'universitas', 'tahun_kelulusan',
+                            'alamat_rumah', 'kode_pos_guru', 'no_hp', 'email_pribadi', 'email_institusi',
+                            'foto_profil', 'status_keaktifan', 'mapel_diampu', 'username_sistem', 'password_sistem'
+                        ];
+
+                        const payload = {};
+                        fields.forEach(field => {
+                            const el = document.getElementById(field);
+                            if (el) payload[field] = el.value;
+                        });
+                        payload['updatedAt'] = serverTimestamp();
+
+                        const customId = document.getElementById('guru_id_hidden').value;
+
+                        try {
+                            if (customId) {
+                                // Mode Update
+                                await setDoc(doc(db, "teachers", customId), payload, { merge: true });
+                                alert("Data Guru berhasil diperbarui!");
+                            } else {
+                                // Mode Insert Guru Baru
+                                payload['createdAt'] = serverTimestamp();
+                                // Gunakan username_sistem sebagai ID unik dokumen agar mempermudah auth modul guru nantinya
+                                await setDoc(doc(db, "teachers", payload.username_sistem), payload);
+                                alert("Guru baru berhasil didaftarkan!");
+                            }
+                            kembaliKeTabelGuru();
+                        } catch (err) {
+                            console.error(err);
+                            alert("Gagal memproses data ke database.");
+                        } finally {
+                            btn.disabled = false;
+                            btn.innerText = "Simpan Data Guru";
+                        }
+                    };
+
+                    window.editGuru = async function(id) {
+                        bukaFormGuru();
+                        document.getElementById('formGuruTitle').innerText = "Edit Data Guru";
+                        document.getElementById('guru_id_hidden').value = id;
+                        
+                        try {
+                            const docSnap = await getDoc(doc(db, "teachers", id));
+                            if(docSnap.exists()) {
+                                const data = docSnap.data();
+                                Object.keys(data).forEach(key => {
+                                    const el = document.getElementById(key);
+                                    if(el) el.value = data[key];
+                                });
+                            }
+                        } catch (err) {
+                            alert("Gagal mengambil rincian data guru.");
+                        }
+                    };
+
+                    window.hapusGuru = async function(id) {
+                        if(confirm("Apakah Anda yakin ingin menghapus permanen data pendidik ini?")) {
+                            try {
+                                await deleteDoc(doc(db, "teachers", id));
+                                alert("Data guru terhapus.");
+                                loadDaftarGuru();
+                            } catch (err) {
+                                alert("Gagal menghapus data.");
+                            }
+                        }
+                    };
+                    break;
+
                 case 'tahun-pelajaran':
                     contentArea.innerHTML = `<h3>Tahun Pelajaran</h3><p>Pengaturan tahun ajaran aktif dan semester (Ganjil / Genap).</p>`;
-                    break;
-                case 'guru':
-                    contentArea.innerHTML = `<h3>Data Guru</h3><p>Manajemen data pendidik, NIP, PTK, dan akun akses wali kelas.</p>`;
                     break;
                 case 'murid':
                     contentArea.innerHTML = `<h3>Data Murid</h3><p>Manajemen data induk siswa, NISN, status aktif, dan mutasi kelas.</p>`;
