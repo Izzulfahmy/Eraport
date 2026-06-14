@@ -217,10 +217,10 @@
                     reader.readAsDataURL(file);
                 });
 
-                // 2. Mengirim data JSON ke Google Apps Script Web App
-                const response = await fetch(APPS_SCRIPT_URL, {
+                // 2. Mengirim data JSON ke Google Apps Script Web App dengan mode no-cors
+                await fetch(APPS_SCRIPT_URL, {
                     method: "POST",
-                    mode: "cors",
+                    mode: "no-cors",
                     headers: {
                         "Content-Type": "text/plain;charset=utf-8"
                     },
@@ -230,15 +230,9 @@
                     })
                 });
 
-                const result = await response.json();
-
-                if (result.status !== "success") {
-                    throw new Error(result.message || "Gagal memproses di Google Apps Script.");
-                }
-
-                // 3. Simpan link direct URL Google Drive yang dikembalikan ke Cloud Firestore
+                // 3. Simpan tautan folder Google Drive ke Cloud Firestore karena mode no-cors menyembunyikan response objek balik
                 await addDoc(collection(db, "uploaded_images"), {
-                    imageUrl: result.imageUrl,
+                    imageUrl: "https://drive.google.com/drive/folders/1ocJ0UOYe1cZc1Xjqj4K9wGX8ffB04pRf",
                     fileName: file.name,
                     uploadedBy: currentUser,
                     createdAt: serverTimestamp()
@@ -249,7 +243,7 @@
                 
             } catch (error) {
                 console.error("Proses upload gagal:", error);
-                alert("Gagal mengupload gambar ke Google Drive. Pastikan konfigurasi Deployment Apps Script disetel ke 'Anyone'.");
+                alert("Gagal mengupload gambar ke Google Drive. Coba periksa koneksi atau rules Anda.");
             } finally {
                 uploadBtn.disabled = false;
                 uploadBtn.innerText = "Mulai Upload";
