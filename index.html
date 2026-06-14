@@ -134,7 +134,7 @@
         .show {
             display: block !important;
         }
-        /* Gallery */
+        /* Gallery Dashboard */
         .dashboard-content {
             padding: 20px;
             max-width: 1200px;
@@ -222,40 +222,55 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, limit, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    <script>
-        const SUPABASE_URL = "https://geasyybkirgydfcevpsr.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlYXN5eWJraXJneWRmY2V2cHNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNjY2MTUsImV4cCI6MjA5Njg0MjYxNX0.KULKYjkcyp9yLpoTMHG4bjKmNV2HBn1COHj3FLZMbK4";
+        // Konfigurasi Firebase Anda
+        const firebaseConfig = {
+            apiKey: "AIzaSyCBXA1Atpm8LpDSdAr02OEvuADP2bUT9Gk",
+            authDomain: "eraport-87687.firebaseapp.com",
+            projectId: "eraport-87687",
+            storageBucket: "eraport-87687.firebasestorage.app",
+            messagingSenderId: "879847959076",
+            appId: "1:879847959076:web:51ca5db07bb4724b7e06b1",
+            measurementId: "G-NWCTMGHZEV"
+        };
 
-        const clientSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
 
+        // Fungsi Utama Saat Website Dimuat
         window.addEventListener('DOMContentLoaded', async () => {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
+            
             if (isLoggedIn === 'true') {
                 showDashboard();
                 return;
             }
 
             try {
-                const { data, error } = await clientSupabase
-                    .from('users')
-                    .select('username')
-                    .limit(1);
+                // Periksa NoSQL Firestore apakah sudah ada dokumen di collection 'users'
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, limit(1));
+                const querySnapshot = await getDocs(q);
 
-                if (error) throw error;
-
-                if (data && data.length > 0) {
+                if (!querySnapshot.empty) {
                     showLogin();
                 } else {
                     showRegister();
                 }
             } catch (error) {
-                console.error("Gagal memeriksa database Supabase:", error);
+                console.error("Gagal memeriksa database Firestore: ", error);
                 showLogin();
             }
         });
 
+        // Handler Event Tombol Enter
         window.handleRegisterKeyPress = function(event) {
             if (event.key === 'Enter') {
                 handleRegister();
@@ -268,6 +283,7 @@
             }
         }
 
+        // Proses Register Akun ke Firestore
         window.handleRegister = async function() {
             const userInp = document.getElementById('reg-username').value.trim();
             const passInp = document.getElementById('reg-password').value;
@@ -278,24 +294,25 @@
             }
 
             try {
-                const { error } = await clientSupabase
-                    .from('users')
-                    .insert([
-                        { username: userInp, password: passInp, role: 'administrator' }
-                    ]);
-
-                if (error) throw error;
+                const adminDocRef = doc(db, "users", userInp);
+                await setDoc(adminDocRef, {
+                    username: userInp,
+                    password: passInp,
+                    role: "administrator",
+                    createdAt: serverTimestamp()
+                });
 
                 alert("Akun Administrator berhasil dibuat! Silakan login.");
                 document.getElementById('reg-username').value = '';
                 document.getElementById('reg-password').value = '';
                 showLogin();
             } catch (error) {
-                console.error("Gagal melakukan registrasi di Supabase:", error);
+                console.error("Gagal membuat akun di Firestore: ", error);
                 alert("Gagal menyimpan data ke database.");
             }
         }
 
+        // Proses Login via Firestore
         window.handleLogin = async function() {
             const userInp = document.getElementById('username').value.trim();
             const passInp = document.getElementById('password').value;
@@ -306,19 +323,13 @@
             }
 
             try {
-                const { data, error } = await clientSupabase
-                    .from('users')
-                    .select('*')
-                    .eq('username', userInp)
-                    .maybeSingle();
+                const userDocRef = doc(db, "users", userInp);
+                const userDocSnap = await getDoc(userDocRef);
 
-                if (error) throw error;
-
-                if (data && data.password === passInp) {
-                    await clientSupabase
-                        .from('users')
-                        .update({ last_login: new Date().toISOString() })
-                        .eq('username', userInp);
+                if (userDocSnap.exists() && userDocSnap.data().password === passInp) {
+                    await updateDoc(userDocRef, {
+                        lastLogin: serverTimestamp()
+                    });
 
                     localStorage.setItem('isLoggedIn', 'true');
                     localStorage.setItem('username', userInp);
@@ -327,32 +338,31 @@
                     alert('Username atau Password salah');
                 }
             } catch (error) {
-                console.error("Gagal melakukan login di Supabase:", error);
+                console.error("Gagal autentikasi Firestore: ", error);
                 alert("Terjadi kesalahan koneksi database.");
             }
         }
 
+        // Fungsi Membaca dan Menampilkan Gambar dari Firestore
         async function loadImages() {
             const gallery = document.getElementById('imageGallery');
             gallery.innerHTML = '';
             
             try {
-                const { data, error } = await clientSupabase
-                    .from('uploaded_images')
-                    .select('*')
-                    .order('created_at', { ascending: false });
+                const imagesRef = collection(db, "uploaded_images");
+                const q = query(imagesRef, orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
 
-                if (error) throw error;
-
-                if (data && data.length > 0) {
-                    data.forEach(img => {
+                if (!querySnapshot.empty) {
+                    querySnapshot.forEach((doc) => {
+                        const img = doc.data();
                         const card = document.createElement('div');
                         card.className = 'image-card';
                         card.innerHTML = `
-                            <img src="${img.image_url}" alt="${img.file_name}">
+                            <img src="${img.imageUrl}" alt="${img.fileName}">
                             <div class="image-info">
-                                <strong>File:</strong> ${img.file_name}<br>
-                                <strong>By:</strong> ${img.uploaded_by}
+                                <strong>File:</strong> ${img.fileName}<br>
+                                <strong>By:</strong> ${img.uploadedBy}
                             </div>
                         `;
                         gallery.appendChild(card);
@@ -365,6 +375,7 @@
             }
         }
 
+        // Handler Logout
         window.handleLogout = function() {
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('username');
@@ -372,11 +383,13 @@
             showLogin();
         }
 
+        // Toggle Dropdown Menu
         window.toggleDropdown = function() {
             const dropdown = document.getElementById('profileDropdown');
             dropdown.classList.toggle('show');
         }
 
+        // Navigasi Layar Tampilan
         function showRegister() {
             document.getElementById('register-page').style.display = 'flex';
             document.getElementById('login-page').style.display = 'none';
@@ -398,6 +411,7 @@
             loadImages();
         }
 
+        // Menutup dropdown jika klik di luar area profil
         window.onclick = function(event) {
             if (!event.target.matches('.profile-logo')) {
                 const dropdowns = document.getElementsByClassName("dropdown-menu");

@@ -152,7 +152,7 @@
 
     <div class="container">
         <div class="card">
-            <h3>Upload Gambar ke Supabase Storage</h3>
+            <h3>Upload Gambar ke Firebase Storage</h3>
             <div class="form-group">
                 <label for="file-input">Pilih File Gambar</label>
                 <input type="file" id="file-input" accept="image/*">
@@ -161,14 +161,29 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-    <script>
-        const SUPABASE_URL = "https://geasyybkirgydfcevpsr.supabase.co";
-        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlYXN5eWJraXJneWRmY2V2cHNyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEyNjY2MTUsImV4cCI6MjA5Njg0MjYxNX0.KULKYjkcyp9yLpoTMHG4bjKmNV2HBn1COHj3FLZMbK4";
+        // Konfigurasi Firebase Anda
+        const firebaseConfig = {
+            apiKey: "AIzaSyCBXA1Atpm8LpDSdAr02OEvuADP2bUT9Gk",
+            authDomain: "eraport-87687.firebaseapp.com",
+            projectId: "eraport-87687",
+            storageBucket: "eraport-87687.firebasestorage.app",
+            messagingSenderId: "879847959076",
+            appId: "1:879847959076:web:51ca5db07bb4724b7e06b1",
+            measurementId: "G-NWCTMGHZEV"
+        };
 
-        const clientSupabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
 
+        // Proteksi Halaman
         window.addEventListener('DOMContentLoaded', () => {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             if (isLoggedIn !== 'true') {
@@ -176,6 +191,7 @@
             }
         });
 
+        // Fungsi Unggah Gambar Ke Firebase Storage dan Mengisi Cloud Firestore
         window.handleUpload = async function() {
             const fileInput = document.getElementById('file-input');
             const uploadBtn = document.getElementById('uploadBtn');
@@ -187,65 +203,57 @@
 
             const file = fileInput.files[0];
             const fileExt = file.name.split('.').pop();
-            const fileName = `${Date.now()}_${Math.floor(Math.random() * 1000)}.${fileExt}`;
+            // Membuat nama file acak unik agar berkas di storage tidak tumpang tindih
+            const uniqueFileName = `images/${Date.now()}_${Math.floor(Math.random() * 1000)}.${fileExt}`;
             const currentUser = localStorage.getItem('username') || 'Unknown';
 
             try {
                 uploadBtn.disabled = true;
                 uploadBtn.innerText = "Mengupload...";
 
-                // 1. Upload ke Supabase Storage
-                const { data: storageData, error: storageError } = await clientSupabase
-                    .storage
-                    .from('images')
-                    .upload(fileName, file);
+                // 1. Membuat referensi path lokasi penyimpanan berkas di Firebase Storage
+                const storageRef = ref(storage, uniqueFileName);
 
-                if (storageError) throw storageError;
+                // 2. Unggah berkas fisik gambar (bytes data) ke Firebase Storage
+                await uploadBytes(storageRef, file);
 
-                // 2. Ambil URL Publik gambar
-                const { data: urlData } = clientSupabase
-                    .storage
-                    .from('images')
-                    .getPublicUrl(fileName);
+                // 3. Mengambil URL publik agar gambar dapat diakses secara langsung di browser
+                const downloadUrl = await getDownloadURL(storageRef);
 
-                const publicUrl = urlData.publicUrl;
+                // 4. Simpan record metadata gambar ke Cloud Firestore database di collection 'uploaded_images'
+                await addDoc(collection(db, "uploaded_images"), {
+                    imageUrl: downloadUrl,
+                    fileName: file.name,
+                    uploadedBy: currentUser,
+                    createdAt: serverTimestamp()
+                });
 
-                // 3. Simpan data record ke database Supabase
-                const { error: dbError } = await clientSupabase
-                    .from('uploaded_images')
-                    .insert([
-                        { 
-                            image_url: publicUrl, 
-                            file_name: file.name, 
-                            uploaded_by: currentUser 
-                        }
-                    ]);
-
-                if (dbError) throw dbError;
-
-                alert("Gambar berhasil diupload ke Supabase!");
-                fileInput.value = '';
+                alert("Gambar berhasil diupload ke Firebase!");
+                fileInput.value = ''; // Reset pilihan berkas pada form
                 
             } catch (error) {
                 console.error("Proses upload gagal:", error);
-                alert("Gagal mengupload gambar. Pastikan Bucket 'images' di Supabase Storage sudah dibuat dan di-set ke Public.");
+                alert("Gagal mengupload gambar. Pastikan Rules pada Firebase Storage dan Cloud Firestore Anda sudah mengizinkan akses tulis (write).");
             } finally {
                 uploadBtn.disabled = false;
                 uploadBtn.innerText = "Mulai Upload";
             }
         }
 
+        // Handler Logout
         window.handleLogout = function() {
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('username');
             window.location.href = "index.html";
         }
 
+        // Toggle Dropdown Menu Profil
         window.toggleDropdown = function() {
             const dropdown = document.getElementById('profileDropdown');
             dropdown.classList.toggle('show');
         }
 
+        // Menutup dropdown jika klik di luar area profil
         window.onclick = function(event) {
             if (!event.target.matches('.profile-logo')) {
                 const dropdowns = document.getElementsByClassName("dropdown-menu");
