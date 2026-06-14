@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eraport</title>
+    <title>Eraport - Admin System</title>
     <style>
         * {
             box-sizing: border-box;
@@ -14,6 +14,7 @@
         body {
             background-color: #f4f4f4;
         }
+        /* Container Form (Login & Register) */
         .auth-page {
             display: none;
             justify-content: center;
@@ -59,6 +60,7 @@
         .btn-submit:hover {
             background-color: #0056b3;
         }
+        /* Halaman Dashboard Admin */
         #dashboard-page {
             display: none;
             height: 100vh;
@@ -74,22 +76,9 @@
             border-bottom: 1px solid #e0e0e0;
             position: relative;
         }
-        .nav-left {
-            display: flex;
-            align-items: center;
-        }
-        .btn-menu {
-            padding: 8px 16px;
-            background-color: #e2e8f0;
+        .nav-left h2 {
+            font-size: 18px;
             color: #333;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        .btn-menu:hover {
-            background-color: #cbd5e1;
         }
         .nav-right {
             display: flex;
@@ -133,36 +122,23 @@
             display: block !important;
         }
         .dashboard-content {
-            padding: 20px;
-            max-width: 1200px;
+            padding: 40px 20px;
+            max-width: 800px;
             margin: 0 auto;
+            text-align: center;
         }
-        .dashboard-content h3 {
-            margin-bottom: 20px;
-            color: #333;
-        }
-        .image-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        .image-card {
+        .welcome-card {
             background: white;
+            padding: 40px;
             border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .image-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            display: block;
+        .welcome-card h3 {
+            color: #333;
+            margin-bottom: 10px;
         }
-        .image-info {
-            padding: 10px;
-            font-size: 12px;
+        .welcome-card p {
             color: #666;
-            border-top: 1px solid #eee;
         }
     </style>
 </head>
@@ -201,7 +177,7 @@
     <div id="dashboard-page">
         <nav class="navbar">
             <div class="nav-left">
-                <a href="uploadgambar.html" class="btn-menu">Upload Gambar</a>
+                <h2>Panel Utama Administrator</h2>
             </div>
             <div class="nav-right">
                 <div class="profile-logo" onclick="toggleDropdown()">A</div>
@@ -211,15 +187,17 @@
             </div>
         </nav>
         <div class="dashboard-content">
-            <h3>Daftar Gambar Terupload</h3>
-            <div class="image-grid" id="imageGallery"></div>
+            <div class="welcome-card">
+                <h3>Selamat Datang di Sistem Eraport</h3>
+                <p>Autentikasi administrator berhasil. Anda dapat melanjutkan manajemen data administrasi sekolah.</p>
+            </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, limit, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, limit, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCBXA1Atpm8LpDSdAr02OEvuADP2bUT9Gk",
@@ -321,40 +299,6 @@
             }
         }
 
-        async function loadImages() {
-            const gallery = document.getElementById('imageGallery');
-            gallery.innerHTML = '';
-            
-            try {
-                const imagesRef = collection(db, "uploaded_images");
-                const q = query(imagesRef, orderBy("createdAt", "desc"));
-                const querySnapshot = await getDocs(q);
-
-                if (!querySnapshot.empty) {
-                    querySnapshot.forEach((doc) => {
-                        const img = doc.data();
-                        if (img && img.imageUrl) {
-                            const card = document.createElement('div');
-                            card.className = 'image-card';
-                            card.innerHTML = `
-                                <img src="${img.imageUrl}" alt="${img.fileName || 'Image'}">
-                                <div class="image-info">
-                                    <strong>File:</strong> ${img.fileName || 'No Name'}<br>
-                                    <strong>By:</strong> ${img.uploadedBy || 'Unknown'}
-                                </div>
-                            `;
-                            gallery.appendChild(card);
-                        }
-                    });
-                } else {
-                    gallery.innerHTML = '<p style="color: #999;">Belum ada gambar yang diupload.</p>';
-                }
-            } catch (error) {
-                console.error("Gagal memuat daftar gambar:", error);
-                gallery.innerHTML = '<p style="color: red;">Gagal memuat gambar.</p>';
-            }
-        }
-
         window.handleLogout = function() {
             localStorage.removeItem('isLoggedIn');
             localStorage.removeItem('username');
@@ -384,7 +328,6 @@
             document.getElementById('dashboard-page').style.display = 'block';
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
-            loadImages();
         }
 
         window.onclick = function(event) {
