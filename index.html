@@ -60,12 +60,15 @@
         .btn-submit:hover {
             background-color: #0056b3;
         }
+        
         /* Halaman Dashboard Admin */
         #dashboard-page {
             display: none;
             height: 100vh;
             overflow-y: auto;
         }
+        
+        /* Navbar Utama & Menu Atas */
         .navbar {
             background-color: #ffffff;
             height: 60px;
@@ -74,15 +77,60 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #e0e0e0;
-            position: relative;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
-        .nav-left h2 {
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            flex: 1;
+        }
+        .logo-brand {
             font-size: 18px;
-            color: #333;
+            font-weight: bold;
+            color: #007bff;
+            white-space: nowrap;
         }
+        
+        /* Navigasi Menu Horizontal */
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 5px;
+            overflow-x: auto;
+            scrollbar-width: none; /* Sembunyikan scrollbar di Firefox */
+        }
+        .nav-menu::-webkit-scrollbar {
+            display: none; /* Sembunyikan scrollbar di Chrome/Safari */
+        }
+        .nav-item {
+            padding: 8px 14px;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+        .nav-item:hover {
+            background-color: #f1f5f9;
+            color: #007bff;
+        }
+        .nav-item.active {
+            background-color: #e0f2fe;
+            color: #0369a1;
+            font-weight: bold;
+        }
+        
+        /* Sisi Kanan Navbar (Profile) */
         .nav-right {
             display: flex;
             align-items: center;
+            padding-left: 15px;
         }
         .profile-logo {
             width: 40px;
@@ -121,24 +169,28 @@
         .show {
             display: block !important;
         }
+        
+        /* Area Konten Utama */
         .dashboard-content {
-            padding: 40px 20px;
-            max-width: 800px;
+            padding: 30px 20px;
+            max-width: 1200px;
             margin: 0 auto;
-            text-align: center;
         }
-        .welcome-card {
+        .content-card {
             background: white;
-            padding: 40px;
+            padding: 30px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            min-height: 200px;
         }
-        .welcome-card h3 {
+        .content-card h3 {
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            font-size: 20px;
         }
-        .welcome-card p {
+        .content-card p {
             color: #666;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -177,7 +229,17 @@
     <div id="dashboard-page">
         <nav class="navbar">
             <div class="nav-left">
-                <h2>Panel Utama Administrator</h2>
+                <div class="logo-brand">Eraport Admin</div>
+                <div class="nav-menu">
+                    <div class="nav-item active" onclick="switchMenu('beranda', this)">Beranda</div>
+                    <div class="nav-item" onclick="switchMenu('profil-sekolah', this)">Profil Sekolah</div>
+                    <div class="nav-item" onclick="switchMenu('tahun-pelajaran', this)">Tahun Pelajaran</div>
+                    <div class="nav-item" onclick="switchMenu('guru', this)">Guru</div>
+                    <div class="nav-item" onclick="switchMenu('murid', this)">Murid</div>
+                    <div class="nav-item" onclick="switchMenu('kurikulum', this)">Kurikulum</div>
+                    <div class="nav-item" onclick="switchMenu('mata-pelajaran', this)">Mata Pelajaran</div>
+                    <div class="nav-item" onclick="switchMenu('kelas', this)">Kelas</div>
+                </div>
             </div>
             <div class="nav-right">
                 <div class="profile-logo" onclick="toggleDropdown()">A</div>
@@ -186,10 +248,11 @@
                 </div>
             </div>
         </nav>
+        
         <div class="dashboard-content">
-            <div class="welcome-card">
+            <div class="content-card" id="mainContentArea">
                 <h3>Selamat Datang di Sistem Eraport</h3>
-                <p>Autentikasi administrator berhasil. Anda dapat melanjutkan manajemen data administrasi sekolah.</p>
+                <p>Silakan pilih menu di bagian atas untuk mulai mengelola manajemen administrasi sekolah.</p>
             </div>
         </div>
     </div>
@@ -235,6 +298,48 @@
                 showLogin();
             }
         });
+
+        // Logika Perpindahan Menu Konten Dinamis
+        window.switchMenu = function(menuName, element) {
+            // Hapus status 'active' dari semua tombol menu
+            const items = document.querySelectorAll('.nav-item');
+            items.forEach(item => item.classList.remove('active'));
+            
+            // Tambahkan status 'active' ke menu yang diklik
+            element.classList.add('active');
+            
+            const contentArea = document.getElementById('mainContentArea');
+            
+            // Mengubah teks judul dan deskripsi sementara sesuai menu yang diklik
+            switch(menuName) {
+                case 'beranda':
+                    contentArea.innerHTML = `<h3>Beranda</h3><p>Ini adalah halaman utama dashboard Panel Administrator Eraport.</p>`;
+                    break;
+                case 'profil-sekolah':
+                    contentArea.innerHTML = `<h3>Profil Sekolah</h3><p>Halaman kelola identitas sekolah, NPSN, alamat, dan akreditasi lembaga.</p>`;
+                    break;
+                case 'tahun-pelajaran':
+                    contentArea.innerHTML = `<h3>Tahun Pelajaran</h3><p>Pengaturan tahun ajaran aktif dan semester (Ganjil / Genap).</p>`;
+                    break;
+                case 'guru':
+                    contentArea.innerHTML = `<h3>Data Guru</h3><p>Manajemen data pendidik, NIP, PTK, dan akun akses wali kelas.</p>`;
+                    break;
+                case 'murid':
+                    contentArea.innerHTML = `<h3>Data Murid</h3><p>Manajemen data induk siswa, NISN, status aktif, dan mutasi kelas.</p>`;
+                    break;
+                case 'kurikulum':
+                    contentArea.innerHTML = `<h3>Kurikulum</h3><p>Pengaturan jenis kurikulum yang digunakan (seperti Kurikulum Merdeka atau K-13).</p>`;
+                    break;
+                case 'mata-pelajaran':
+                    contentArea.innerHTML = `<h3>Mata Pelajaran</h3><p>Kelola daftar muatan mata pelajaran, kelompok mapel, dan KKM/KKTP.</p>`;
+                    break;
+                case 'kelas':
+                    contentArea.innerHTML = `<h3>Data Kelas</h3><p>Manajemen pembagian rombongan belajar (rombel) dan penentuan wali kelas.</p>`;
+                    break;
+                default:
+                    contentArea.innerHTML = `<h3>Dashboard</h3><p>Silakan pilih menu di atas.</p>`;
+            }
+        }
 
         window.handleRegisterKeyPress = function(event) {
             if (event.key === 'Enter') handleRegister();
@@ -328,6 +433,10 @@
             document.getElementById('dashboard-page').style.display = 'block';
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
+            
+            // Set default view ke beranda saat login berhasil
+            const berandaItem = document.querySelector('.nav-item');
+            if(berandaItem) switchMenu('beranda', berandaItem);
         }
 
         window.onclick = function(event) {
