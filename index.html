@@ -16,7 +16,7 @@
             color: #333;
         }
         
-        /* Container Form (Login & Register) - Fleksibel Mobile */
+        /* Container Form (Login & Register) */
         .auth-page {
             display: none;
             justify-content: center;
@@ -77,11 +77,11 @@
             flex-direction: column;
         }
         
-        /* Navbar Utama Responsif */
+        /* Navbar Utama */
         .navbar {
             background-color: #ffffff;
-            min-height: 60px;
-            padding: 10px 20px;
+            height: 60px;
+            padding: 0 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -89,15 +89,21 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            flex-wrap: wrap; /* Izinkan menu turun ke bawah jika layar sangat sempit */
-            gap: 10px;
         }
+        
+        /* Header Top (Brand + Profile) */
+        .nav-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: auto;
+        }
+        
         .nav-left {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 25px;
             flex: 1;
-            flex-wrap: wrap;
         }
         .logo-brand {
             font-size: 18px;
@@ -106,18 +112,17 @@
             white-space: nowrap;
         }
         
-        /* Navigasi Menu Horizontal dengan horizontal scroll otomatis pada mobile */
+        /* Navigasi Menu Horizontal */
         .nav-menu {
             display: flex;
             list-style: none;
             gap: 5px;
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch; /* Scroll halus di iOS */
-            scrollbar-width: none; /* Sembunyikan scrollbar Firefox */
-            max-width: 100%;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
         }
         .nav-menu::-webkit-scrollbar {
-            display: none; /* Sembunyikan scrollbar Chrome/Safari */
+            display: none;
         }
         .nav-item {
             padding: 8px 14px;
@@ -147,8 +152,8 @@
             position: relative;
         }
         .profile-logo {
-            width: 40px;
-            height: 40px;
+            width: 32px; /* Dikecilkan sedikit agar serasi dengan teks brand */
+            height: 32px;
             background-color: #6c757d;
             border-radius: 50%;
             cursor: pointer;
@@ -157,11 +162,12 @@
             align-items: center;
             color: white;
             font-weight: bold;
+            font-size: 14px;
         }
         .dropdown-menu {
             display: none;
             position: absolute;
-            top: 50px;
+            top: 42px;
             right: 0;
             background-color: white;
             border: 1px solid #ccc;
@@ -186,7 +192,7 @@
             display: block !important;
         }
         
-        /* Area Konten Utama Responsif */
+        /* Area Konten Utama */
         .dashboard-content {
             padding: 20px;
             width: 100%;
@@ -212,31 +218,56 @@
             font-size: 15px;
         }
 
-        /* --- MEDIA QUERIES (LOGIKA RESPONSIVE UKURAN LAYAR) --- */
-        
-        /* Pengaturan Khusus Layar Tablet & HP (Lebar di bawah 768px) */
+        /* --- MEDIA QUERIES MOBILE OPTIMIZATION --- */
         @media (max-width: 768px) {
             .navbar {
                 padding: 10px 15px;
-            }
-            .nav-left {
+                height: auto; /* Mengikuti tinggi konten tumpukan */
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
+                align-items: stretch;
+                gap: 8px;
+            }
+            
+            /* Baris Pertama Mobile: Menjaga "Eraport Admin" & Logo Akun sejajar di paling atas */
+            .nav-header-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
                 width: 100%;
             }
+            
+            .nav-left {
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
             .logo-brand {
                 font-size: 16px;
             }
-            /* Menjadikan baris menu bisa di-swipe kanan-kiri di layar HP */
+            
+            /* Menyesuaikan ukuran tombol logo profil agar pas dengan teks brand mobile */
+            .profile-logo {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+            
+            .dropdown-menu {
+                top: 35px;
+            }
+            
+            /* Baris Kedua Mobile: Menu slide horizontal berada tepat di bawahnya */
             .nav-menu {
                 width: 100%;
-                padding-bottom: 5px;
+                padding-bottom: 4px;
             }
             .nav-item {
                 padding: 6px 12px;
                 font-size: 13px;
             }
+            
             .dashboard-content {
                 padding: 15px;
             }
@@ -251,7 +282,6 @@
             }
         }
 
-        /* Pengaturan Tambahan untuk Layar HP Sangat Kecil (Lebar di bawah 480px) */
         @media (max-width: 480px) {
             .auth-container {
                 padding: 20px 15px;
@@ -296,8 +326,11 @@
 
     <div id="dashboard-page">
         <nav class="navbar">
-            <div class="nav-left">
+            <div class="nav-header-top">
                 <div class="logo-brand">Eraport Admin</div>
+            </div>
+            
+            <div class="nav-left">
                 <div class="nav-menu">
                     <div class="nav-item active" onclick="switchMenu('beranda', this)">Beranda</div>
                     <div class="nav-item" onclick="switchMenu('profil-sekolah', this)">Profil Sekolah</div>
@@ -309,6 +342,7 @@
                     <div class="nav-item" onclick="switchMenu('kelas', this)">Kelas</div>
                 </div>
             </div>
+            
             <div class="nav-right">
                 <div class="profile-logo" onclick="toggleDropdown()">A</div>
                 <div class="dropdown-menu" id="profileDropdown">
@@ -346,6 +380,11 @@
 
         window.addEventListener('DOMContentLoaded', async () => {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
+            
+            // Penanganan posisi elemen khusus layout mobile secara dinamis saat dimuat
+            adjustMobileLayout();
+            window.addEventListener('resize', adjustMobileLayout);
+
             if (isLoggedIn === 'true') {
                 showDashboard();
                 return;
@@ -366,6 +405,23 @@
                 showLogin();
             }
         });
+
+        // Fungsi manipulasi DOM demi memindahkan tombol profil ke baris paling atas saat mode HP aktif
+        function adjustMobileLayout() {
+            const headerTop = document.querySelector('.nav-header-top');
+            const navRight = document.querySelector('.nav-right');
+            const navbar = document.querySelector('.navbar');
+            
+            if (window.innerWidth <= 768) {
+                if (headerTop && navRight && navRight.parentElement === navbar) {
+                    headerTop.appendChild(navRight);
+                }
+            } else {
+                if (navbar && navRight && navRight.parentElement === headerTop) {
+                    navbar.appendChild(navRight);
+                }
+            }
+        }
 
         window.switchMenu = function(menuName, element) {
             const items = document.querySelectorAll('.nav-item');
