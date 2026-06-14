@@ -13,13 +13,16 @@
         }
         body {
             background-color: #f4f4f4;
+            color: #333;
         }
-        /* Container Form (Login & Register) */
+        
+        /* Container Form (Login & Register) - Fleksibel Mobile */
         .auth-page {
             display: none;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            padding: 20px;
         }
         .auth-container {
             background: white;
@@ -33,6 +36,7 @@
             margin-bottom: 20px;
             text-align: center;
             color: #333;
+            font-size: 24px;
         }
         .form-group {
             margin-bottom: 15px;
@@ -40,22 +44,25 @@
         .form-group label {
             display: block;
             margin-bottom: 5px;
+            font-size: 14px;
         }
         .form-group input {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            font-size: 14px;
         }
         .btn-submit {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
+            font-weight: bold;
         }
         .btn-submit:hover {
             background-color: #0056b3;
@@ -66,13 +73,15 @@
             display: none;
             height: 100vh;
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
         
-        /* Navbar Utama & Menu Atas */
+        /* Navbar Utama Responsif */
         .navbar {
             background-color: #ffffff;
-            height: 60px;
-            padding: 0 20px;
+            min-height: 60px;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -80,12 +89,15 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            flex-wrap: wrap; /* Izinkan menu turun ke bawah jika layar sangat sempit */
+            gap: 10px;
         }
         .nav-left {
             display: flex;
             align-items: center;
-            gap: 25px;
+            gap: 20px;
             flex: 1;
+            flex-wrap: wrap;
         }
         .logo-brand {
             font-size: 18px;
@@ -94,16 +106,18 @@
             white-space: nowrap;
         }
         
-        /* Navigasi Menu Horizontal */
+        /* Navigasi Menu Horizontal dengan horizontal scroll otomatis pada mobile */
         .nav-menu {
             display: flex;
             list-style: none;
             gap: 5px;
             overflow-x: auto;
-            scrollbar-width: none; /* Sembunyikan scrollbar di Firefox */
+            -webkit-overflow-scrolling: touch; /* Scroll halus di iOS */
+            scrollbar-width: none; /* Sembunyikan scrollbar Firefox */
+            max-width: 100%;
         }
         .nav-menu::-webkit-scrollbar {
-            display: none; /* Sembunyikan scrollbar di Chrome/Safari */
+            display: none; /* Sembunyikan scrollbar Chrome/Safari */
         }
         .nav-item {
             padding: 8px 14px;
@@ -130,7 +144,7 @@
         .nav-right {
             display: flex;
             align-items: center;
-            padding-left: 15px;
+            position: relative;
         }
         .profile-logo {
             width: 40px;
@@ -147,13 +161,14 @@
         .dropdown-menu {
             display: none;
             position: absolute;
-            top: 55px;
-            right: 20px;
+            top: 50px;
+            right: 0;
             background-color: white;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 1000;
+            z-index: 1001;
+            min-width: 120px;
         }
         .dropdown-menu button {
             background: none;
@@ -162,6 +177,7 @@
             width: 100%;
             text-align: left;
             cursor: pointer;
+            font-size: 14px;
         }
         .dropdown-menu button:hover {
             background-color: #f8f9fa;
@@ -170,27 +186,79 @@
             display: block !important;
         }
         
-        /* Area Konten Utama */
+        /* Area Konten Utama Responsif */
         .dashboard-content {
-            padding: 30px 20px;
+            padding: 20px;
+            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
+            flex: 1;
         }
         .content-card {
             background: white;
-            padding: 30px;
+            padding: 25px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            min-height: 200px;
+            min-height: 250px;
         }
         .content-card h3 {
             color: #333;
             margin-bottom: 12px;
-            font-size: 20px;
+            font-size: 22px;
         }
         .content-card p {
             color: #666;
-            line-height: 1.5;
+            line-height: 1.6;
+            font-size: 15px;
+        }
+
+        /* --- MEDIA QUERIES (LOGIKA RESPONSIVE UKURAN LAYAR) --- */
+        
+        /* Pengaturan Khusus Layar Tablet & HP (Lebar di bawah 768px) */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 10px 15px;
+            }
+            .nav-left {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+                width: 100%;
+            }
+            .logo-brand {
+                font-size: 16px;
+            }
+            /* Menjadikan baris menu bisa di-swipe kanan-kiri di layar HP */
+            .nav-menu {
+                width: 100%;
+                padding-bottom: 5px;
+            }
+            .nav-item {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            .dashboard-content {
+                padding: 15px;
+            }
+            .content-card {
+                padding: 20px;
+            }
+            .content-card h3 {
+                font-size: 18px;
+            }
+            .content-card p {
+                font-size: 14px;
+            }
+        }
+
+        /* Pengaturan Tambahan untuk Layar HP Sangat Kecil (Lebar di bawah 480px) */
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 20px 15px;
+            }
+            .auth-container h2 {
+                font-size: 20px;
+            }
         }
     </style>
 </head>
@@ -299,18 +367,13 @@
             }
         });
 
-        // Logika Perpindahan Menu Konten Dinamis
         window.switchMenu = function(menuName, element) {
-            // Hapus status 'active' dari semua tombol menu
             const items = document.querySelectorAll('.nav-item');
             items.forEach(item => item.classList.remove('active'));
-            
-            // Tambahkan status 'active' ke menu yang diklik
             element.classList.add('active');
             
             const contentArea = document.getElementById('mainContentArea');
             
-            // Mengubah teks judul dan deskripsi sementara sesuai menu yang diklik
             switch(menuName) {
                 case 'beranda':
                     contentArea.innerHTML = `<h3>Beranda</h3><p>Ini adalah halaman utama dashboard Panel Administrator Eraport.</p>`;
@@ -434,7 +497,6 @@
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
             
-            // Set default view ke beranda saat login berhasil
             const berandaItem = document.querySelector('.nav-item');
             if(berandaItem) switchMenu('beranda', berandaItem);
         }
