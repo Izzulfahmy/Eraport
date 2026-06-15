@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eraport - Admin System</title>
+    <link rel="icon" type="image/png" href="https://izzulfahmy.github.io/Eraport/logoerapor.png">
     <style>
         * {
             box-sizing: border-box;
@@ -112,7 +113,7 @@
             white-space: nowrap;
         }
         
-        /* Navigasi Menu Horizontal */
+        /* Navigasi Menu Horizontal - Statis Tanpa Animasi */
         .nav-menu {
             display: flex;
             list-style: none;
@@ -144,7 +145,7 @@
             font-weight: bold;
         }
         
-        /* Profile Menu Dropdown */
+        /* Sisi Kanan Navbar (Profile) */
         .nav-right {
             display: flex;
             align-items: center;
@@ -217,6 +218,7 @@
             font-size: 15px;
         }
 
+        /* --- MEDIA QUERIES MOBILE OPTIMIZATION --- */
         @media (max-width: 768px) {
             .navbar {
                 padding: 10px 15px;
@@ -225,27 +227,56 @@
                 align-items: stretch;
                 gap: 8px;
             }
+            
             .nav-header-top {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 width: 100%;
             }
+            
             .nav-left {
                 width: 100%;
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 8px;
             }
-            .logo-brand { font-size: 16px; }
-            .profile-logo { width: 28px; height: 28px; font-size: 12px; }
-            .dropdown-menu { top: 35px; }
-            .nav-menu { width: 100%; padding-bottom: 4px; }
-            .nav-item { padding: 6px 12px; font-size: 13px; }
-            .dashboard-content { padding: 15px; }
-            .content-card { padding: 20px; }
-            .content-card h3 { font-size: 18px; }
-            .content-card p { font-size: 14px; }
+            
+            .logo-brand {
+                font-size: 16px;
+            }
+            
+            .profile-logo {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+            
+            .dropdown-menu {
+                top: 35px;
+            }
+            
+            .nav-menu {
+                width: 100%;
+                padding-bottom: 4px;
+            }
+            .nav-item {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+            
+            .dashboard-content {
+                padding: 15px;
+            }
+            .content-card {
+                padding: 20px;
+            }
+            .content-card h3 {
+                font-size: 18px;
+            }
+            .content-card p {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -554,7 +585,6 @@
                         const tbody = document.getElementById('tbodyTP'); if(!tbody) return;
                         tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#999;">Mengambil data...</td></tr>';
                         try {
-                            // Target tabel berubah menjadi: tahunpelajaran
                             const snap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("createdAt", "desc")));
                             tbody.innerHTML = ''; let idx = 1;
                             if(snap.empty) {
@@ -595,7 +625,6 @@
                             const statusBaru = isChecked ? 'Aktif' : 'Tidak Aktif';
                             
                             if (isChecked) {
-                                // Target tabel berubah menjadi: tahunpelajaran
                                 const snap = await getDocs(collection(db, "tahunpelajaran"));
                                 for (const d of snap.docs) {
                                     if (d.id !== id && d.data().status_aktif === 'Aktif') {
@@ -638,7 +667,6 @@
 
                         try {
                             if (statusChecked) {
-                                // Target tabel berubah menjadi: tahunpelajaran
                                 const snap = await getDocs(collection(db, "tahunpelajaran"));
                                 for (const d of snap.docs) {
                                     if (d.id !== targetId && d.data().status_aktif === 'Aktif') {
