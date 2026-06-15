@@ -1,190 +1,324 @@
-<style>
-    .profile-container {
-        display: flex;
-        flex-direction: column;
-        gap: 30px;
-        position: relative;
-    }
-    .action-header {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        position: absolute;
-        top: -10px;
-        right: 0;
-        z-index: 10;
-    }
-    /* Desain Tombol Ikon Bundar Minimalis */
-    .btn-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        transition: transform 0.1s;
-    }
-    .btn-icon:active { transform: scale(0.95); }
-    
-    .btn-edit-mode { background-color: #ffc107; color: #333; }
-    .btn-edit-mode:hover { background-color: #e0a800; }
-    
-    .btn-save-mode { background-color: #28a745; color: white; }
-    .btn-save-mode:hover { background-color: #218838; }
-    
-    .btn-cancel-mode { background-color: #dc3545; color: white; }
-    .btn-cancel-mode:hover { background-color: #c82333; }
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Sekolah</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
 
-    .section-title {
-        font-size: 16px;
-        color: #007bff;
-        border-bottom: 2px solid #e0e0e0;
-        padding-bottom: 8px;
-        margin-bottom: 15px;
-        font-weight: bold;
-    }
-    
-    /* Layout Grid */
-    .info-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        gap: 15px 20px;
-    }
-    
-    /* TAMPILAN MODE BACA (IDENTITAS STATIS) */
-    .read-field {
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        border-bottom: 1px solid #f4f4f4;
-        padding-bottom: 8px;
-    }
-    .read-field .label {
-        font-size: 12px;
-        font-weight: 600;
-        color: #777;
-    }
-    .read-field .value {
-        font-size: 14px;
-        color: #333;
-        font-weight: 500;
-        word-break: break-word;
-        padding: 4px 0;
-    }
-    
-    /* TAMPILAN MODE EDIT (KOTAK BOX FORM CARD) */
-    .form-box-mode {
-        background-color: #ffffff;
-        padding: 25px;
-        border-radius: 8px;
-        border: 1px solid #e0e0e0;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-    }
-    .form-field {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-    }
-    .form-field label {
-        font-size: 13px;
-        font-weight: 600;
-        color: #444;
-    }
-    .form-field input, .form-field select {
-        padding: 10px 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 14px;
-        color: #333;
-        background-color: #fff;
-        width: 100%;
-        box-sizing: border-box;
-    }
-    .form-field input:focus, .form-field select:focus {
-        border-color: #007bff;
-        outline: none;
-        box-shadow: 0 0 0 3px rgba(0,123,255,0.15);
-    }
-    
-    @media (max-width: 768px) {
-        .info-grid { grid-template-columns: 1fr; }
-        .action-header { position: static; justify-content: flex-end; margin-bottom: 15px; }
-    }
-</style>
+        .profile-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 24px;
+            box-sizing: border-box;
+        }
+
+        /* Header Utama dengan Tombol Aksi */
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 16px;
+            margin-bottom: 24px;
+        }
+
+        .main-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        /* Desain Tombol Ikon Bundar Minimalis - Tanpa Animasi */
+        .btn-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f1f5f9;
+            color: #475569;
+        }
+        
+        .btn-edit-mode { background-color: #fef08a; color: #854d0e; border-color: #fef08a; }
+        .btn-edit-mode:hover { background-color: #fde047; }
+        
+        .btn-save-mode { background-color: #bbf7d0; color: #166534; border-color: #bbf7d0; }
+        .btn-save-mode:hover { background-color: #86efac; }
+        
+        .btn-cancel-mode { background-color: #fee2e2; color: #991b1b; border-color: #fee2e2; }
+        .btn-cancel-mode:hover { background-color: #fca5a5; }
+
+        /* Komponen Section */
+        .section-box {
+            margin-bottom: 30px;
+        }
+        
+        .section-box:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 15px;
+            color: #2563eb;
+            background-color: #eff6ff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+        
+        /* Layout Grid Konsisten */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        
+        /* TAMPILAN MODE BACA */
+        .read-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            background-color: #f8fafc;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid #f1f5f9;
+        }
+        .read-field .label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .read-field .value {
+            font-size: 14px;
+            color: #1e293b;
+            font-weight: 500;
+            word-break: break-word;
+        }
+        
+        /* TAMPILAN MODE EDIT */
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-field label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+        }
+        .form-field input, .form-field select {
+            padding: 9px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #1e293b;
+            background-color: #fff;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .form-field input:focus, .form-field select:focus {
+            border-color: #2563eb;
+            outline: none;
+        }
+        
+        /* Responsive Breakpoints */
+        @media (max-width: 900px) {
+            .info-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .main-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+            .action-buttons { width: 100%; justify-content: flex-end; }
+            .info-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
 
 <div class="profile-container">
-    <div class="action-header">
-        <button type="button" id="btnKeModeEdit" class="btn-icon btn-edit-mode" onclick="aktifkanModeEdit()" title="Edit Profil">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
-        </button>
-        <button type="button" id="btnBatalEdit" class="btn-icon btn-cancel-mode" style="display: none;" onclick="batalkanModeEdit()" title="Batal">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
-        <button type="submit" form="formProfilSekolah" id="btnSimpanProfil" class="btn-icon btn-save-mode" style="display: none;" title="Simpan Perubahan">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        </button>
+    <div class="main-header">
+        <h2 class="main-title">Profil Satuan Pendidikan</h2>
+        <div class="action-buttons">
+            <button type="button" id="btnKeModeEdit" class="btn-icon btn-edit-mode" onclick="aktifkanModeEdit()" title="Edit Profil">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            </button>
+            <button type="button" id="btnBatalEdit" class="btn-icon btn-cancel-mode" style="display: none;" onclick="batalkanModeEdit()" title="Batal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            <button type="submit" form="formProfilSekolah" id="btnSimpanProfil" class="btn-icon btn-save-mode" style="display: none;" title="Simpan Perubahan">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </button>
+        </div>
     </div>
 
     <div id="wrapperModeBaca">
-        <div class="section-title">1. Data Administrasi dan Legalitas</div>
-        <div class="info-grid" id="gridModeBaca1"></div>
+        <div class="section-box">
+            <div class="section-title">1. Data Administrasi dan Legalitas</div>
+            <div class="info-grid" id="gridModeBaca1"></div>
+        </div>
 
-        <div class="section-title" style="margin-top: 25px;">2. Data Lokasi dan Geografis</div>
-        <div class="info-grid" id="gridModeBaca2"></div>
+        <div class="section-box">
+            <div class="section-title">2. Data Lokasi dan Geografis</div>
+            <div class="info-grid" id="gridModeBaca2"></div>
+        </div>
 
-        <div class="section-title" style="margin-top: 25px;">3. Data Kontak dan Media Resmi</div>
-        <div class="info-grid" id="gridModeBaca3"></div>
+        <div class="section-box">
+            <div class="section-title">3. Data Kontak dan Media Resmi</div>
+            <div class="info-grid" id="gridModeBaca3"></div>
+        </div>
     </div>
 
     <form id="formProfilSekolah" onsubmit="simpanProfilSekolah(event)" style="display: none;">
         
-        <div class="form-box-mode">
+        <div class="section-box">
             <div class="section-title">1. Data Administrasi dan Legalitas</div>
             <div class="info-grid">
-                <div class="form-field"><label>Nama Resmi Sekolah</label><input type="text" id="nama_sekolah" required></div>
-                <div class="form-field"><label>NPSN</label><input type="text" id="npsn" required></div>
-                <div class="form-field"><label>NSS / NDS</label><input type="text" id="nss_nds"></div>
-                <div class="form-field"><label>Status Sekolah</label><select id="status_sekolah"><option value="Negeri">Negeri</option><option value="Swasta">Swasta</option></select></div>
-                <div class="form-field"><label>Bentuk Satuan Pendidikan</label><input type="text" id="jenjang"></div>
-                <div class="form-field"><label>Status Kepemilikan</label><select id="status_kepemilikan"><option value="Pemerintah">Pemerintah</option><option value="Yayasan">Yayasan</option><option value="Pribadi">Pribadi</option></select></div>
-                <div class="form-field"><label>Nama Pemilik / Yayasan</label><input type="text" id="nama_pemilik"></div>
-                <div class="form-field"><label>SK Pendirian Sekolah</label><input type="text" id="sk_pendirian"></div>
-                <div class="form-field"><label>SK Izin Operasional</label><input type="text" id="sk_operasional"></div>
-                <div class="form-field"><label>Tanggal Berdiri / SK Operasional</label><input type="date" id="tgl_berdiri"></div>
-                <div class="form-field"><label>Status Akreditasi</label><input type="text" id="status_akreditasi"></div>
-                <div class="form-field"><label>Nomor Pokok Wajib Pajak (NPWP)</label><input type="text" id="npwp_sekolah"></div>
+                <div class="form-field"><label>Nama Resmi Sekolah</label><input type="text" id="nama_sekolah" value="SD Negeri Exemplar" required></div>
+                <div class="form-field"><label>NPSN</label><input type="text" id="npsn" value="10203040" required></div>
+                <div class="form-field"><label>NSS / NDS</label><input type="text" id="nss_nds" value="101110203040"></div>
+                <div class="form-field"><label>Status Sekolah</label><select id="status_sekolah"><option value="Negeri" selected>Negeri</option><option value="Swasta">Swasta</option></select></div>
+                <div class="form-field"><label>Bentuk Satuan Pendidikan</label><input type="text" id="jenjang" value="SD"></div>
+                <div class="form-field"><label>Status Kepemilikan</label><select id="status_kepemilikan"><option value="Pemerintah" selected>Pemerintah</option><option value="Yayasan">Yayasan</option><option value="Pribadi">Pribadi</option></select></div>
+                <div class="form-field"><label>Nama Pemilik / Yayasan</label><input type="text" id="nama_pemilik" value="Pemerintah Daerah"></div>
+                <div class="form-field"><label>SK Pendirian Sekolah</label><input type="text" id="sk_pendirian" value="821/234/2005"></div>
+                <div class="form-field"><label>SK Izin Operasional</label><input type="text" id="sk_operasional" value="421.2/123/436.7.1/2006"></div>
+                <div class="form-field"><label>Tanggal Berdiri / Operasional</label><input type="date" id="tgl_berdiri" value="2005-08-17"></div>
+                <div class="form-field"><label>Status Akreditasi</label><input type="text" id="status_akreditasi" value="A (Unggul)"></div>
+                <div class="form-field"><label>Nomor Pokok Wajib Pajak (NPWP)</label><input type="text" id="npwp_sekolah" value="01.234.567.8-123.000"></div>
             </div>
         </div>
 
-        <div class="form-box-mode" style="margin-top: 25px;">
+        <div class="section-box">
             <div class="section-title">2. Data Lokasi dan Geografis</div>
             <div class="info-grid">
-                <div class="form-field"><label>Alamat Lengkap</label><input type="text" id="alamat_lengkap" required></div>
-                <div class="form-field"><label>Dusun / Kampung</label><input type="text" id="dusun"></div>
-                <div class="form-field"><label>Desa / Kelurahan</label><input type="text" id="desa" required></div>
-                <div class="form-field"><label>Kecamatan</label><input type="text" id="kecamatan" required></div>
-                <div class="form-field"><label>Kabupaten / Kota</label><input type="text" id="kabupaten" required></div>
-                <div class="form-field"><label>Provinsi</label><input type="text" id="provinsi" required></div>
-                <div class="form-field"><label>Kode Pos</label><input type="text" id="kode_pos"></div>
-                <div class="form-field"><label>Garis Lintang (Latitude)</label><input type="text" id="latitude"></div>
-                <div class="form-field"><label>Garis Bujur (Longitude)</label><input type="text" id="longitude"></div>
+                <div class="form-field"><label>Alamat Lengkap</label><input type="text" id="alamat_lengkap" value="Jl. Pendidikan No. 45" required></div>
+                <div class="form-field"><label>Dusun / Kampung</label><input type="text" id="dusun" value="Krajan"></div>
+                <div class="form-field"><label>Desa / Kelurahan</label><input type="text" id="desa" value="Kembang" required></div>
+                <div class="form-field"><label>Kecamatan</label><input type="text" id="kecamatan" value="Sukasari" required></div>
+                <div class="form-field"><label>Kabupaten / Kota</label><input type="text" id="kabupaten" value="Kota Maju" required></div>
+                <div class="form-field"><label>Provinsi</label><input type="text" id="provinsi" value="Jawa Timur" required></div>
+                <div class="form-field"><label>Kode Pos</label><input type="text" id="kode_pos" value="68123"></div>
+                <div class="form-field"><label>Garis Lintang (Latitude)</label><input type="text" id="latitude" value="-8.1724"></div>
+                <div class="form-field"><label>Garis Bujur (Longitude)</label><input type="text" id="longitude" value="113.7001"></div>
             </div>
         </div>
 
-        <div class="form-box-mode" style="margin-top: 25px;">
+        <div class="section-box">
             <div class="section-title">3. Data Kontak dan Media Resmi</div>
             <div class="info-grid">
-                <div class="form-field"><label>Nomor Telepon</label><input type="text" id="no_telp"></div>
-                <div class="form-field"><label>Nomor Faksimile (Fax)</label><input type="text" id="fax"></div>
-                <div class="form-field"><label>WhatsApp / Kontak Humas</label><input type="text" id="no_wa"></div>
-                <div class="form-field"><label>Alamat Email Resmi</label><input type="email" id="email_sekolah"></div>
-                <div class="form-field"><label>Situs Web Resmi (Website)</label><input type="url" id="website"></div>
-                <div class="form-field"><label>Media Sosial</label><input type="text" id="medsos"></div>
+                <div class="form-field"><label>Nomor Telepon</label><input type="text" id="no_telp" value="0331-123456"></div>
+                <div class="form-field"><label>Nomor Faksimile (Fax)</label><input type="text" id="fax" value="0331-123457"></div>
+                <div class="form-field"><label>WhatsApp / Kontak Humas</label><input type="text" id="no_wa" value="081234567890"></div>
+                <div class="form-field"><label>Alamat Email Resmi</label><input type="email" id="email_sekolah" value="admin@sdnexemplar.sch.id"></div>
+                <div class="form-field"><label>Situs Web Resmi (Website)</label><input type="url" id="website" value="https://www.sdnexemplar.sch.id"></div>
+                <div class="form-field"><label>Media Sosial</label><input type="text" id="medsos" value="@sdnexemplar"></div>
             </div>
         </div>
         
     </form>
 </div>
+
+<script>
+    // Jalankan render mode baca saat halaman pertama kali dibuka
+    document.addEventListener("DOMContentLoaded", function() {
+        renderModeBaca();
+    });
+
+    function renderModeBaca() {
+        const form = document.getElementById('formProfilSekolah');
+        
+        // Pemetaan ID input form ke Grid Bagian tertentu
+        const mapping = {
+            gridModeBaca1: ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah'],
+            gridModeBaca2: ['alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude'],
+            gridModeBaca3: ['no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos']
+        };
+
+        for (const [gridId, fields] of Object.entries(mapping)) {
+            const gridContainer = document.getElementById(gridId);
+            gridContainer.innerHTML = ''; // Kosongkan data lama
+
+            fields.forEach(fieldId => {
+                const inputElement = document.getElementById(fieldId);
+                if (inputElement) {
+                    const labelText = inputElement.closest('.form-field').querySelector('label').innerText;
+                    let valueText = inputElement.value || '-';
+
+                    // Buat element penampung data static
+                    const readField = document.createElement('div');
+                    readField.className = 'read-field';
+                    readField.innerHTML = `
+                        <div class="label">${labelText}</div>
+                        <div class="value">${valueText}</div>
+                    `;
+                    gridContainer.appendChild(readField);
+                }
+            });
+        }
+    }
+
+    function aktifkanModeEdit() {
+        document.getElementById('wrapperModeBaca').style.display = 'none';
+        document.getElementById('formProfilSekolah').style.display = 'block';
+        
+        document.getElementById('btnKeModeEdit').style.display = 'none';
+        document.getElementById('btnBatalEdit').style.display = 'flex';
+        document.getElementById('btnSimpanProfil').style.display = 'flex';
+    }
+
+    function batalkanModeEdit() {
+        document.getElementById('formProfilSekolah').style.display = 'none';
+        document.getElementById('wrapperModeBaca').style.display = 'block';
+        
+        document.getElementById('btnKeModeEdit').style.display = 'flex';
+        document.getElementById('btnBatalEdit').style.display = 'none';
+        document.getElementById('btnSimpanProfil').style.display = 'none';
+        
+        // Reset form ke data terakhir yang belum disimpan
+        document.getElementById('formProfilSekolah').reset();
+    }
+
+    function simpanProfilSekolah(event) {
+        event.preventDefault();
+        
+        // Sinkronisasi data form ke mode baca statis
+        renderModeBaca();
+
+        // Kembalikan ke mode baca
+        document.getElementById('formProfilSekolah').style.display = 'none';
+        document.getElementById('wrapperModeBaca').style.display = 'block';
+        
+        document.getElementById('btnKeModeEdit').style.display = 'flex';
+        document.getElementById('btnBatalEdit').style.display = 'none';
+        document.getElementById('btnSimpanProfil').style.display = 'none';
+
+        // Opsional: Integrasikan proses Ajax / Fetch API Anda di sini untuk simpan ke DB
+        alert('Data profil sekolah berhasil diperbarui!');
+    }
+</script>
+
+</body>
+</html>
