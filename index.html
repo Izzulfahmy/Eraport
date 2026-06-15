@@ -378,126 +378,67 @@
                         const docSnap = await getDoc(doc(db, "pengaturan", "profil_sekolah"));
                         const currentData = docSnap.exists() ? docSnap.data() : {};
 
-                        const fields = [
-                            'nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 
-                            'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 
-                            'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah', 'alamat_lengkap', 
-                            'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 
-                            'latitude', 'longitude', 'no_telp', 'fax', 'no_wa', 'email_sekolah', 
-                            'website', 'medsos'
-                        ];
-
-                        const labelMapping = {
-                            'nama_sekolah': 'Nama Resmi Sekolah', 'npsn': 'NPSN', 'nss_nds': 'NSS / NDS',
-                            'status_sekolah': 'Status Sekolah', 'jenjang': 'Bentuk Satuan Pendidikan',
-                            'status_kepemilikan': 'Status Kepemilikan', 'nama_pemilik': 'Nama Pemilik / Yayasan',
-                            'sk_pendirian': 'SK Pendirian Sekolah', 'sk_operasional': 'SK Izin Operasional',
-                            'tgl_berdiri': 'Tanggal Berdiri / SK Operasional', 'status_akreditasi': 'Status Akreditasi',
-                            'npwp_sekolah': 'Nomor Pokok Wajib Pajak (NPWP)', 'alamat_lengkap': 'Alamat Lengkap',
-                            'dusun': 'Dusun / Kampung', 'desa': 'Desa / Kelurahan', 'kecamatan': 'Kecamatan',
-                            'kabupaten': 'Kabupaten / Kota', 'provinsi': 'Provinsi', 'kode_pos': 'Kode Pos',
-                            'latitude': 'Garis Lintang (Latitude)', 'longitude': 'Garis Bujur (Longitude)',
-                            'no_telp': 'Nomor Telepon', 'fax': 'Nomor Faksimile (Fax)', 'no_wa': 'WhatsApp / Kontak Humas',
-                            'email_sekolah': 'Alamat Email Resmi', 'website': 'Situs Web Resmi', 'medsos': 'Media Sosial'
-                        };
+                        const fields = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah', 'alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude', 'no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
+                        const labelMapping = { 'nama_sekolah': 'Nama Resmi Sekolah', 'npsn': 'NPSN', 'nss_nds': 'NSS / NDS', 'status_sekolah': 'Status Sekolah', 'jenjang': 'Bentuk Satuan Pendidikan', 'status_kepemilikan': 'Status Kepemilikan', 'nama_pemilik': 'Nama Pemilik / Yayasan', 'sk_pendirian': 'SK Pendirian Sekolah', 'sk_operasional': 'SK Izin Operasional', 'tgl_berdiri': 'Tanggal Berdiri / SK Operasional', 'status_akreditasi': 'Status Akreditasi', 'npwp_sekolah': 'Nomor Pokok Wajib Pajak (NPWP)', 'alamat_lengkap': 'Alamat Lengkap', 'dusun': 'Dusun / Kampung', 'desa': 'Desa / Kelurahan', 'kecamatan': 'Kecamatan', 'kabupaten': 'Kabupaten / Kota', 'provinsi': 'Provinsi', 'kode_pos': 'Kode Pos', 'latitude': 'Garis Lintang (Latitude)', 'longitude': 'Garis Bujur (Longitude)', 'no_telp': 'Nomor Telepon', 'fax': 'Nomor Faksimile (Fax)', 'no_wa': 'WhatsApp / Kontak Humas', 'email_sekolah': 'Alamat Email Resmi', 'website': 'Situs Web Resmi', 'medsos': 'Media Sosial' };
 
                         const sec1 = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah'];
                         const sec2 = ['alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude'];
                         const sec3 = ['no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
 
                         const renderFieldsToGrid = (fieldList, gridId) => {
-                            const gridEl = document.getElementById(gridId);
-                            if(!gridEl) return;
+                            const gridEl = document.getElementById(gridId); if(!gridEl) return;
                             gridEl.innerHTML = '';
                             fieldList.forEach(key => {
                                 const valText = currentData[key] || '-';
-                                const inputEl = document.getElementById(key);
-                                if(inputEl) inputEl.value = currentData[key] || '';
-
-                                const fieldDiv = document.createElement('div');
-                                fieldDiv.className = 'read-field';
+                                const inputEl = document.getElementById(key); if(inputEl) inputEl.value = currentData[key] || '';
+                                const fieldDiv = document.createElement('div'); fieldDiv.className = 'read-field';
                                 fieldDiv.innerHTML = `<span class="label">${labelMapping[key]}</span><span class="value">${valText}</span>`;
                                 gridEl.appendChild(fieldDiv);
                             });
                         };
+                        renderFieldsToGrid(sec1, 'gridModeBaca1'); renderFieldsToGrid(sec2, 'gridModeBaca2'); renderFieldsToGrid(sec3, 'gridModeBaca3');
 
-                        renderFieldsToGrid(sec1, 'gridModeBaca1');
-                        renderFieldsToGrid(sec2, 'gridModeBaca2');
-                        renderFieldsToGrid(sec3, 'gridModeBaca3');
-
-                        // TRIGER SATU: MASUK KE MODE BOX FORM EDIT
                         window.aktifkanModeEdit = function() {
-                            document.getElementById('wrapperModeBaca').style.display = 'none';
-                            document.getElementById('btnKeModeEdit').style.display = 'none';
-                            
-                            document.getElementById('formProfilSekolah').style.display = 'block';
-                            document.getElementById('btnBatalEdit').style.display = 'flex';
-                            document.getElementById('btnSimpanProfil').style.display = 'flex';
+                            document.getElementById('wrapperModeBaca').style.display = 'none'; document.getElementById('btnKeModeEdit').style.display = 'none';
+                            document.getElementById('formProfilSekolah').style.display = 'block'; document.getElementById('btnBatalEdit').style.display = 'flex'; document.getElementById('btnSimpanProfil').style.display = 'flex';
                         };
-
-                        // TRIGER DUA: BATALKAN DAN KEMBALI KE DETAIL STATIS
                         window.batalkanModeEdit = function() {
-                            document.getElementById('formProfilSekolah').style.display = 'none';
-                            document.getElementById('btnBatalEdit').style.display = 'none';
-                            document.getElementById('btnSimpanProfil').style.display = 'none';
-                            
-                            document.getElementById('wrapperModeBaca').style.display = 'block';
-                            document.getElementById('btnKeModeEdit').style.display = 'flex';
+                            document.getElementById('formProfilSekolah').style.display = 'none'; document.getElementById('btnBatalEdit').style.display = 'none'; document.getElementById('btnSimpanProfil').style.display = 'none';
+                            document.getElementById('wrapperModeBaca').style.display = 'block'; document.getElementById('btnKeModeEdit').style.display = 'flex';
                         };
-
-                    } catch (err) {
-                        console.error(err);
-                        contentArea.innerHTML = `<p style="color: red;">Gagal memuat profil sekolah.</p>`;
-                    }
+                    } catch (err) { contentArea.innerHTML = `<p style="color: red;">Gagal memuat profil sekolah.</p>`; }
 
                     window.simpanProfilSekolah = async function(event) {
-                        event.preventDefault();
-                        const btn = document.getElementById('btnSimpanProfil');
-                        if(btn) btn.disabled = true;
-                        
+                        event.preventDefault(); const btn = document.getElementById('btnSimpanProfil'); if(btn) btn.disabled = true;
                         const fields = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah', 'alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude', 'no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
-                        const payload = {};
-                        fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
-                        
+                        const payload = {}; fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
                         try {
-                            await setDoc(doc(db, "pengaturan", "profil_sekolah"), payload);
-                            alert("Data Profil Sekolah berhasil diperbarui!");
+                            await setDoc(doc(db, "pengaturan", "profil_sekolah"), payload); alert("Data Profil Sekolah diperbarui!");
                             switchMenu('profil-sekolah', document.querySelector('[onclick*="profil-sekolah"]'));
-                        } catch { 
-                            alert("Gagal menyimpan."); 
-                            if(btn) btn.disabled = false;
-                        }
+                        } catch { alert("Gagal menyimpan."); if(btn) btn.disabled = false; }
                     };
                     break;
 
                 case 'guru':
                     contentArea.innerHTML = `<p style="color: #999;">Memuat Modul Pendidik...</p>`;
                     try {
-                        const res = await fetch('guru.html');
-                        contentArea.innerHTML = await res.text();
-                        loadDaftarGuru();
+                        const res = await fetch('guru.html'); contentArea.innerHTML = await res.text(); loadDaftarGuru();
                     } catch { contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul guru.</p>`; }
 
                     window.bukaFormGuru = function() {
-                        document.getElementById('viewTabelGuru').style.display = 'none';
-                        document.getElementById('viewFormGuru').style.display = 'block';
-                        document.getElementById('formGuru').reset();
-                        document.getElementById('guru_id_hidden').value = '';
+                        document.getElementById('viewTabelGuru').style.display = 'none'; document.getElementById('viewFormGuru').style.display = 'block';
+                        document.getElementById('formGuru').reset(); document.getElementById('guru_id_hidden').value = '';
                     };
                     window.kembaliKeTabelGuru = function() {
-                        document.getElementById('viewFormGuru').style.display = 'none';
-                        document.getElementById('viewTabelGuru').style.display = 'block';
-                        loadDaftarGuru();
+                        document.getElementById('viewFormGuru').style.display = 'none'; document.getElementById('viewTabelGuru').style.display = 'block'; loadDaftarGuru();
                     };
                     async function loadDaftarGuru() {
                         const tbody = document.getElementById('tbodyGuru'); if(!tbody) return;
                         tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Mengambil data...</td></tr>';
                         try {
-                            const snap = await getDocs(query(collection(db, "teachers"), orderBy("createdAt", "desc")));
-                            tbody.innerHTML = ''; let idx = 1;
+                            const snap = await getDocs(query(collection(db, "teachers"), orderBy("createdAt", "desc"))); tbody.innerHTML = ''; let idx = 1;
                             snap.forEach(d => {
-                                const t = d.data();
-                                const tr = document.createElement('tr');
+                                const t = d.data(); const tr = document.createElement('tr');
                                 tr.innerHTML = `<td>${idx++}</td><td>${t.nuptk||'-'} / ${t.nip||'-'}</td><td><strong>${t.nama_lengkap}</strong></td><td>${t.jabatan}</td><td>${t.status_keaktifan}</td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editGuru('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusGuru('${d.id}')">Hapus</button></div></td>`;
                                 tbody.appendChild(tr);
                             });
@@ -506,8 +447,7 @@
                     window.simpanDataGuru = async function(e) {
                         e.preventDefault();
                         const fields = ['nama_lengkap', 'gelar_depan', 'gelar_belakang', 'nik', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'gol_darah', 'status_pernikahan', 'nuptk', 'nip', 'niy_nigk', 'status_kepegawaian', 'jabatan', 'pangkat_golongan', 'tmt_pengangkatan', 'sk_pengangkatan', 'lembaga_pengangkat', 'npwp', 'tingkat_pendidikan', 'gelar_akademik', 'jurusan', 'universitas', 'tahun_kelulusan', 'alamat_rumah', 'kode_pos_guru', 'no_hp', 'email_pribadi', 'email_institusi', 'foto_profil', 'status_keaktifan', 'mapel_diampu', 'username_sistem', 'password_sistem'];
-                        const payload = { updatedAt: serverTimestamp() };
-                        fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
+                        const payload = { updatedAt: serverTimestamp() }; fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
                         const id = document.getElementById('guru_id_hidden').value;
                         try {
                             if(id) { await setDoc(doc(db, "teachers", id), payload, { merge: true }); }
@@ -520,184 +460,277 @@
                         const snap = await getDoc(doc(db, "teachers", id));
                         if(snap.exists()) { const d = snap.data(); Object.keys(d).forEach(k => { const el = document.getElementById(k); if(el) el.value = d[k]; }); }
                     };
-                    window.hapusGuru = async function(id) {
-                        if(confirm("Hapus data guru ini?")) { await deleteDoc(doc(db, "teachers", id)); loadDaftarGuru(); }
-                    };
+                    window.hapusGuru = async function(id) { if(confirm("Hapus data guru ini?")) { await deleteDoc(doc(db, "teachers", id)); loadDaftarGuru(); } };
                     break;
 
                 case 'murid':
                     contentArea.innerHTML = `<p style="color: #999;">Memuat Modul Peserta Didik...</p>`;
                     try {
-                        const res = await fetch('murid.html');
-                        contentArea.innerHTML = await res.text();
-                        loadDaftarMurid();
+                        const res = await fetch('murid.html'); contentArea.innerHTML = await res.text(); loadDaftarMurid();
                     } catch { contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul murid.</p>`; }
 
                     window.bukaFormMurid = function() {
-                        document.getElementById('viewTabelMurid').style.display = 'none';
-                        document.getElementById('viewFormMurid').style.display = 'block';
-                        document.getElementById('formMurid').reset();
-                        document.getElementById('murid_id_hidden').value = '';
-                        document.getElementById('formMuridTitle').innerText = "Tambah Data Murid Baru";
+                        document.getElementById('viewTabelMurid').style.display = 'none'; document.getElementById('viewFormMurid').style.display = 'block';
+                        document.getElementById('formMurid').reset(); document.getElementById('murid_id_hidden').value = '';
                     };
                     window.kembaliKeTabelMurid = function() {
-                        document.getElementById('viewFormMurid').style.display = 'none';
-                        document.getElementById('viewTabelMurid').style.display = 'block';
-                        loadDaftarMurid();
+                        document.getElementById('viewFormMurid').style.display = 'none'; document.getElementById('viewTabelMurid').style.display = 'block'; loadDaftarMurid();
                     };
                     async function loadDaftarMurid() {
                         const tbody = document.getElementById('tbodyMurid'); if(!tbody) return;
-                        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#999;">Mengambil data...</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Mengambil data...</td></tr>';
                         try {
-                            const snap = await getDocs(query(collection(db, "students"), orderBy("createdAt", "desc")));
-                            tbody.innerHTML = ''; let idx = 1;
-                            if(snap.empty) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#999;">Belum ada data murid terdaftar.</td></tr>'; return; }
+                            const snap = await getDocs(query(collection(db, "students"), orderBy("createdAt", "desc"))); tbody.innerHTML = ''; let idx = 1;
                             snap.forEach(d => {
-                                const m = d.data();
-                                const tr = document.createElement('tr');
+                                const m = d.data(); const tr = document.createElement('tr');
                                 tr.innerHTML = `<td>${idx++}</td><td>${m.nisn || '-'} / ${m.nis || '-'}</td><td><strong>${m.nama_lengkap}</strong></td><td>${m.id_kelas || '-'} / Absen: ${m.nomor_absen || '-'}</td><td><span style="padding:4px 8px; font-size:12px; border-radius:4px; font-weight:bold; background-color:${m.status_keaktifan === 'Aktif' ? '#d4edda; color:#155724;' : '#f8d7da; color:#721c24;'}">${m.status_keaktifan || 'Aktif'}</span></td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editMurid('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusMurid('${d.id}')">Hapus</button></div></td>`;
                                 tbody.appendChild(tr);
                             });
-                        } catch { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Gagal memuat list murid.</td></tr>'; }
+                        } catch { tbody.innerHTML = '<tr><td colspan="6">Gagal memuat list.</td></tr>'; }
                     }
                     window.simpanDataMurid = async function(e) {
-                        e.preventDefault();
-                        const btn = document.getElementById('btnSimpanMurid');
-                        if(btn) { btn.disabled = true; btn.innerText = "Memproses..."; }
+                        e.preventDefault(); const btn = document.getElementById('btnSimpanMurid'); if(btn) { btn.disabled = true; btn.innerText = "Memproses..."; }
                         const fields = ['nama_lengkap', 'nama_panggilan', 'nisn', 'nis', 'nik', 'no_akta', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'kewarganegaraan', 'anak_ke', 'jumlah_saudara', 'gol_darah', 'alamat_tinggal', 'kode_pos', 'tempat_tinggal_bersama', 'transportasi', 'no_hp_siswa', 'email_siswa', 'nama_ayah', 'nik_ayah', 'tahun_lahir_ayah', 'pendidikan_ayah', 'pekerjaan_ayah', 'penghasilan_ayah', 'nama_ibu', 'nik_ibu', 'tahun_lahir_ibu', 'pendidikan_ibu', 'pekerjaan_ibu', 'penghasilan_ibu', 'no_hp_ortu', 'nama_wali', 'nik_wali', 'hubungan_wali', 'pekerjaan_wali', 'no_hp_wali', 'status_murid', 'asal_sekolah', 'no_ijazah', 'no_skhun', 'tanggal_masuk', 'foto_profil', 'id_kelas', 'nomor_absen', 'status_keaktifan', 'username_murid', 'password_murid'];
-                        const payload = { updatedAt: serverTimestamp() };
-                        fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
+                        const payload = { updatedAt: serverTimestamp() }; fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
                         const mid = document.getElementById('murid_id_hidden').value;
                         try {
-                            if(mid) { await setDoc(doc(db, "students", mid), payload, { merge: true }); alert("Data Murid berhasil diupdate!"); } 
-                            else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "students", payload.username_murid), payload); alert("Murid baru berhasil disimpan!"); }
+                            if(mid) { await setDoc(doc(db, "students", mid), payload, { merge: true }); alert("Data Murid diupdate!"); } 
+                            else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "students", payload.username_murid), payload); alert("Murid baru disimpan!"); }
                             kembaliKeTabelMurid();
-                        } catch { alert("Gagal memproses ke database."); }
-                        finally { if(btn) { btn.disabled = false; btn.innerText = "Simpan Data Murid"; } }
+                        } catch { alert("Gagal memproses."); } finally { if(btn) { btn.disabled = false; btn.innerText = "Simpan Data Murid"; } }
                     };
                     window.editMurid = async function(id) {
-                        bukaFormMurid(); document.getElementById('formMuridTitle').innerText = "Edit Data Murid"; document.getElementById('murid_id_hidden').value = id;
-                        try { const snap = await getDoc(doc(db, "students", id)); if(snap.exists()) { const d = snap.data(); Object.keys(d).forEach(k => { const el = document.getElementById(k); if(el) el.value = d[k]; }); } } catch { alert("Gagal memuat rincian data."); }
+                        bukaFormMurid(); document.getElementById('murid_id_hidden').value = id;
+                        try { const snap = await getDoc(doc(db, "students", id)); if(snap.exists()) { const d = snap.data(); Object.keys(d).forEach(k => { const el = document.getElementById(k); if(el) el.value = d[k]; }); } } catch { alert("Gagal memuat detail."); }
                     };
-                    window.hapusMurid = async function(id) {
-                        if(confirm("Hapus data murid ini secara permanen?")) { try { await deleteDoc(doc(db, "students", id)); alert("Data murid berhasil dihapus."); loadDaftarMurid(); } catch { alert("Gagal menghapus."); } }
-                    };
+                    window.hapusMurid = async function(id) { if(confirm("Hapus data murid ini?")) { await deleteDoc(doc(db, "students", id)); loadDaftarMurid(); } };
                     break;
 
                 case 'tahun-pelajaran':
                     contentArea.innerHTML = `<p style="color: #999;">Memuat Modul Tahun Pelajaran...</p>`;
                     try {
-                        const res = await fetch('tahunpelajaran.html');
-                        contentArea.innerHTML = await res.text();
-                        loadDaftarTP();
+                        const res = await fetch('tahunpelajaran.html'); contentArea.innerHTML = await res.text(); loadDaftarTP();
                     } catch { contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul tahun pelajaran.</p>`; }
 
                     window.bukaFormTP = function() {
-                        document.getElementById('viewTabelTP').style.display = 'none';
-                        document.getElementById('viewFormTP').style.display = 'block';
-                        document.getElementById('formTP').reset();
-                        document.getElementById('tp_id_hidden').value = '';
-                        document.getElementById('status_aktif_checkbox').checked = false;
-                        document.getElementById('formTPTitle').innerText = "Tambah Tahun Pelajaran Baru";
+                        document.getElementById('viewTabelTP').style.display = 'none'; document.getElementById('viewFormTP').style.display = 'block';
+                        document.getElementById('formTP').reset(); document.getElementById('tp_id_hidden').value = ''; document.getElementById('status_aktif_checkbox').checked = false;
                     };
                     window.kembaliKeTabelTP = function() {
-                        document.getElementById('viewFormTP').style.display = 'none';
-                        document.getElementById('viewTabelTP').style.display = 'block';
-                        loadDaftarTP();
+                        document.getElementById('viewFormTP').style.display = 'none'; document.getElementById('viewTabelTP').style.display = 'block'; loadDaftarTP();
                     };
                     async function loadDaftarTP() {
                         const tbody = document.getElementById('tbodyTP'); if(!tbody) return;
-                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#999;">Mengambil data...</td></tr>';
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Mengambil data...</td></tr>';
                         try {
-                            const snap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("createdAt", "desc")));
-                            tbody.innerHTML = ''; let idx = 1;
-                            if(snap.empty) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#999;">Belum ada tahun pelajaran.</td></tr>'; return; }
+                            const snap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("createdAt", "desc"))); tbody.innerHTML = ''; let idx = 1;
                             snap.forEach(d => {
-                                const tp = d.data();
-                                const isChecked = tp.status_aktif === 'Aktif' ? 'checked' : '';
-                                const tr = document.createElement('tr');
+                                const tp = d.data(); const isChecked = tp.status_aktif === 'Aktif' ? 'checked' : ''; const tr = document.createElement('tr');
                                 tr.innerHTML = `<td>${idx++}</td><td><code>${d.id}</code></td><td>${tp.tahun_mulai} / ${tp.tahun_berakhir}</td><td><strong>${tp.semester}</strong></td><td>${tp.tanggal_mulai} s.d ${tp.tanggal_berakhir}</td><td><label class="switch"><input type="checkbox" ${isChecked} onclick="toggleStatusTPDirect('${d.id}', this.checked)"><span class="slider"></span></label></td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editTP('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusTP('${d.id}')">Hapus</button></div></td>`;
                                 tbody.appendChild(tr);
                             });
                         } catch { tbody.innerHTML = '<tr><td colspan="7">Gagal memuat list.</td></tr>'; }
                     }
-
                     window.toggleStatusTPDirect = async function(id, isChecked) {
                         try {
                             const statusBaru = isChecked ? 'Aktif' : 'Tidak Aktif';
                             if (isChecked) {
                                 const snap = await getDocs(collection(db, "tahunpelajaran"));
-                                for (const d of snap.docs) {
-                                    if (d.id !== id && d.data().status_aktif === 'Aktif') {
-                                        await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Aktif' });
-                                    }
-                                }
+                                for (const d of snap.docs) { if (d.id !== id && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Aktif' }); }
                             }
-                            await updateDoc(doc(db, "tahunpelajaran", id), { status_aktif: statusBaru, updatedAt: serverTimestamp() });
-                            loadDaftarTP();
+                            await updateDoc(doc(db, "tahunpelajaran", id), { status_aktif: statusBaru, updatedAt: serverTimestamp() }); loadDaftarTP();
                         } catch { alert("Gagal merubah status."); loadDaftarTP(); }
                     };
-
                     window.simpanDataTP = async function(e) {
-                        e.preventDefault();
-                        const btn = document.getElementById('btnSimpanTP');
-                        if(btn) btn.disabled = true;
-
-                        const tMulai = document.getElementById('tahun_mulai').value.trim();
-                        const tBerakhir = document.getElementById('tahun_berakhir').value.trim();
-                        const sem = document.getElementById('semester').value;
-                        const statusChecked = document.getElementById('status_aktif_checkbox').checked;
-
-                        const payload = { 
-                            tahun_mulai: parseInt(tMulai), tahun_berakhir: parseInt(tBerakhir), semester: sem,
-                            tanggal_mulai: document.getElementById('tanggal_mulai').value,
-                            tanggal_berakhir: document.getElementById('tanggal_berakhir').value,
-                            status_aktif: statusChecked ? 'Aktif' : 'Tidak Aktif', updatedAt: serverTimestamp() 
-                        };
-                        
-                        const isEdit = document.getElementById('tp_id_hidden').value;
-                        const targetId = isEdit ? isEdit : `${tMulai}${tBerakhir}${(sem === "Ganjil") ? "1" : "2"}`;
-
+                        e.preventDefault(); const btn = document.getElementById('btnSimpanTP'); if(btn) btn.disabled = true;
+                        const tMulai = document.getElementById('tahun_mulai').value.trim(); const tBerakhir = document.getElementById('tahun_berakhir').value.trim();
+                        const sem = document.getElementById('semester').value; const statusChecked = document.getElementById('status_aktif_checkbox').checked;
+                        const payload = { tahun_mulai: parseInt(tMulai), tahun_berakhir: parseInt(tBerakhir), semester: sem, tanggal_mulai: document.getElementById('tanggal_mulai').value, tanggal_berakhir: document.getElementById('tanggal_berakhir').value, status_aktif: statusChecked ? 'Aktif' : 'Tidak Aktif', updatedAt: serverTimestamp() };
+                        const isEdit = document.getElementById('tp_id_hidden').value; const targetId = isEdit ? isEdit : `${tMulai}${tBerakhir}${(sem === "Ganjil") ? "1" : "2"}`;
                         try {
                             if (statusChecked) {
                                 const snap = await getDocs(collection(db, "tahunpelajaran"));
-                                for (const d of snap.docs) {
-                                    if (d.id !== targetId && d.data().status_aktif === 'Aktif') {
-                                        await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Aktif' });
-                                    }
-                                }
+                                for (const d of snap.docs) { if (d.id !== targetId && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Aktif' }); }
                             }
                             if(isEdit) { await setDoc(doc(db, "tahunpelajaran", isEdit), payload, { merge: true }); } 
                             else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "tahunpelajaran", targetId), payload); }
                             kembaliKeTabelTP();
-                        } catch { alert("Gagal menyimpan."); }
-                        finally { if(btn) btn.disabled = false; }
+                        } catch { alert("Gagal menyimpan."); } finally { if(btn) btn.disabled = false; }
                     };
-
                     window.editTP = async function(id) {
                         bukaFormTP(); document.getElementById('tp_id_hidden').value = id;
                         try {
                             const snap = await getDoc(doc(db, "tahunpelajaran", id));
                             if(snap.exists()) {
-                                const d = snap.data();
-                                document.getElementById('tahun_mulai').value = d.tahun_mulai || '';
-                                document.getElementById('tahun_berakhir').value = d.tahun_berakhir || '';
-                                document.getElementById('semester').value = d.semester || 'Ganjil';
-                                document.getElementById('tanggal_mulai').value = d.tanggal_mulai || '';
-                                document.getElementById('tanggal_berakhir').value = d.tanggal_berakhir || '';
-                                document.getElementById('status_aktif_checkbox').checked = d.status_aktif === 'Aktif';
+                                const d = snap.data(); document.getElementById('tahun_mulai').value = d.tahun_mulai || ''; document.getElementById('tahun_berakhir').value = d.tahun_berakhir || '';
+                                document.getElementById('semester').value = d.semester || 'Ganjil'; document.getElementById('tanggal_mulai').value = d.tanggal_mulai || '';
+                                document.getElementById('tanggal_berakhir').value = d.tanggal_berakhir || ''; document.getElementById('status_aktif_checkbox').checked = d.status_aktif === 'Aktif';
                             }
-                        } catch { alert("Gagal memuat detail data."); }
+                        } catch { alert("Gagal memuat detail."); }
                     };
-
-                    window.hapusTP = async function(id) {
-                        if(confirm("Hapus data ini?")) { await deleteDoc(doc(db, "tahunpelajaran", id)); loadDaftarTP(); }
-                    };
+                    window.hapusTP = async function(id) { if(confirm("Hapus data ini?")) { await deleteDoc(doc(db, "tahunpelajaran", id)); loadDaftarTP(); } };
                     break;
 
                 case 'kurikulum':
-                    contentArea.innerHTML = `<h3>Kurikulum</h3><p>Pengaturan jenis kurikulum yang digunakan (seperti Kurikulum Merdeka atau K-13).</p>`;
+                    contentArea.innerHTML = `<p style="color: #999;">Memuat Modul Kurikulum...</p>`;
+                    try {
+                        const res = await fetch('kurikulum.html');
+                        contentArea.innerHTML = await res.text();
+                        
+                        // 1. Tarik referensi Tahun Pelajaran secara dinamis untuk mengisi opsi dropdown relasi
+                        const selectRelasi = document.getElementById('relasi_tahun_pelajaran');
+                        if (selectRelasi) {
+                            const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc")));
+                            tpSnap.forEach(tpDoc => {
+                                const tpData = tpDoc.data();
+                                const opt = document.createElement('option');
+                                opt.value = tpDoc.id; // Gunakan ID Sistem (Primary Key) sebagai Value Relasi
+                                opt.innerText = `${tpData.tahun_mulai}/${tpData.tahun_berakhir} - Semestet ${tpData.semester}`;
+                                selectRelasi.appendChild(opt);
+                            });
+                        }
+
+                        loadDaftarKurikulum();
+                    } catch (err) { console.error(err); contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul kurikulum.</p>`; }
+
+                    // --- CRUD LOGIC MODUL KURIKULUM (Koleksi: kurikulum) ---
+                    window.bukaFormKurikulum = function() {
+                        document.getElementById('viewTabelKurikulum').style.display = 'none';
+                        document.getElementById('viewFormKurikulum').style.display = 'block';
+                        document.getElementById('formKurikulum').reset();
+                        document.getElementById('kurikulum_id_hidden').value = '';
+                        document.getElementById('kurikulum_aktif_checkbox').checked = false;
+                        document.getElementById('formKurikulumTitle').innerText = "Tambah Kurikulum Baru";
+                    };
+
+                    window.kembaliKeTabelKurikulum = function() {
+                        document.getElementById('viewFormKurikulum').style.display = 'none';
+                        document.getElementById('viewTabelKurikulum').style.display = 'block';
+                        loadDaftarKurikulum();
+                    };
+
+                    async function loadDaftarKurikulum() {
+                        const tbody = document.getElementById('tbodyKurikulum'); if(!tbody) return;
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#999;">Mengambil data...</td></tr>';
+                        try {
+                            const snap = await getDocs(query(collection(db, "kurikulum"), orderBy("createdAt", "desc")));
+                            tbody.innerHTML = ''; let idx = 1;
+                            if(snap.empty) {
+                                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#999;">Belum ada data kurikulum.</td></tr>';
+                                return;
+                            }
+                            snap.forEach(d => {
+                                const kr = d.data();
+                                const isChecked = kr.status_aktif === 'Aktif' ? 'checked' : '';
+                                const tr = document.createElement('tr');
+                                tr.innerHTML = `
+                                    <td>${idx++}</td>
+                                    <td><code>${d.id}</code></td>
+                                    <td><strong>${kr.nama_kurikulum}</strong></td>
+                                    <td><code>${kr.relasi_tahun_pelajaran}</code></td>
+                                    <td>
+                                        <label class="switch">
+                                            <input type="checkbox" ${isChecked} onclick="toggleStatusKurikulumDirect('${d.id}', this.checked)">
+                                            <span class="slider"></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group-actions">
+                                            <button class="btn-edit" onclick="editKurikulum('${d.id}')">Edit</button>
+                                            <button class="btn-delete" onclick="hapusKurikulum('${d.id}')">Hapus</button>
+                                        </div>
+                                    </td>
+                                `;
+                                tbody.appendChild(tr);
+                            });
+                        } catch { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Gagal memuat list kurikulum.</td></tr>'; }
+                    }
+
+                    window.toggleStatusKurikulumDirect = async function(id, isChecked) {
+                        try {
+                            const statusBaru = isChecked ? 'Aktif' : 'Tidak Aktif';
+                            if (isChecked) {
+                                // Sifat pengunci Single-Active: matikan kurikulum lain
+                                const snap = await getDocs(collection(db, "kurikulum"));
+                                for (const d of snap.docs) {
+                                    if (d.id !== id && d.data().status_aktif === 'Aktif') {
+                                        await updateDoc(doc(db, "kurikulum", d.id), { status_aktif: 'Tidak Aktif' });
+                                    }
+                                }
+                            }
+                            await updateDoc(doc(db, "kurikulum", id), { status_aktif: statusBaru, updatedAt: serverTimestamp() });
+                            loadDaftarKurikulum();
+                        } catch { alert("Gagal merubah status kurikulum."); loadDaftarKurikulum(); }
+                    };
+
+                    window.simpanDataKurikulum = async function(e) {
+                        e.preventDefault();
+                        const btn = document.getElementById('btnSimpanKurikulum');
+                        if(btn) { btn.disabled = true; btn.innerText = "Memproses..."; }
+
+                        const namaKr = document.getElementById('nama_kurikulum').value.trim();
+                        const relasiTp = document.getElementById('relasi_tahun_pelajaran').value;
+                        const statusChecked = document.getElementById('kurikulum_aktif_checkbox').checked;
+
+                        const payload = {
+                            nama_kurikulum: namaKr,
+                            relasi_tahun_pelajaran: relasiTp,
+                            status_aktif: statusChecked ? 'Aktif' : 'Tidak Aktif',
+                            updatedAt: serverTimestamp()
+                        };
+
+                        const isEdit = document.getElementById('kurikulum_id_hidden').value;
+                        // Auto-ID Sistem menggunakan prefix string acak berbasis milidetik waktu unik
+                        const targetId = isEdit ? isEdit : "KR_" + Date.now().toString().slice(-6);
+
+                        try {
+                            if (statusChecked) {
+                                const snap = await getDocs(collection(db, "kurikulum"));
+                                for (const d of snap.docs) {
+                                    if (d.id !== targetId && d.data().status_aktif === 'Aktif') {
+                                        await updateDoc(doc(db, "kurikulum", d.id), { status_aktif: 'Tidak Aktif' });
+                                    }
+                                }
+                            }
+
+                            if(isEdit) {
+                                await setDoc(doc(db, "kurikulum", isEdit), payload, { merge: true });
+                                alert("Data Kurikulum berhasil diupdate!");
+                            } else {
+                                payload['createdAt'] = serverTimestamp();
+                                await setDoc(doc(db, "kurikulum", targetId), payload);
+                                alert(`Kurikulum baru berhasil disimpan dengan ID: ${targetId}`);
+                            }
+                            kembaliKeTabelKurikulum();
+                        } catch { alert("Gagal menyimpan data kurikulum."); }
+                        finally { if(btn) { btn.disabled = false; btn.innerText = "Simpan Kurikulum"; } }
+                    };
+
+                    window.editKurikulum = async function(id) {
+                        bukaFormKurikulum();
+                        document.getElementById('formKurikulumTitle').innerText = "Edit Kurikulum";
+                        document.getElementById('kurikulum_id_hidden').value = id;
+                        try {
+                            const snap = await getDoc(doc(db, "kurikulum", id));
+                            if(snap.exists()) {
+                                const d = snap.data();
+                                document.getElementById('nama_kurikulum').value = d.nama_kurikulum || '';
+                                document.getElementById('relasi_tahun_pelajaran').value = d.relasi_tahun_pelajaran || '';
+                                document.getElementById('kurikulum_aktif_checkbox').checked = d.status_aktif === 'Aktif';
+                            }
+                        } catch { alert("Gagal memuat detail data kurikulum."); }
+                    };
+
+                    window.hapusKurikulum = async function(id) {
+                        if(confirm("Apakah Anda yakin ingin menghapus data kurikulum ini?")) {
+                            try {
+                                await deleteDoc(doc(db, "kurikulum", id));
+                                alert("Data kurikulum berhasil dihapus."); loadDaftarKurikulum();
+                            } catch { alert("Gagal menghapus."); }
+                        }
+                    };
                     break;
+
                 case 'mata-pelajaran':
                     contentArea.innerHTML = `<h3>Mata Pelajaran</h3><p>Kelola daftar muatan mata pelajaran, kelompok mapel, dan KKM/KKTP.</p>`;
                     break;
