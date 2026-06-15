@@ -138,7 +138,6 @@
 </style>
 
 <div class="murid-container">
-    <!-- VIEW 1: TABEL DAFTAR MURID -->
     <div id="viewTabelMurid">
         <div class="action-bar" style="margin-bottom: 15px;">
             <h3 style="font-size: 20px; color: #333;">Manajemen Data Murid</h3>
@@ -150,7 +149,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>NISN / NIS</th>
+                        <th>NIS (ID) / NISN</th>
                         <th>Nama Lengkap Murid</th>
                         <th>Kelas / Absen</th>
                         <th>Status</th>
@@ -158,13 +157,11 @@
                     </tr>
                 </thead>
                 <tbody id="tbodyMurid">
-                    <!-- Data dimuat dari Firestore -->
-                </tbody>
+                    </tbody>
             </table>
         </div>
     </div>
 
-    <!-- VIEW 2: FORM INPUT MURID -->
     <div id="viewFormMurid" style="display: none;">
         <div class="action-bar" style="margin-bottom: 15px;">
             <h3 id="formMuridTitle" style="font-size: 20px; color: #333;">Tambah Data Murid Baru</h3>
@@ -175,7 +172,6 @@
             <form id="formMurid" onsubmit="simpanDataMurid(event)">
                 <input type="hidden" id="murid_id_hidden">
 
-                <!-- 1. Identitas Utama -->
                 <div class="section-title">1. Identitas Pribadi Utama</div>
                 <div class="form-grid">
                     <div class="form-field">
@@ -187,12 +183,12 @@
                         <input type="text" id="nama_panggilan">
                     </div>
                     <div class="form-field">
-                        <label>NISN (Nomor Induk Siswa Nasional)</label>
-                        <input type="text" id="nisn" required>
+                        <label>NIS (Nomor Induk Siswa Lokal) - Jadi ID</label>
+                        <input type="text" id="nis" required>
                     </div>
                     <div class="form-field">
-                        <label>NIS (Nomor Induk Siswa Lokal)</label>
-                        <input type="text" id="nis" required>
+                        <label>NISN (Nomor Induk Siswa Nasional)</label>
+                        <input type="text" id="nisn" required>
                     </div>
                     <div class="form-field">
                         <label>NIK / KIA / KTP</label>
@@ -252,7 +248,6 @@
                     </div>
                 </div>
 
-                <!-- 2. Kontak dan Domisili -->
                 <div class="section-title">2. Kontak dan Domisili Murid</div>
                 <div class="form-grid">
                     <div class="form-field">
@@ -291,7 +286,6 @@
                     </div>
                 </div>
 
-                <!-- 3. Data Orang Tua -->
                 <div class="section-title">3. Data Orang Tua (Ayah & Ibu Kandung)</div>
                 <div class="form-grid">
                     <div class="form-field">
@@ -360,7 +354,6 @@
                     </div>
                 </div>
 
-                <!-- 4. Data Wali -->
                 <div class="section-title">4. Data Wali (Opsional)</div>
                 <div class="form-grid">
                     <div class="form-field">
@@ -385,7 +378,6 @@
                     </div>
                 </div>
 
-                <!-- 5. Riwayat Akademik -->
                 <div class="section-title">5. Riwayat Akademik & Pendaftaran</div>
                 <div class="form-grid">
                     <div class="form-field">
@@ -413,7 +405,6 @@
                     </div>
                 </div>
 
-                <!-- 6. Data Tambahan Aplikasi -->
                 <div class="section-title">6. Data Tambahan Aplikasi (Sistem)</div>
                 <div class="form-grid">
                     <div class="form-field">
