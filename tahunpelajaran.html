@@ -52,6 +52,7 @@
     .table-tp th, .table-tp td {
         padding: 12px 15px;
         border-bottom: 1px solid #e0e0e0;
+        vertical-align: middle;
     }
     .table-tp th {
         background-color: #f8f9fa;
@@ -60,6 +61,48 @@
     }
     .table-tp tr:hover { background-color: #f1f5f9; }
     
+    /* Desain Komponen Toggle Switch Slider */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 44px;
+        height: 20px;
+    }
+    .switch input { 
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: #ccc;
+        transition: .15s;
+        border-radius: 20px;
+    }
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 14px; width: 14px;
+        left: 3px; bottom: 3px;
+        background-color: white;
+        transition: .15s;
+        border-radius: 50%;
+    }
+    input:checked + .slider {
+        background-color: #28a745;
+    }
+    input:checked + .slider:before {
+        transform: translateX(24px);
+    }
+    .status-text-label {
+        font-size: 12px;
+        font-weight: bold;
+        margin-left: 8px;
+        vertical-align: super;
+    }
+
     /* Form Card */
     .form-card {
         background: white;
@@ -142,7 +185,7 @@
                         <th>Tahun Periode</th>
                         <th>Semester</th>
                         <th>Rentang Tanggal</th>
-                        <th>Status Aktif</th>
+                        <th>Status</th>
                         <th>Aksi</th>
                     </tr>
                 </thead>
@@ -186,12 +229,15 @@
                         <label>Tanggal Berakhir Semester</label>
                         <input type="date" id="tanggal_berakhir" required>
                     </div>
-                    <div class="form-field">
-                        <label>Status Keaktifan</label>
-                        <select id="status_aktif">
-                            <option value="Aktif">Aktif</option>
-                            <option value="Tidak Aktif">Tidak Aktif</option>
-                        </select>
+                    <div class="form-field" style="justify-content: center;">
+                        <label style="margin-bottom: 8px;">Status Aktif</label>
+                        <div>
+                            <label class="switch">
+                                <input type="checkbox" id="status_aktif_checkbox">
+                                <span class="slider"></span>
+                            </label>
+                            <span id="formStatusLabel" class="status-text-label" style="color: #666;">Tidak Aktif</span>
+                        </div>
                     </div>
                 </div>
 
@@ -203,3 +249,17 @@
         </div>
     </div>
 </div>
+
+<script>
+    // Listener lokal sederhana agar label teks di samping slider form berubah real-time saat digeser
+    document.getElementById('status_aktif_checkbox').addEventListener('change', function() {
+        const label = document.getElementById('formStatusLabel');
+        if(this.checked) {
+            label.innerText = "Aktif";
+            label.style.color = "#28a745";
+        } else {
+            label.innerText = "Tidak Aktif";
+            label.style.color = "#666";
+        }
+    });
+</script>
