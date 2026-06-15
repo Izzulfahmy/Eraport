@@ -112,7 +112,7 @@
             white-space: nowrap;
         }
         
-        /* Navigasi Menu Horizontal - Statis Tanpa Animasi */
+        /* Navigasi Menu Horizontal */
         .nav-menu {
             display: flex;
             list-style: none;
@@ -144,7 +144,7 @@
             font-weight: bold;
         }
         
-        /* Sisi Kanan Navbar (Profile) */
+        /* Profile Menu Dropdown */
         .nav-right {
             display: flex;
             align-items: center;
@@ -217,7 +217,6 @@
             font-size: 15px;
         }
 
-        /* --- MEDIA QUERIES MOBILE OPTIMIZATION --- */
         @media (max-width: 768px) {
             .navbar {
                 padding: 10px 15px;
@@ -226,56 +225,27 @@
                 align-items: stretch;
                 gap: 8px;
             }
-            
             .nav-header-top {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 width: 100%;
             }
-            
             .nav-left {
                 width: 100%;
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 8px;
             }
-            
-            .logo-brand {
-                font-size: 16px;
-            }
-            
-            .profile-logo {
-                width: 28px;
-                height: 28px;
-                font-size: 12px;
-            }
-            
-            .dropdown-menu {
-                top: 35px;
-            }
-            
-            .nav-menu {
-                width: 100%;
-                padding-bottom: 4px;
-            }
-            .nav-item {
-                padding: 6px 12px;
-                font-size: 13px;
-            }
-            
-            .dashboard-content {
-                padding: 15px;
-            }
-            .content-card {
-                padding: 20px;
-            }
-            .content-card h3 {
-                font-size: 18px;
-            }
-            .content-card p {
-                font-size: 14px;
-            }
+            .logo-brand { font-size: 16px; }
+            .profile-logo { width: 28px; height: 28px; font-size: 12px; }
+            .dropdown-menu { top: 35px; }
+            .nav-menu { width: 100%; padding-bottom: 4px; }
+            .nav-item { padding: 6px 12px; font-size: 13px; }
+            .dashboard-content { padding: 15px; }
+            .content-card { padding: 20px; }
+            .content-card h3 { font-size: 18px; }
+            .content-card p { font-size: 14px; }
         }
     </style>
 </head>
@@ -571,8 +541,6 @@
                         document.getElementById('formTP').reset();
                         document.getElementById('tp_id_hidden').value = '';
                         document.getElementById('status_aktif_checkbox').checked = false;
-                        document.getElementById('formStatusLabel').innerText = "Tidak Aktif";
-                        document.getElementById('formStatusLabel').style.color = "#666";
                         document.getElementById('formTPTitle').innerText = "Tambah Tahun Pelajaran Baru";
                     };
 
@@ -586,7 +554,8 @@
                         const tbody = document.getElementById('tbodyTP'); if(!tbody) return;
                         tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#999;">Mengambil data...</td></tr>';
                         try {
-                            const snap = await getDocs(query(collection(db, "academic_years"), orderBy("createdAt", "desc")));
+                            // Target tabel berubah menjadi: tahunpelajaran
+                            const snap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("createdAt", "desc")));
                             tbody.innerHTML = ''; let idx = 1;
                             if(snap.empty) {
                                 tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#999;">Belum ada tahun pelajaran yang diatur.</td></tr>';
@@ -595,7 +564,6 @@
                             snap.forEach(d => {
                                 const tp = d.data();
                                 const isChecked = tp.status_aktif === 'Aktif' ? 'checked' : '';
-                                const labelColor = tp.status_aktif === 'Aktif' ? '#28a745' : '#666';
                                 
                                 const tr = document.createElement('tr');
                                 tr.innerHTML = `
@@ -609,7 +577,6 @@
                                             <input type="checkbox" ${isChecked} onclick="toggleStatusTPDirect('${d.id}', this.checked)">
                                             <span class="slider"></span>
                                         </label>
-                                        <span class="status-text-label" style="color: ${labelColor}">${tp.status_aktif || 'Tidak Aktif'}</span>
                                     </td>
                                     <td>
                                         <div class="btn-group-actions">
@@ -623,24 +590,22 @@
                         } catch { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Gagal memuat list tahun pelajaran.</td></tr>'; }
                     }
 
-                    // FUNGSI UTAMA: Matikan semester lain jika salah satu diaktifkan langsung dari slider tabel
                     window.toggleStatusTPDirect = async function(id, isChecked) {
                         try {
                             const statusBaru = isChecked ? 'Aktif' : 'Tidak Aktif';
                             
                             if (isChecked) {
-                                // Matikan semua dokumen yang ada di koleksi academic_years terlebih dahulu
-                                const snap = await getDocs(collection(db, "academic_years"));
+                                // Target tabel berubah menjadi: tahunpelajaran
+                                const snap = await getDocs(collection(db, "tahunpelajaran"));
                                 for (const d of snap.docs) {
                                     if (d.id !== id && d.data().status_aktif === 'Aktif') {
-                                        await updateDoc(doc(db, "academic_years", d.id), { status_aktif: 'Tidak Aktif' });
+                                        await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Aktif' });
                                     }
                                 }
                             }
                             
-                            // Perbarui status dokumen target
-                            await updateDoc(doc(db, "academic_years", id), { status_aktif: statusBaru, updatedAt: serverTimestamp() });
-                            loadDaftarTP(); // Refresh tabel biar teks label sinkron
+                            await updateDoc(doc(db, "tahunpelajaran", id), { status_aktif: statusBaru, updatedAt: serverTimestamp() });
+                            loadDaftarTP();
                         } catch (err) {
                             alert("Gagal merubah status keaktifan.");
                             loadDaftarTP();
@@ -673,21 +638,21 @@
 
                         try {
                             if (statusChecked) {
-                                // Jika form menyimpan data sebagai 'Aktif', matikan semester lainnya terlebih dahulu
-                                const snap = await getDocs(collection(db, "academic_years"));
+                                // Target tabel berubah menjadi: tahunpelajaran
+                                const snap = await getDocs(collection(db, "tahunpelajaran"));
                                 for (const d of snap.docs) {
                                     if (d.id !== targetId && d.data().status_aktif === 'Aktif') {
-                                        await updateDoc(doc(db, "academic_years", d.id), { status_aktif: 'Tidak Aktif' });
+                                        await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Aktif' });
                                     }
                                 }
                             }
 
                             if(isEdit) {
-                                await setDoc(doc(db, "academic_years", isEdit), payload, { merge: true });
+                                await setDoc(doc(db, "tahunpelajaran", isEdit), payload, { merge: true });
                                 alert("Data Tahun Pelajaran berhasil diperbarui!");
                             } else {
                                 payload['createdAt'] = serverTimestamp();
-                                await setDoc(doc(db, "academic_years", targetId), payload);
+                                await setDoc(doc(db, "tahunpelajaran", targetId), payload);
                                 alert(`Tahun Pelajaran baru disimpan dengan ID Sistem: ${targetId}`);
                             }
                             kembaliKeTabelTP();
@@ -703,7 +668,7 @@
                         document.getElementById('formTPTitle').innerText = "Edit Tahun Pelajaran";
                         document.getElementById('tp_id_hidden').value = id;
                         try {
-                            const snap = await getDoc(doc(db, "academic_years", id));
+                            const snap = await getDoc(doc(db, "tahunpelajaran", id));
                             if(snap.exists()) {
                                 const d = snap.data();
                                 document.getElementById('tahun_mulai').value = d.tahun_mulai || '';
@@ -714,9 +679,6 @@
                                 
                                 const isActive = d.status_aktif === 'Aktif';
                                 document.getElementById('status_aktif_checkbox').checked = isActive;
-                                const label = document.getElementById('formStatusLabel');
-                                label.innerText = isActive ? "Aktif" : "Tidak Aktif";
-                                label.style.color = isActive ? "#28a745" : "#666";
                             }
                         } catch { alert("Gagal memuat detail data tahun pelajaran."); }
                     };
@@ -724,7 +686,7 @@
                     window.hapusTP = async function(id) {
                         if(confirm("Hapus data tahun pelajaran " + id + "?")) {
                             try {
-                                await deleteDoc(doc(db, "academic_years", id));
+                                await deleteDoc(doc(db, "tahunpelajaran", id));
                                 alert("Data tahun pelajaran berhasil dihapus."); loadDaftarTP();
                             } catch { alert("Gagal menghapus."); }
                         }

@@ -96,12 +96,6 @@
     input:checked + .slider:before {
         transform: translateX(24px);
     }
-    .status-text-label {
-        font-size: 12px;
-        font-weight: bold;
-        margin-left: 8px;
-        vertical-align: super;
-    }
 
     /* Form Card */
     .form-card {
@@ -181,7 +175,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>ID Sistem (PK)</th>
+                        <th>ID</th>
                         <th>Tahun Periode</th>
                         <th>Semester</th>
                         <th>Rentang Tanggal</th>
@@ -236,7 +230,6 @@
                                 <input type="checkbox" id="status_aktif_checkbox">
                                 <span class="slider"></span>
                             </label>
-                            <span id="formStatusLabel" class="status-text-label" style="color: #666;">Tidak Aktif</span>
                         </div>
                     </div>
                 </div>
@@ -249,17 +242,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    // Listener lokal sederhana agar label teks di samping slider form berubah real-time saat digeser
-    document.getElementById('status_aktif_checkbox').addEventListener('change', function() {
-        const label = document.getElementById('formStatusLabel');
-        if(this.checked) {
-            label.innerText = "Aktif";
-            label.style.color = "#28a745";
-        } else {
-            label.innerText = "Tidak Aktif";
-            label.style.color = "#666";
-        }
-    });
-</script>
