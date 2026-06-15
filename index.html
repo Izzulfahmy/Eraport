@@ -113,7 +113,7 @@
             white-space: nowrap;
         }
         
-        /* Navigasi Menu Horizontal */
+        /* Navigasi Menu Horizontal - Statis Tanpa Animasi */
         .nav-menu {
             display: flex;
             list-style: none;
@@ -145,7 +145,7 @@
             font-weight: bold;
         }
         
-        /* Profile Menu Dropdown */
+        /* Sisi Kanan Navbar (Profile) */
         .nav-right {
             display: flex;
             align-items: center;
@@ -206,6 +206,36 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
             min-height: 250px;
+        }
+
+        /* --- MEDIA QUERIES MOBILE OPTIMIZATION --- */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 10px 15px;
+                height: auto;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            .nav-header-top {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+            }
+            .nav-left {
+                width: 100%;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .logo-brand { font-size: 16px; }
+            .profile-logo { width: 28px; height: 28px; font-size: 12px; }
+            .dropdown-menu { top: 35px; }
+            .nav-menu { width: 100%; padding-bottom: 4px; }
+            .nav-item { padding: 6px 12px; font-size: 13px; }
+            .dashboard-content { padding: 15px; }
+            .content-card { padding: 20px; }
         }
     </style>
 </head>
@@ -359,7 +389,6 @@
                             'website', 'medsos'
                         ];
 
-                        // Tembakkan data ke text label (mode baca) dan input form (mode edit) sekaligus
                         fields.forEach(key => {
                             const txtEl = document.getElementById(`txt_${key}`);
                             const inputEl = document.getElementById(key);
@@ -371,6 +400,18 @@
                                 if(txtEl) txtEl.innerText = '-';
                             }
                         });
+
+                        // DAFTARKAN TRIGER KLIK DI LEVEL GLOBAL SCRIPT INDUK
+                        window.aktifkanModeEdit = function() {
+                            const txtLabels = document.querySelectorAll('.profile-container .view-data');
+                            const formInputs = document.querySelectorAll('.profile-container input, .profile-container select');
+                            
+                            txtLabels.forEach(txt => txt.style.display = 'none');
+                            formInputs.forEach(inp => stroke => inp.style.display = 'block');
+                            
+                            document.getElementById('btnKeModeEdit').style.display = 'none';
+                            document.getElementById('btnSimpanProfil').style.display = 'flex';
+                        };
 
                     } catch (err) {
                         console.error(err);
@@ -432,7 +473,7 @@
                     }
                     window.simpanDataGuru = async function(e) {
                         e.preventDefault();
-                        const fields = ['nama_lengkap', 'gelar_depan', 'gelar_belakang', 'nik', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'gol_darah', 'status_pernikahan', 'nuptk', 'nip', 'niy_nigk', 'status_kepegawaian', 'jabatan', 'pangkat_golongan', 'tmt_pengangkatan', 'sk_pengangkatan', 'lembaga_pengangkat', 'npwp', 'tingkat_pendidikan', 'gelar_akademik', 'jurusan', 'universitas', 'tahun_kelulusan', 'alamat_rumah', 'kode_pos_guru', 'no_hp', 'email_pribadi', 'email_institusi', 'foto_profil', 'status_keaktifan', 'mapel_diampu', 'username_sistem', 'password_sistem'];
+                        const fields = ['nama_lengkap', 'gelar_depan', 'gelar_belakang', 'nik', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'gol_darah', 'status_pernikahan', 'nuptk', 'nip', 'niy_nigk', 'status_kepegawiain', 'jabatan', 'pangkat_golongan', 'tmt_pengangkatan', 'sk_pengangkatan', 'lembaga_pengangkat', 'npwp', 'tingkat_pendidikan', 'gelar_akademik', 'jurusan', 'universitas', 'tahun_kelulusan', 'alamat_rumah', 'kode_pos_guru', 'no_hp', 'email_pribadi', 'email_institusi', 'foto_profil', 'status_keaktifan', 'mapel_diampu', 'username_sistem', 'password_sistem'];
                         const payload = { updatedAt: serverTimestamp() };
                         fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
                         const id = document.getElementById('guru_id_hidden').value;
