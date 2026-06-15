@@ -13,6 +13,7 @@
         right: 0;
         z-index: 10;
     }
+    /* Desain Tombol Ikon Bundar Minimalis Pojok Kanan Atas */
     .btn-icon {
         width: 40px;
         height: 40px;
@@ -23,11 +24,18 @@
         justify-content: center;
         align-items: center;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: background-color 0.2s;
     }
-    .btn-edit-mode { background-color: #ffc107; color: #333; }
+    .btn-edit-mode { 
+        background-color: #ffc107; 
+        color: #333; 
+    }
     .btn-edit-mode:hover { background-color: #e0a800; }
     
-    .btn-save-mode { background-color: #28a745; color: white; }
+    .btn-save-mode { 
+        background-color: #28a745; 
+        color: white; 
+    }
     .btn-save-mode:hover { background-color: #218838; }
 
     .section-title {
@@ -44,7 +52,7 @@
         gap: 15px 20px;
     }
     
-    /* Kontainer komponen dinamis */
+    /* Kontainer Komponen Lapangan Data */
     .profile-field {
         display: flex;
         flex-direction: column;
@@ -58,23 +66,25 @@
         color: #777;
     }
     
-    /* Mode Baca Text */
+    /* Mode Tampilan Data Statis */
     .profile-field .view-data {
         font-size: 14px;
         color: #333;
         font-weight: 500;
         padding: 4px 0;
         word-break: break-word;
+        display: block;
     }
     
-    /* Mode Edit Input */
+    /* Mode Kolom Pengisian Form (Sembunyi Bawaan) */
     .profile-field input, .profile-field select {
-        display: none; /* Sembunyikan saat mode baca */
+        display: none;
         padding: 8px 10px;
         border: 1px solid #ccc;
         border-radius: 4px;
         font-size: 14px;
         width: 100%;
+        box-sizing: border-box;
     }
     .profile-field input:focus, .profile-field select:focus {
         border-color: #007bff;
@@ -89,9 +99,11 @@
 
 <div class="profile-container">
     <div class="action-header">
+        <!-- Tombol Edit (Ikon Pensil) -->
         <button type="button" id="btnKeModeEdit" class="btn-icon btn-edit-mode" onclick="aktifkanModeEdit()" title="Edit Profil">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
         </button>
+        <!-- Tombol Simpan (Ikon Centang) -->
         <button type="submit" form="formProfilSekolah" id="btnSimpanProfil" class="btn-icon btn-save-mode" style="display: none;" title="Simpan Perubahan">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
         </button>
@@ -99,6 +111,7 @@
 
     <form id="formProfilSekolah" onsubmit="simpanProfilSekolah(event)">
         
+        <!-- 1. Data Administrasi dan Legalitas -->
         <div class="section-title">1. Data Administrasi dan Legalitas</div>
         <div class="info-grid">
             <div class="profile-field"><label>Nama Resmi Sekolah</label><span id="txt_nama_sekolah" class="view-data">-</span><input type="text" id="nama_sekolah" required></div>
@@ -115,6 +128,7 @@
             <div class="profile-field"><label>Nomor Pokok Wajib Pajak (NPWP)</label><span id="txt_npwp_sekolah" class="view-data">-</span><input type="text" id="npwp_sekolah"></div>
         </div>
 
+        <!-- 2. Data Lokasi dan Geografis -->
         <div class="section-title" style="margin-top: 25px;">2. Data Lokasi dan Geografis</div>
         <div class="info-grid">
             <div class="profile-field"><label>Alamat Lengkap</label><span id="txt_alamat_lengkap" class="view-data">-</span><input type="text" id="alamat_lengkap" required></div>
@@ -128,10 +142,11 @@
             <div class="profile-field"><label>Garis Bujur (Longitude)</label><span id="txt_longitude" class="view-data">-</span><input type="text" id="longitude"></div>
         </div>
 
+        <!-- 3. Data Kontak dan Media Resmi -->
         <div class="section-title" style="margin-top: 25px;">3. Data Kontak dan Media Resmi</div>
         <div class="info-grid">
             <div class="profile-field"><label>Nomor Telepon</label><span id="txt_no_telp" class="view-data">-</span><input type="text" id="no_telp"></div>
-            <div class="form-field profile-field"><label>Nomor Faksimile (Fax)</label><span id="txt_fax" class="view-data">-</span><input type="text" id="fax"></div>
+            <div class="profile-field"><label>Nomor Faksimile (Fax)</label><span id="txt_fax" class="view-data">-</span><input type="text" id="fax"></div>
             <div class="profile-field"><label>WhatsApp / Kontak Humas</label><span id="txt_no_wa" class="view-data">-</span><input type="text" id="no_wa"></div>
             <div class="profile-field"><label>Alamat Email Resmi</label><span id="txt_email_sekolah" class="view-data">-</span><input type="email" id="email_sekolah"></div>
             <div class="profile-field"><label>Situs Web Resmi (Website)</label><span id="txt_website" class="view-data">-</span><input type="url" id="website"></div>
@@ -142,13 +157,21 @@
 
 <script>
     function aktifkanModeEdit() {
-        // Sembunyikan elemen text biasa, tampilkan form input
-        const texts = document.querySelectorAll('.profile-container .view-data');
-        const inputs = document.querySelectorAll('.profile-container input, .profile-container select');
+        // 1. Ambil semua teks label statis dan kolom input form
+        const txtLabels = document.querySelectorAll('.profile-container .view-data');
+        const formInputs = document.querySelectorAll('.profile-container input, .profile-container select');
         
-        texts.forEach(t => t.style.display = 'none');
-        inputs.forEach(i => i.style.display = 'block');
+        // 2. Sembunyikan teks detail statis
+        txtLabels.forEach(txt => {
+            txt.style.display = 'none';
+        });
         
+        // 3. Munculkan semua kolom input form pengisian
+        formInputs.forEach(input => {
+            input.style.display = 'block';
+        });
+        
+        // 4. Sembunyikan ikon pensil, tampilkan ikon simpan (centang) di pojok kanan atas
         document.getElementById('btnKeModeEdit').style.display = 'none';
         document.getElementById('btnSimpanProfil').style.display = 'flex';
     }
