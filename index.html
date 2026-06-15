@@ -38,17 +38,6 @@
         .read-field { display: flex; flex-direction: column; gap: 4px; border-bottom: 1px solid #f4f4f4; padding-bottom: 8px; }
         .read-field .label { font-size: 12px; font-weight: 600; color: #777; }
         .read-field .value { font-size: 14px; color: #333; font-weight: 500; word-break: break-word; padding: 4px 0; }
-        @media (max-width: 768px) {
-            .navbar { padding: 10px 15px; height: auto; flex-direction: column; align-items: stretch; gap: 8px; }
-            .nav-header-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-            .nav-left { width: 100%; flex-direction: column; align-items: flex-start; gap: 8px; }
-            .logo-brand { font-size: 16px; }
-            .profile-logo { width: 28px; height: 28px; font-size: 12px; }
-            .dropdown-menu { top: 35px; }
-            .nav-menu { width: 100%; padding-bottom: 4px; }
-            .nav-item { padding: 6px 12px; font-size: 13px; }
-            .dashboard-content { padding: 15px; }
-        }
     </style>
 </head>
 <body>
@@ -185,8 +174,8 @@
                     break;
 
                 case 'tahun-pelajaran':
-                    contentArea.innerHTML = `<p>Memuat...</p>`;
-                    try { const res = await fetch('tahunpelajaran.html'); contentArea.innerHTML = await res.text(); loadDaftarTP(); } catch { contentArea.innerHTML = `<p style="color: red;">Gagal.</p>`; }
+                    contentArea.innerHTML = `<p style="color: #999;">Memuat...</p>`;
+                    try { const res = await fetch('tahunpelajaran.html'); contentArea.innerHTML = await res.text(); loadDaftarTP(); } catch {}
                     window.bukaFormTP = function() { document.getElementById('viewTabelTP').style.display = 'none'; document.getElementById('viewFormTP').style.display = 'block'; document.getElementById('formTP').reset(); document.getElementById('tp_id_hidden').value = ''; document.getElementById('status_aktif_checkbox').checked = false; };
                     window.kembaliKeTabelTP = function() { document.getElementById('viewFormTP').style.display = 'none'; document.getElementById('viewTabelTP').style.display = 'block'; loadDaftarTP(); };
                     async function loadDaftarTP() {
@@ -322,13 +311,12 @@
                     try {
                         const res = await fetch('rombel.html'); contentArea.innerHTML = await res.text();
                         
-                        // VARIABEL TRACKER STATE LOCAL FORM ROMBEL
                         window.rombelSiswaList = [];
                         window.rombelMapelList = [];
                         window.masterSiswaArray = [];
                         window.masterMapelArray = [];
+                        window.siswaSudahAdaRombel = new Set(); // Proteksi multi-rombel siswa
 
-                        // 1. Sinkronisasi Dropdown TP Filter Utama
                         const selectTp = document.getElementById('filter_tp_rombel');
                         if (selectTp) {
                             selectTp.innerHTML = ''; const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc")));
@@ -337,7 +325,6 @@
                         }
                     } catch (err) { console.error(err); contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul Rombel.</p>`; }
 
-                    // HANDLER PERUBAHAN FILTER TP ROMBEL
                     window.handleFilterTpChangeRombel = async function(forcedId) {
                         const tpVal = forcedId ? forcedId : document.getElementById('filter_tp_rombel').value;
                         const krSelect = document.getElementById('filter_kurikulum_rombel'); if(!krSelect) return;
@@ -351,7 +338,6 @@
                         } catch {}
                     };
 
-                    // FORM INJECT DATA MASTER UTK PILIHAN GURU, SISWA, MAPEL
                     window.bukaFormRombel = async function() {
                         document.getElementById('viewTabelRombel').style.display = 'none';
                         document.getElementById('viewFormRombel').style.display = 'block';
@@ -363,10 +349,20 @@
                         document.getElementById('siswaRombelContainer').innerHTML = '';
                         document.getElementById('tbodyRombelMapel').innerHTML = '';
 
+                        const tpId = document.getElementById('filter_tp_rombel').value;
                         const krId = document.getElementById('filter_kurikulum_rombel').value;
                         
                         try {
-                            // A. Isi Tipe Jenjang otomatis dari Kurikulum Terpilih
+                            // Hitung list proteksi siswa yang sudah masuk rombel di filter TP & Kurikulum ini
+                            window.siswaSudahAdaRombel.clear();
+                            const rAllSnap = await getDocs(collection(db, "rombel"));
+                            rAllSnap.forEach(rDoc => {
+                                const rData = rDoc.data();
+                                if(rData.tp_id === tpId && rData.kurikulum_id === krId) {
+                                    (rData.siswa_ids || []).forEach(sId => window.siswaSudahAdaRombel.add(sId));
+                                }
+                            });
+
                             const krSnap = await getDoc(doc(db, "kurikulum", krId));
                             const jenjangSelect = document.getElementById('rombel_jenjang');
                             if(jenjangSelect && krSnap.exists()) {
@@ -378,7 +374,6 @@
                                 }
                             }
 
-                            // B. Isi Dropdown Wali Kelas & Guru Pengampu ( teachers )
                             const tSnap = await getDocs(query(collection(db, "teachers"), orderBy("nama_lengkap", "asc")));
                             const waliSelect = document.getElementById('rombel_wali_id');
                             const pengampuSelect = document.getElementById('select_tambah_guru_pengampu');
@@ -392,21 +387,14 @@
                                 const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect) pengampuSelect.appendChild(optP);
                             });
 
-                            // C. Simpan master array siswa untuk lookup nama badge ( students )
                             const sSnap = await getDocs(query(collection(db, "students"), orderBy("nama_lengkap", "asc")));
                             window.masterSiswaArray = [];
-                            const siswaSelect = document.getElementById('select_tambah_siswa');
-                            if(siswaSelect) siswaSelect.innerHTML = '<option value="">-- Pilih Siswa --</option>';
-                            
                             sSnap.forEach(sDoc => {
                                 const s = sDoc.data();
                                 window.masterSiswaArray.push({ id: sDoc.id, nama: s.nama_lengkap, nisn: s.nisn });
-                                const optS = document.createElement('option'); optS.value = sDoc.id; optS.innerText = `${s.nama_lengkap} (${s.nisn})`;
-                                if(siswaSelect) siswaSelect.appendChild(optS);
                             });
+                            refreshSiswaDropdownOptions();
 
-                            // D. Simpan master array mapel tipe 'mapel' ( matapelajaran )
-                            const tpId = document.getElementById('filter_tp_rombel').value;
                             const mSnap = await getDocs(query(collection(db, "matapelajaran"), orderBy("createdAt", "asc")));
                             window.masterMapelArray = [];
                             const mSelect = document.getElementById('select_tambah_mapel');
@@ -421,83 +409,118 @@
                                 }
                             });
 
-                        } catch (err) { console.error(err); }
+                        } catch (err) { console.error(err); alert("Gagal mengambil master data."); }
                     };
 
                     window.kembaliKeTabelRombel = function() { document.getElementById('viewFormRombel').style.display = 'none'; document.getElementById('viewTabelRombel').style.display = 'block'; loadDaftarRombel(); };
 
-                    // SUB-CRUD ACTION: Tambah Siswa ke Array State Lokal
+                    // Fungsi menyaring pilihan siswa (Hanya sisa siswa yang tidak punya kelas)
+                    function refreshSiswaDropdownOptions() {
+                        const siswaSelect = document.getElementById('select_tambah_siswa');
+                        if(!siswaSelect) return;
+                        siswaSelect.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+                        
+                        const currentEditId = document.getElementById('rombel_id_hidden').value;
+
+                        window.masterSiswaArray.forEach(sObj => {
+                            // Siswa boleh muncul jika: Belum ada di rombel lain, ATAU dia memang anggota rombel ini (jika mode edit)
+                            const sudahAdaDiRombelLain = window.siswaSudahAdaRombel.has(sObj.id);
+                            const bagianDariRombelIni = window.rombelSiswaList.includes(sObj.id);
+
+                            if (!sudahAdaDiRombelLain || bagianDariRombelIni) {
+                                const optS = document.createElement('option');
+                                optS.value = sObj.id;
+                                optS.innerText = `${sObj.nama} (${sObj.nisn})`;
+                                siswaSelect.appendChild(optS);
+                            }
+                        });
+                    }
+
                     window.addSiswaToRombelList = function() {
                         const sId = document.getElementById('select_tambah_siswa').value; if(!sId) return;
-                        if(window.rombelSiswaList.includes(sId)) { alert("Siswa sudah ada dalam list rombel."); return; }
-                        window.rombelSiswaList.push(sId); renderSiswaBadges();
+                        if(window.rombelSiswaList.includes(sId)) { alert("Siswa sudah ada dalam list."); return; }
+                        window.rombelSiswaList.push(sId); 
+                        renderSiswaBadges();
                     };
-                    window.removeSiswaFromRombelList = function(sId) { window.rombelSiswaList = window.rombelSiswaList.filter(id => id !== sId); renderSiswaBadges(); };
+                    
+                    window.removeSiswaFromRombelList = function(sId) { 
+                        window.rombelSiswaList = window.rombelSiswaList.filter(id => id !== sId); 
+                        renderSiswaBadges(); 
+                    };
+                    
                     function renderSiswaBadges() {
                         const container = document.getElementById('siswaRombelContainer'); if(!container) return; container.innerHTML = '';
                         window.rombelSiswaList.forEach(id => {
                             const sObj = window.masterSiswaArray.find(item => item.id === id);
                             if(sObj) {
-                                const span = document.createElement('span'); className = 'tag-item'; span.className = 'tag-item';
+                                const span = document.createElement('span'); 
+                                span.className = 'tag-item';
                                 span.innerHTML = `${sObj.nama} <span class="remove-btn" onclick="removeSiswaFromRombelList('${id}')">&times;</span>`;
                                 container.appendChild(span);
                             }
                         });
+                        refreshSiswaDropdownOptions(); // Perbarui dropdown setelah list berubah
                     }
 
-                    // SUB-CRUD ACTION: Tambah Mapel & Guru Pengampu ke List Rombel
                     window.addMapelToRombelList = function() {
                         const mId = document.getElementById('select_tambah_mapel').value;
                         const gId = document.getElementById('select_tambah_guru_pengampu').value;
-                        if(!mId || !gId) { alert("Pilih Mapel dan Guru Pengampu."); return; }
-                        if(window.rombelMapelList.some(item => item.mapel_id === mId)) { alert("Mata pelajaran ini sudah dikonfigurasi."); return; }
-                        window.rombelMapelList.push({ mapel_id: mId, guru_id: gId }); renderRombelMapelTable();
+                        if(!mId || !gId) { alert("Pilih Mapel dan Guru."); return; }
+                        if(window.rombelMapelList.some(item => item.mapel_id === mId)) { alert("Mapel ini sudah masuk daftar."); return; }
+                        window.rombelMapelList.push({ mapel_id: mId, guru_id: gId }); 
+                        renderRombelMapelTable();
                     };
-                    window.removeMapelFromRombelList = function(mId) { window.rombelMapelList = window.rombelMapelList.filter(item => item.mapel_id !== mId); renderRombelMapelTable(); };
-                    async function renderRombelMapelTable() {
+                    
+                    window.removeMapelFromRombelList = function(mId) { 
+                        window.rombelMapelList = window.rombelMapelList.filter(item => item.mapel_id !== mId); 
+                        renderRombelMapelTable(); 
+                    };
+                    
+                    function renderRombelMapelTable() {
                         const tbody = document.getElementById('tbodyRombelMapel'); if(!tbody) return; tbody.innerHTML = '';
-                        try {
-                            // Tarik nama guru secara instant via DOM select element lookup
-                            const pengampuSelect = document.getElementById('select_tambah_guru_pengampu');
-                            
-                            window.rombelMapelList.forEach(item => {
-                                const mObj = window.masterMapelArray.find(m => m.id === item.mapel_id);
-                                let gName = "Guru Tidak Dikenal";
-                                if(pengampuSelect) {
-                                    const opt = Array.from(pengampuSelect.options).find(o => o.value === item.guru_id);
-                                    if(opt) gName = opt.innerText;
-                                }
-                                if(mObj) {
-                                    const tr = document.createElement('tr');
-                                    tr.innerHTML = `<td><code>${mObj.kode}</code></td><td><strong>${mObj.nama}</strong></td><td>${gName}</td><td><button type="button" class="btn-delete-mp" onclick="removeMapelFromRombelList('${item.mapel_id}')">&times;</button></td>`;
-                                    tbody.appendChild(tr);
-                                }
-                            });
-                        } catch {}
+                        const pengampuSelect = document.getElementById('select_tambah_guru_pengampu');
+                        
+                        window.rombelMapelList.forEach(item => {
+                            const mObj = window.masterMapelArray.find(m => m.id === item.mapel_id);
+                            let gName = "Guru Tidak Dikenal";
+                            if(pengampuSelect) {
+                                const opt = Array.from(pengampuSelect.options).find(o => o.value === item.guru_id);
+                                if(opt) gName = opt.innerText;
+                            }
+                            if(mObj) {
+                                const tr = document.createElement('tr');
+                                tr.innerHTML = `<td><code>${mObj.kode}</code></td><td><strong>${mObj.nama}</strong></td><td>${gName}</td><td><button type="button" class="btn-delete-mp" onclick="removeMapelFromRombelList('${item.mapel_id}')">&times;</button></td>`;
+                                tbody.appendChild(tr);
+                            }
+                        });
                     }
 
-                    // RENDER DAFTAR INDUK UTAMA ROMBEL
                     async function loadDaftarRombel() {
                         const tpId = document.getElementById('filter_tp_rombel').value; const krId = document.getElementById('filter_kurikulum_rombel').value;
                         const tbody = document.getElementById('tbodyRombel'); if(!tbody) return;
-                        if(!tpId || !krId) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Silakan filter data.</td></tr>'; return; }
-                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Memuat...</td></tr>';
+                        if(!tpId || !krId) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Silakan pilih filter data di atas.</td></tr>'; return; }
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Mengambil struktur rombel...</td></tr>';
                         try {
                             const snap = await getDocs(collection(db, "rombel")); tbody.innerHTML = ''; let idx = 1;
                             let empty = true;
+                            
+                            // Tarik list guru pendukung translasi ID ke Nama di tabel utama
+                            const tSnap = await getDocs(collection(db, "teachers"));
+                            const teachersMap = {}; tSnap.forEach(doc => { teachersMap[doc.id] = doc.data().nama_lengkap; });
+
                             snap.forEach(d => {
                                 const r = d.data();
                                 if(r.tp_id === tpId && r.kurikulum_id === krId) {
                                     empty = false; const tr = document.createElement('tr');
-                                    tr.innerHTML = `<td>${idx++}</td><td><code>${d.id}</code></td><td>Tingkat ${r.jenjang}</td><td><strong>${r.nama_rombel}</strong></td><td><code>${r.wali_kelas_id}</code></td><td>${(r.siswa_ids || []).length} Siswa</td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editRombel('${d.id}')">✏️</button><button class="btn-delete" onclick="hapusRombel('${d.id}')">🗑️</button></div></td>`;
+                                    const wName = teachersMap[r.wali_kelas_id] || r.wali_kelas_id;
+                                    tr.innerHTML = `<td>${idx++}</td><td><code>${d.id}</code></td><td>Tingkat ${r.jenjang}</td><td><strong>${r.nama_rombel}</strong></td><td><strong>${wName}</strong></td><td>${(r.siswa_ids || []).length} Siswa</td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editRombel('${d.id}')">✏️</button><button class="btn-delete" onclick="hapusRombel('${d.id}')">🗑️</button></div></td>`;
                                     tbody.appendChild(tr);
                                 }
                             });
-                            if(empty) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Belum ada Rombel di filter ini.</td></tr>';
-                        } catch { tbody.innerHTML = '<tr><td colspan="7">Gagal.</td></tr>'; }
+                            if(empty) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#999;">Belum ada Rombel di filter ini.</td></tr>';
+                        } catch(err) { console.error(err); tbody.innerHTML = '<tr><td colspan="7">Gagal memuat.</td></tr>'; }
                     }
 
-                    // CORE ACTION: SIMPAN ROMBEL GLOBAL KE FIRESTORE
                     window.simpanStrukturRombel = async function(e) {
                         e.preventDefault();
                         const tpId = document.getElementById('filter_tp_rombel').value;
@@ -507,7 +530,7 @@
                         const wali = document.getElementById('rombel_wali_id').value;
                         const isEdit = document.getElementById('rombel_id_hidden').value;
 
-                        if(!name || !jg || !wali) { alert("Lengkapi kolom data utama rombel."); return; }
+                        if(!name || !jg || !wali) { alert("Lengkapi data dasar Rombel."); return; }
 
                         const payload = {
                             nama_rombel: name, jenjang: parseInt(jg), wali_kelas_id: wali,
@@ -521,13 +544,13 @@
                         try {
                             if(!isEdit) payload['createdAt'] = serverTimestamp();
                             await setDoc(doc(db, "rombel", targetId), payload, { merge: true });
-                            alert("Data Rombel Berhasil Disimpan!"); kembaliKeTabelRombel();
-                        } catch { alert("Gagal menyimpan rombel."); }
+                            alert("Struktur data rombel berhasil disimpan!"); kembaliKeTabelRombel();
+                        } catch { alert("Gagal menyimpan."); }
                     };
 
-                    // CORE ACTION: EDIT ROMBEL LOAD STATE BACK
                     window.editRombel = async function(id) {
-                        await bukaFormRombel();
+                        // Jalankan pemuatan master data penunjang form box terlebih dahulu
+                        await window.bukaFormRombel();
                         document.getElementById('formRombelTitle').innerText = "Edit Data Rombel";
                         document.getElementById('rombel_id_hidden').value = id;
                         try {
@@ -543,10 +566,9 @@
                                 
                                 renderSiswaBadges(); renderRombelMapelTable();
                             }
-                        } catch { alert("Gagal mengambil detail data."); }
+                        } catch(err) { console.error(err); alert("Gagal memuat rincian data rombel."); }
                     };
 
-                    // CORE ACTION: HAPUS ROMBEL
                     window.hapusRombel = async function(id) {
                         if(confirm("Hapus Rombel ini secara permanen?")) { try { await deleteDoc(doc(db, "rombel", id)); loadDaftarRombel(); } catch {} }
                     };
@@ -562,11 +584,11 @@
         window.handleRegister = async function() {
             const userInp = document.getElementById('reg-username').value.trim(); const passInp = document.getElementById('reg-password').value;
             if (userInp === "" || passInp.trim() === "") { alert("Data tidak boleh kosong"); return; }
-            try { await setDoc(doc(db, "users", userInp), { username: userInp, password: passInp, role: "administrator", createdAt: serverTimestamp() }); alert("Admin berhasil dibuat!"); showLogin(); } catch { alert("Gagal mendaftar."); }
+            try { await setDoc(doc(db, "users", userInp), { username: userInp, password: passInp, role: "administrator", createdAt: serverTimestamp() }); alert("Admin dibuat!"); showLogin(); } catch { alert("Gagal."); }
         }
         window.handleLogin = async function() {
             const userInp = document.getElementById('username').value.trim(); const passInp = document.getElementById('password').value;
-            try { const userDocSnap = await getDoc(doc(db, "users", userInp)); if (userDocSnap.exists() && userDocSnap.data().password === passInp) { await updateDoc(doc(db, "users", userInp), { lastLogin: serverTimestamp() }); localStorage.setItem('isLoggedIn', 'true'); localStorage.setItem('username', userInp); showDashboard(); } else { alert('Username/Password salah'); } } catch { alert("Kesalahan server database."); }
+            try { const userDocSnap = await getDoc(doc(db, "users", userInp)); if (userDocSnap.exists() && userDocSnap.data().password === passInp) { await updateDoc(doc(db, "users", userInp), { lastLogin: serverTimestamp() }); localStorage.setItem('isLoggedIn', 'true'); localStorage.setItem('username', userInp); showDashboard(); } else { alert('Username/Password salah'); } } catch { alert("Kesalahan database."); }
         }
         window.handleLogout = function() { localStorage.removeItem('isLoggedIn'); localStorage.removeItem('username'); document.getElementById('profileDropdown').classList.remove('show'); showLogin(); }
         window.toggleDropdown = function() { document.getElementById('profileDropdown').classList.toggle('show'); }
