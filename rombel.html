@@ -1,0 +1,328 @@
+<style>
+    .rb-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .filter-bar {
+        background: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    .filter-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 200px;
+        flex: 1;
+    }
+    .filter-field label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #666;
+    }
+    .filter-field select {
+        padding: 8px 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        background-color: #fff;
+    }
+    
+    .action-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    /* Tombol Ikon Bulat */
+    .btn-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        transition: background-color 0.2s;
+    }
+    .btn-primary { background-color: #007bff; color: white; }
+    .btn-primary:hover { background-color: #0056b3; }
+    .btn-success { background-color: #28a745; color: white; }
+    .btn-success:hover { background-color: #218838; }
+    .btn-danger { background-color: #dc3545; color: white; }
+    .btn-danger:hover { background-color: #c82333; }
+    .btn-warning { background-color: #ffc107; color: #333; }
+    .btn-warning:hover { background-color: #e0a800; }
+    .btn-secondary { background-color: #6c757d; color: white; }
+    .btn-secondary:hover { background-color: #5a6268; }
+
+    /* Desain Tabel Card Rombel */
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .table-rb {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        font-size: 14px;
+    }
+    .table-rb th, .table-rb td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #e0e0e0;
+        vertical-align: middle;
+    }
+    .table-rb th {
+        background-color: #f8f9fa;
+        color: #333;
+        font-weight: bold;
+    }
+    .table-rb tr:hover { background-color: #f1f5f9; }
+
+    /* Desain Form Card Box */
+    .form-box-mode {
+        background-color: #ffffff;
+        padding: 25px;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        margin-bottom: 20px;
+    }
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 15px 20px;
+    }
+    .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    .form-field label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #444;
+    }
+    .form-field input, .form-field select {
+        padding: 10px 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+        background-color: #fff;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* Sub-Section untuk pengelolaan siswa/mapel di dalam kelas */
+    .sub-management-box {
+        margin-top: 20px;
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 6px;
+        border: 1px dashed #cbd5e1;
+    }
+    .sub-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        border-bottom: 1px solid #e2e8f0;
+        padding-bottom: 6px;
+    }
+    .sub-title {
+        font-size: 14px;
+        font-weight: bold;
+        color: #334155;
+    }
+    
+    .flex-row-input {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+        align-items: flex-end;
+    }
+    .flex-row-input .form-field { flex: 1; }
+
+    .tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .tag-item {
+        background: #e2e8f0;
+        color: #334155;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .tag-item .remove-btn {
+        cursor: pointer;
+        color: #ef4444;
+        font-weight: bold;
+    }
+
+    .tr-grup-mapel {
+        background-color: #f1f5f9;
+        font-weight: bold;
+        color: #0284c7;
+    }
+</style>
+
+<div class="rb-container">
+    
+    <div class="filter-bar">
+        <div class="filter-field">
+            <label>Tahun Pelajaran</label>
+            <select id="filter_tp_rombel" onchange="handleFilterTpChangeRombel()">
+                </select>
+        </div>
+        <div class="filter-field">
+            <label>Kurikulum Terrelasi</label>
+            <select id="filter_kurikulum_rombel" onchange="loadDaftarRombel()">
+                <option value="">-- Pilih Kurikulum --</option>
+                </select>
+        </div>
+    </div>
+
+    <div id="viewTabelRombel">
+        <div class="action-bar" style="margin-bottom: 15px;">
+            <h3 style="font-size: 18px; color: #333;">Manajemen Rombongan Belajar (Rombel)</h3>
+            <button class="btn-icon btn-primary" onclick="bukaFormRombel()" title="Tambah Rombel">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            </button>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table-rb">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>ID Rombel</th>
+                        <th>Jenjang</th>
+                        <th>Nama Rombel</th>
+                        <th>Wali Kelas</th>
+                        <th>Total Siswa</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyRombel">
+                    <tr><td colspan="7" style="text-align:center; color:#999;">Tentukan rentang filter di atas.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="viewFormRombel" style="display: none;">
+        <div class="action-bar" style="margin-bottom: 15px;">
+            <h3 id="formRombelTitle" style="font-size: 18px; color: #333;">Tambah Struktur Rombel Baru</h3>
+            <div style="display:flex; gap:8px;">
+                <button type="button" class="btn-icon btn-secondary" onclick="kembaliKeTabelRombel()" title="Kembali">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                </button>
+                <button type="button" class="btn-icon btn-success" onclick="simpanStrukturRombel(event)" title="Simpan Rombel">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </button>
+            </div>
+        </div>
+
+        <form id="formRombelMaster">
+            <input type="hidden" id="rombel_id_hidden">
+            
+            <div class="form-box-mode">
+                <div class="section-title">1. Informasi Dasar Rombel</div>
+                <div class="form-grid">
+                    <div class="form-field">
+                        <label>Nama Rombel / Kelas</label>
+                        <input type="text" id="rombel_nama" placeholder="Contoh: Kelas 1-A / Rombel I" required>
+                    </div>
+                    <div class="form-field">
+                        <label>Tingkatan Jenjang</label>
+                        <select id="rombel_jenjang" required>
+                            </select>
+                    </div>
+                    <div class="form-field">
+                        <label>Wali Kelas (Guru Terpilih)</label>
+                        <select id="rombel_wali_id" required>
+                            <option value="">-- Pilih Wali Kelas --</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-box-mode">
+                <div class="section-title">2. Manajemen Anggota Peserta Didik (Siswa)</div>
+                <div class="sub-management-box">
+                    <div class="flex-row-input">
+                        <div class="form-field">
+                            <label>Pilih Siswa Aktif</label>
+                            <select id="select_tambah_siswa">
+                                <option value="">-- Pilih Siswa --</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn-icon btn-primary" onclick="addSiswaToRombelList()" title="Masukkan Siswa">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                    </div>
+                    <div class="tag-list" id="siswaRombelContainer">
+                        </div>
+                </div>
+            </div>
+
+            <div class="form-box-mode">
+                <div class="section-title">3. Paket Mata Pelajaran & Guru Pengampu</div>
+                <div class="sub-management-box">
+                    <div class="flex-row-input">
+                        <div class="form-field">
+                            <label>Pilih Mata Pelajaran</label>
+                            <select id="select_tambah_mapel">
+                                <option value="">-- Pilih Mapel --</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label>Guru Pengampu Pilihan</label>
+                            <select id="select_tambah_guru_pengampu">
+                                <option value="">-- Pilih Guru Pengampu --</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn-icon btn-success" onclick="addMapelToRombelList()" title="Ikatkan Mapel">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        </button>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table-rb" style="box-shadow: none; font-size: 13px;">
+                            <thead>
+                                <tr style="background:#f1f5f9;">
+                                    <th>Kode Mapel</th>
+                                    <th>Mata Pelajaran</th>
+                                    <th>Guru Pengampu</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyRombelMapel">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+</div>

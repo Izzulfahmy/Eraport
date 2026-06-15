@@ -6,228 +6,42 @@
     <title>Eraport</title>
     <link rel="icon" type="image/png" href="https://izzulfahmy.github.io/Eraport/logoerapor.png">
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-        body {
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        
-        /* Container Form (Login & Register) */
-        .auth-page {
-            display: none;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            padding: 20px;
-        }
-        .auth-container {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        .auth-container h2 {
-            margin-bottom: 20px;
-            text-align: center;
-            color: #333;
-            font-size: 24px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-        .btn-submit {
-            width: 100%;
-            padding: 12px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-        }
-        .btn-submit:hover {
-            background-color: #0056b3;
-        }
-        
-        /* Halaman Dashboard Admin */
-        #dashboard-page {
-            display: none;
-            height: 100vh;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        /* Navbar Utama */
-        .navbar {
-            background-color: #ffffff;
-            height: 60px;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #e0e0e0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        /* Header Top (Brand + Profile) */
-        .nav-header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: auto;
-        }
-        
-        .nav-left {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-            flex: 1;
-        }
-        .logo-brand {
-            font-size: 18px;
-            font-weight: bold;
-            color: #007bff;
-            white-space: nowrap;
-        }
-        
-        /* Navigasi Menu Horizontal - Statis Tanpa Animasi */
-        .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 5px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
-        }
-        .nav-menu::-webkit-scrollbar {
-            display: none;
-        }
-        .nav-item {
-            padding: 8px 14px;
-            color: #555;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            border-radius: 4px;
-            white-space: nowrap;
-            cursor: pointer;
-        }
-        .nav-item:hover {
-            background-color: #f1f5f9;
-            color: #007bff;
-        }
-        .nav-item.active {
-            background-color: #e0f2fe;
-            color: #0369a1;
-            font-weight: bold;
-        }
-        
-        /* Sisi Kanan Navbar (Profile) */
-        .nav-right {
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-        .profile-logo {
-            width: 32px;
-            height: 32px;
-            background-color: #6c757d;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 42px;
-            right: 0;
-            background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 1001;
-            min-width: 120px;
-        }
-        .dropdown-menu button {
-            background: none;
-            border: none;
-            padding: 10px 20px;
-            width: 100%;
-            text-align: left;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .dropdown-menu button:hover {
-            background-color: #f8f9fa;
-        }
-        .show {
-            display: block !important;
-        }
-        
-        /* Area Konten Utama */
-        .dashboard-content {
-            padding: 20px;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            flex: 1;
-        }
-        .content-card {
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            min-height: 250px;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { background-color: #f4f4f4; color: #333; }
+        .auth-page { display: none; justify-content: center; align-items: center; height: 100vh; padding: 20px; }
+        .auth-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        .auth-container h2 { margin-bottom: 20px; text-align: center; color: #333; font-size: 24px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 14px; }
+        .form-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+        .btn-submit { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; }
+        .btn-submit:hover { background-color: #0056b3; }
+        #dashboard-page { display: none; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
+        .navbar { background-color: #ffffff; height: 60px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; position: sticky; top: 0; z-index: 1000; }
+        .nav-header-top { display: flex; justify-content: space-between; align-items: center; width: auto; }
+        .nav-left { display: flex; align-items: center; gap: 25px; flex: 1; }
+        .logo-brand { font-size: 18px; font-weight: bold; color: #007bff; white-space: nowrap; }
+        .nav-menu { display: flex; list-style: none; gap: 5px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .nav-menu::-webkit-scrollbar { display: none; }
+        .nav-item { padding: 8px 14px; color: #555; text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 4px; white-space: nowrap; cursor: pointer; }
+        .nav-item:hover { background-color: #f1f5f9; color: #007bff; }
+        .nav-item.active { background-color: #e0f2fe; color: #0369a1; font-weight: bold; }
+        .nav-right { display: flex; align-items: center; position: relative; }
+        .profile-logo { width: 32px; height: 32px; background-color: #6c757d; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 14px; }
+        .dropdown-menu { display: none; position: absolute; top: 42px; right: 0; background-color: white; border: 1px solid #ccc; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 1001; min-width: 120px; }
+        .dropdown-menu button { background: none; border: none; padding: 10px 20px; width: 100%; text-align: left; cursor: pointer; font-size: 14px; }
+        .dropdown-menu button:hover { background-color: #f8f9fa; }
+        .show { display: block !important; }
+        .dashboard-content { padding: 20px; width: 100%; max-width: 1200px; margin: 0 auto; flex: 1; }
+        .content-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); min-height: 250px; }
+        .section-title { font-size: 16px; color: #007bff; border-bottom: 2px solid #e0e0e0; padding-bottom: 8px; margin-bottom: 15px; font-weight: bold; }
+        .read-field { display: flex; flex-direction: column; gap: 4px; border-bottom: 1px solid #f4f4f4; padding-bottom: 8px; }
+        .read-field .label { font-size: 12px; font-weight: 600; color: #777; }
+        .read-field .value { font-size: 14px; color: #333; font-weight: 500; word-break: break-word; padding: 4px 0; }
         @media (max-width: 768px) {
-            .navbar {
-                padding: 10px 15px;
-                height: auto;
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-            }
-            .nav-header-top {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                width: 100%;
-            }
-            .nav-left {
-                width: 100%;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
+            .navbar { padding: 10px 15px; height: auto; flex-direction: column; align-items: stretch; gap: 8px; }
+            .nav-header-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+            .nav-left { width: 100%; flex-direction: column; align-items: flex-start; gap: 8px; }
             .logo-brand { font-size: 16px; }
             .profile-logo { width: 28px; height: 28px; font-size: 12px; }
             .dropdown-menu { top: 35px; }
@@ -239,42 +53,12 @@
 </head>
 <body>
 
-    <div id="register-page" class="auth-page">
-        <div class="auth-container">
-            <h2>Register Administrator</h2>
-            <div class="form-group">
-                <label for="reg-username">Username</label>
-                <input type="text" id="reg-username" onkeydown="handleRegisterKeyPress(event)">
-            </div>
-            <div class="form-group">
-                <label for="reg-password">Password</label>
-                <input type="password" id="reg-password" onkeydown="handleRegisterKeyPress(event)">
-            </div>
-            <button class="btn-submit" onclick="handleRegister()">Buat Akun Admin</button>
-        </div>
-    </div>
-
-    <div id="login-page" class="auth-page">
-        <div class="auth-container">
-            <h2>Login</h2>
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" onkeydown="handleLoginKeyPress(event)">
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" onkeydown="handleLoginKeyPress(event)">
-            </div>
-            <button class="btn-submit" onclick="handleLogin()">Login</button>
-        </div>
-    </div>
+    <div id="register-page" class="auth-page"><div class="auth-container"><h2>Register Administrator</h2><div class="form-group"><label>Username</label><input type="text" id="reg-username" onkeydown="handleRegisterKeyPress(event)"></div><div class="form-group"><label>Password</label><input type="password" id="reg-password" onkeydown="handleRegisterKeyPress(event)"></div><button class="btn-submit" onclick="handleRegister()">Buat Akun Admin</button></div></div>
+    <div id="login-page" class="auth-page"><div class="auth-container"><h2>Login</h2><div class="form-group"><label>Username</label><input type="text" id="username" onkeydown="handleLoginKeyPress(event)"></div><div class="form-group"><label>Password</label><input type="password" id="password" onkeydown="handleLoginKeyPress(event)"></div><button class="btn-submit" onclick="handleLogin()">Login</button></div></div>
 
     <div id="dashboard-page">
         <nav class="navbar">
-            <div class="nav-header-top">
-                <div class="logo-brand">Eraport Admin</div>
-            </div>
-            
+            <div class="nav-header-top"><div class="logo-brand">Eraport Admin</div></div>
             <div class="nav-left">
                 <div class="nav-menu">
                     <div class="nav-item active" onclick="switchMenu('beranda', this)">Beranda</div>
@@ -284,631 +68,490 @@
                     <div class="nav-item" onclick="switchMenu('murid', this)">Murid</div>
                     <div class="nav-item" onclick="switchMenu('kurikulum', this)">Kurikulum</div>
                     <div class="nav-item" onclick="switchMenu('mata-pelajaran', this)">Mata Pelajaran</div>
-                    <div class="nav-item" onclick="switchMenu('kelas', this)">Kelas</div>
+                    <div class="nav-item" onclick="switchMenu('kelas', this)">Rombel</div>
                 </div>
             </div>
-            
             <div class="nav-right">
                 <div class="profile-logo" onclick="toggleDropdown()">A</div>
-                <div class="dropdown-menu" id="profileDropdown">
-                    <button onclick="handleLogout()">Logout</button>
-                </div>
+                <div class="dropdown-menu" id="profileDropdown"><button onclick="handleLogout()">Logout</button></div>
             </div>
         </nav>
-        
-        <div class="dashboard-content">
-            <div class="content-card" id="mainContentArea">
-                <h3>Selamat Datang di Sistem Eraport</h3>
-                <p>Silakan pilih menu di bagian atas untuk mulai mengelola manajemen administrasi sekolah.</p>
-            </div>
-        </div>
+        <div class="dashboard-content"><div class="content-card" id="mainContentArea"></div></div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc, limit, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyCBXA1Atpm8LpDSdAr02OEvuADP2bUT9Gk",
-            authDomain: "eraport-87687.firebaseapp.com",
-            projectId: "eraport-87687",
-            storageBucket: "eraport-87687.firebasestorage.app",
-            messagingSenderId: "879847959076",
-            appId: "1:879847959076:web:51ca5db07bb4724b7e06b1",
-            measurementId: "G-NWCTMGHZEV"
+            apiKey: "AIzaSyCBXA1Atpm8LpDSdAr02OEvuADP2bUT9Gk", authDomain: "eraport-87687.firebaseapp.com",
+            projectId: "eraport-87687", storageBucket: "eraport-87687.firebasestorage.app",
+            messagingSenderId: "879847959076", appId: "1:879847959076:web:51ca5db07bb4724b7e06b1"
         };
-
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const db = getFirestore(app);
+        const app = initializeApp(firebaseConfig); const db = getFirestore(app);
 
         window.addEventListener('resize', adjustMobileLayout);
-
         window.addEventListener('DOMContentLoaded', async () => {
-            adjustMobileLayout();
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (isLoggedIn === 'true') {
-                showDashboard();
-                return;
-            }
-
+            adjustMobileLayout(); const isLoggedIn = localStorage.getItem('isLoggedIn');
+            if (isLoggedIn === 'true') { showDashboard(); return; }
             try {
-                const usersRef = collection(db, "users");
-                const q = query(usersRef, limit(1));
-                const querySnapshot = await getDocs(q);
-                if (!querySnapshot.empty) showLogin(); else showRegister();
-            } catch (error) {
-                console.error(error);
-                showLogin();
-            }
+                const snap = await getDocs(query(collection(db, "users"), limit(1)));
+                if (!snap.empty) showLogin(); else showRegister();
+            } catch { showLogin(); }
         });
 
         function adjustMobileLayout() {
-            const headerTop = document.querySelector('.nav-header-top');
-            const navRight = document.querySelector('.nav-right');
-            const navbar = document.querySelector('.navbar');
+            const headerTop = document.querySelector('.nav-header-top'); const navRight = document.querySelector('.nav-right'); const navbar = document.querySelector('.navbar');
             if (!headerTop || !navRight || !navbar) return;
-            if (window.innerWidth <= 768) {
-                if (navRight.parentElement === navbar) headerTop.appendChild(navRight);
-            } else {
-                if (navRight.parentElement === headerTop) navbar.appendChild(navRight);
-            }
+            if (window.innerWidth <= 768) { if (navRight.parentElement === navbar) headerTop.appendChild(navRight); }
+            else { if (navRight.parentElement === headerTop) navbar.appendChild(navRight); }
         }
 
         window.switchMenu = async function(menuName, element) {
-            const items = document.querySelectorAll('.nav-item');
-            items.forEach(item => item.classList.remove('active'));
+            const items = document.querySelectorAll('.nav-item'); items.forEach(item => item.classList.remove('active'));
             if(element) element.classList.add('active');
-            
-            const contentArea = document.getElementById('mainContentArea');
-            if(!contentArea) return;
+            const contentArea = document.getElementById('mainContentArea'); if(!contentArea) return;
             
             switch(menuName) {
                 case 'beranda':
-                    contentArea.innerHTML = `<h3>Beranda</h3><p>Ini adalah halaman utama dashboard Panel Administrator Eraport.</p>`;
-                    break;
-                    
+                    contentArea.innerHTML = `<h3>Beranda</h3><p>Ini adalah halaman utama dashboard Panel Administrator Eraport.</p>`; break;
                 case 'profil-sekolah':
-                    contentArea.innerHTML = `<p style="color: #999;">Memuat data profil sekolah...</p>`;
+                    contentArea.innerHTML = `<p>Memuat data...</p>`;
                     try {
-                        const res = await fetch('profilsekolah.html');
-                        contentArea.innerHTML = await res.text();
-                        
-                        const docSnap = await getDoc(doc(db, "pengaturan", "profil_sekolah"));
-                        const currentData = docSnap.exists() ? docSnap.data() : {};
-
+                        const res = await fetch('profilsekolah.html'); contentArea.innerHTML = await res.text();
+                        const docSnap = await getDoc(doc(db, "pengaturan", "profil_sekolah")); const currentData = docSnap.exists() ? docSnap.data() : {};
                         const fields = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah', 'alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude', 'no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
                         const labelMapping = { 'nama_sekolah': 'Nama Resmi Sekolah', 'npsn': 'NPSN', 'nss_nds': 'NSS / NDS', 'status_sekolah': 'Status Sekolah', 'jenjang': 'Bentuk Satuan Pendidikan', 'status_kepemilikan': 'Status Kepemilikan', 'nama_pemilik': 'Nama Pemilik / Yayasan', 'sk_pendirian': 'SK Pendirian Sekolah', 'sk_operasional': 'SK Izin Operasional', 'tgl_berdiri': 'Tanggal Berdiri / SK Operasional', 'status_akreditasi': 'Status Akreditasi', 'npwp_sekolah': 'Nomor Pokok Wajib Pajak (NPWP)', 'alamat_lengkap': 'Alamat Lengkap', 'dusun': 'Dusun / Kampung', 'desa': 'Desa / Kelurahan', 'kecamatan': 'Kecamatan', 'kabupaten': 'Kabupaten / Kota', 'provinsi': 'Provinsi', 'kode_pos': 'Kode Pos', 'latitude': 'Garis Lintang (Latitude)', 'longitude': 'Garis Bujur (Longitude)', 'no_telp': 'Nomor Telepon', 'fax': 'Nomor Faksimile (Fax)', 'no_wa': 'WhatsApp / Kontak Humas', 'email_sekolah': 'Alamat Email Resmi', 'website': 'Situs Web Resmi', 'medsos': 'Media Sosial' };
-
-                        const sec1 = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah'];
-                        const sec2 = ['alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude'];
-                        const sec3 = ['no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
-
+                        const sec1 = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah']; const sec2 = ['alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude']; const sec3 = ['no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
                         const renderFieldsToGrid = (fieldList, gridId) => {
-                            const gridEl = document.getElementById(gridId); if(!gridEl) return;
-                            gridEl.innerHTML = '';
+                            const gridEl = document.getElementById(gridId); if(!gridEl) return; gridEl.innerHTML = '';
                             fieldList.forEach(key => {
-                                const valText = currentData[key] || '-';
-                                const inputEl = document.getElementById(key); if(inputEl) inputEl.value = currentData[key] || '';
-                                const fieldDiv = document.createElement('div'); fieldDiv.className = 'read-field';
-                                fieldDiv.innerHTML = `<span class="label">${labelMapping[key]}</span><span class="value">${valText}</span>`;
-                                gridEl.appendChild(fieldDiv);
+                                const valText = currentData[key] || '-'; const inputEl = document.getElementById(key); if(inputEl) inputEl.value = currentData[key] || '';
+                                const fieldDiv = document.createElement('div'); fieldDiv.className = 'read-field'; fieldDiv.innerHTML = `<span class="label">${labelMapping[key]}</span><span class="value">${valText}</span>`; gridEl.appendChild(fieldDiv);
                             });
                         };
                         renderFieldsToGrid(sec1, 'gridModeBaca1'); renderFieldsToGrid(sec2, 'gridModeBaca2'); renderFieldsToGrid(sec3, 'gridModeBaca3');
-
-                        window.aktifkanModeEdit = function() {
-                            document.getElementById('wrapperModeBaca').style.display = 'none'; document.getElementById('btnKeModeEdit').style.display = 'none';
-                            document.getElementById('formProfilSekolah').style.display = 'block'; document.getElementById('btnBatalEdit').style.display = 'flex'; document.getElementById('btnSimpanProfil').style.display = 'flex';
-                        };
-                        window.batalkanModeEdit = function() {
-                            document.getElementById('formProfilSekolah').style.display = 'none'; document.getElementById('btnBatalEdit').style.display = 'none'; document.getElementById('btnSimpanProfil').style.display = 'none';
-                            document.getElementById('wrapperModeBaca').style.display = 'block'; document.getElementById('btnKeModeEdit').style.display = 'flex';
-                        };
-                    } catch (err) { contentArea.innerHTML = `<p style="color: red;">Gagal memuat profil sekolah.</p>`; }
-
+                        window.aktifkanModeEdit = function() { document.getElementById('wrapperModeBaca').style.display = 'none'; document.getElementById('btnKeModeEdit').style.display = 'none'; document.getElementById('formProfilSekolah').style.display = 'block'; document.getElementById('btnBatalEdit').style.display = 'flex'; document.getElementById('btnSimpanProfil').style.display = 'flex'; };
+                        window.batalkanModeEdit = function() { document.getElementById('formProfilSekolah').style.display = 'none'; document.getElementById('btnBatalEdit').style.display = 'none'; document.getElementById('btnSimpanProfil').style.display = 'none'; document.getElementById('wrapperModeBaca').style.display = 'block'; document.getElementById('btnKeModeEdit').style.display = 'flex'; };
+                    } catch { contentArea.innerHTML = `<p style="color: red;">Gagal memuat profil sekolah.</p>`; }
                     window.simpanProfilSekolah = async function(event) {
                         event.preventDefault(); const btn = document.getElementById('btnSimpanProfil'); if(btn) btn.disabled = true;
                         const fields = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah', 'alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude', 'no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
                         const payload = {}; fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
-                        try {
-                            await setDoc(doc(db, "pengaturan", "profil_sekolah"), payload); alert("Data Profil Sekolah diperbarui!");
-                            switchMenu('profil-sekolah', document.querySelector('[onclick*="profil-sekolah"]'));
-                        } catch { alert("Gagal menyimpan."); if(btn) btn.disabled = false; }
-                    };
-                    break;
+                        try { await setDoc(doc(db, "pengaturan", "profil_sekolah"), payload); switchMenu('profil-sekolah', document.querySelector('[onclick*="profil-sekolah"]')); } catch { alert("Gagal."); if(btn) btn.disabled = false; }
+                    }; break;
 
                 case 'guru':
-                    contentArea.innerHTML = `<p style="color: #999;">Memuat Modul Pendidik...</p>`;
-                    try {
-                        const res = await fetch('guru.html'); contentArea.innerHTML = await res.text(); loadDaftarGuru();
-                    } catch { contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul guru.</p>`; }
-
-                    window.bukaFormGuru = function() {
-                        document.getElementById('viewTabelGuru').style.display = 'none'; document.getElementById('viewFormGuru').style.display = 'block';
-                        document.getElementById('formGuru').reset(); document.getElementById('guru_id_hidden').value = '';
-                    };
-                    window.kembaliKeTabelGuru = function() {
-                        document.getElementById('viewFormGuru').style.display = 'none'; document.getElementById('viewTabelGuru').style.display = 'block'; loadDaftarGuru();
-                    };
+                    contentArea.innerHTML = `<p>Memuat...</p>`;
+                    try { const res = await fetch('guru.html'); contentArea.innerHTML = await res.text(); loadDaftarGuru(); } catch { contentArea.innerHTML = `<p style="color: red;">Gagal.</p>`; }
+                    window.bukaFormGuru = function() { document.getElementById('viewTabelGuru').style.display = 'none'; document.getElementById('viewFormGuru').style.display = 'block'; document.getElementById('formGuru').reset(); document.getElementById('guru_id_hidden').value = ''; };
+                    window.kembaliKeTabelGuru = function() { document.getElementById('viewFormGuru').style.display = 'none'; document.getElementById('viewTabelGuru').style.display = 'block'; loadDaftarGuru(); };
                     async function loadDaftarGuru() {
-                        const tbody = document.getElementById('tbodyGuru'); if(!tbody) return;
-                        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Mengambil data...</td></tr>';
+                        const tbody = document.getElementById('tbodyGuru'); if(!tbody) return; tbody.innerHTML = '<tr><td>Memuat...</td></tr>';
                         try {
                             const snap = await getDocs(query(collection(db, "teachers"), orderBy("createdAt", "desc"))); tbody.innerHTML = ''; let idx = 1;
-                            snap.forEach(d => {
-                                const t = d.data(); const tr = document.createElement('tr');
-                                tr.innerHTML = `<td>${idx++}</td><td>${t.nuptk||'-'} / ${t.nip||'-'}</td><td><strong>${t.nama_lengkap}</strong></td><td>${t.jabatan}</td><td>${t.status_keaktifan}</td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editGuru('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusGuru('${d.id}')">Hapus</button></div></td>`;
-                                tbody.appendChild(tr);
-                            });
-                        } catch { tbody.innerHTML = '<tr><td colspan="6">Gagal memuat list.</td></tr>'; }
+                            snap.forEach(d => { const t = d.data(); const tr = document.createElement('tr'); tr.innerHTML = `<td>${idx++}</td><td>${t.nuptk||'-'} / ${t.nip||'-'}</td><td><strong>${t.nama_lengkap}</strong></td><td>${t.jabatan}</td><td>${t.status_keaktifan}</td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editGuru('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusGuru('${d.id}')">Hapus</button></div></td>`; tbody.appendChild(tr); });
+                        } catch { tbody.innerHTML = '<tr><td>Gagal.</td></tr>'; }
                     }
                     window.simpanDataGuru = async function(e) {
-                        e.preventDefault();
-                        const fields = ['nama_lengkap', 'gelar_depan', 'gelar_belakang', 'nik', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'gol_darah', 'status_pernikahan', 'nuptk', 'nip', 'niy_nigk', 'status_kepegawaian', 'jabatan', 'pangkat_golongan', 'tmt_pengangkatan', 'sk_pengangkatan', 'lembaga_pengangkat', 'npwp', 'tingkat_pendidikan', 'gelar_akademik', 'jurusan', 'universitas', 'tahun_kelulusan', 'alamat_rumah', 'kode_pos_guru', 'no_hp', 'email_pribadi', 'email_institusi', 'foto_profil', 'status_keaktifan', 'mapel_diampu', 'username_sistem', 'password_sistem'];
-                        const payload = { updatedAt: serverTimestamp() }; fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
-                        const id = document.getElementById('guru_id_hidden').value;
-                        try {
-                            if(id) { await setDoc(doc(db, "teachers", id), payload, { merge: true }); }
-                            else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "teachers", payload.username_sistem), payload); }
-                            alert("Data Guru Berhasil Diproses!"); kembaliKeTabelGuru();
-                        } catch { alert("Gagal memproses data."); }
+                        e.preventDefault(); const fields = ['nama_lengkap', 'gelar_depan', 'gelar_belakang', 'nik', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'gol_darah', 'status_pernikahan', 'nuptk', 'nip', 'niy_nigk', 'status_kepegawaian', 'jabatan', 'pangkat_golongan', 'tmt_pengangkatan', 'sk_pengangkatan', 'lembaga_pengangkat', 'npwp', 'tingkat_pendidikan', 'gelar_akademik', 'jurusan', 'universitas', 'tahun_kelulusan', 'alamat_rumah', 'kode_pos_guru', 'no_hp', 'email_pribadi', 'email_institusi', 'foto_profil', 'status_keaktifan', 'mapel_diampu', 'username_sistem', 'password_sistem'];
+                        const payload = { updatedAt: serverTimestamp() }; fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; }); const id = document.getElementById('guru_id_hidden').value;
+                        try { if(id) { await setDoc(doc(db, "teachers", id), payload, { merge: true }); } else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "teachers", payload.username_sistem), payload); } kembaliKeTabelGuru(); } catch { alert("Gagal."); }
                     };
-                    window.editGuru = async function(id) {
-                        bukaFormGuru(); document.getElementById('guru_id_hidden').value = id;
-                        const snap = await getDoc(doc(db, "teachers", id));
-                        if(snap.exists()) { const d = snap.data(); Object.keys(d).forEach(k => { const el = document.getElementById(k); if(el) el.value = d[k]; }); }
-                    };
-                    window.hapusGuru = async function(id) { if(confirm("Hapus data guru ini?")) { await deleteDoc(doc(db, "teachers", id)); loadDaftarGuru(); } };
+                    window.editGuru = async function(id) { bukaFormGuru(); document.getElementById('guru_id_hidden').value = id; const snap = await getDoc(doc(db, "teachers", id)); if(snap.exists()) { const d = snap.data(); Object.keys(d).forEach(k => { const el = document.getElementById(k); if(el) el.value = d[k]; }); } };
+                    window.hapusGuru = async function(id) { if(confirm("Hapus?")) { await deleteDoc(doc(db, "teachers", id)); loadDaftarGuru(); } };
                     break;
 
                 case 'murid':
-                    contentArea.innerHTML = `<p style="color: #999;">Memuat Modul Peserta Didik...</p>`;
-                    try {
-                        const res = await fetch('murid.html'); contentArea.innerHTML = await res.text(); loadDaftarMurid();
-                    } catch { contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul murid.</p>`; }
-
-                    window.bukaFormMurid = function() {
-                        document.getElementById('viewTabelMurid').style.display = 'none'; document.getElementById('viewFormMurid').style.display = 'block';
-                        document.getElementById('formMurid').reset(); document.getElementById('murid_id_hidden').value = '';
-                    };
-                    window.kembaliKeTabelMurid = function() {
-                        document.getElementById('viewFormMurid').style.display = 'none'; document.getElementById('viewTabelMurid').style.display = 'block'; loadDaftarMurid();
-                    };
+                    contentArea.innerHTML = `<p>Memuat...</p>`;
+                    try { const res = await fetch('murid.html'); contentArea.innerHTML = await res.text(); loadDaftarMurid(); } catch { contentArea.innerHTML = `<p style="color: red;">Gagal.</p>`; }
+                    window.bukaFormMurid = function() { document.getElementById('viewTabelMurid').style.display = 'none'; document.getElementById('viewFormMurid').style.display = 'block'; document.getElementById('formMurid').reset(); document.getElementById('murid_id_hidden').value = ''; };
+                    window.kembaliKeTabelMurid = function() { document.getElementById('viewFormMurid').style.display = 'none'; document.getElementById('viewTabelMurid').style.display = 'block'; loadDaftarMurid(); };
                     async function loadDaftarMurid() {
-                        const tbody = document.getElementById('tbodyMurid'); if(!tbody) return;
-                        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Mengambil data...</td></tr>';
+                        const tbody = document.getElementById('tbodyMurid'); if(!tbody) return; tbody.innerHTML = '<tr><td>Memuat...</td></tr>';
                         try {
                             const snap = await getDocs(query(collection(db, "students"), orderBy("createdAt", "desc"))); tbody.innerHTML = ''; let idx = 1;
-                            snap.forEach(d => {
-                                const m = d.data(); const tr = document.createElement('tr');
-                                tr.innerHTML = `<td>${idx++}</td><td>${m.nisn || '-'} / ${m.nis || '-'}</td><td><strong>${m.nama_lengkap}</strong></td><td>${m.id_kelas || '-'} / Absen: ${m.nomor_absen || '-'}</td><td><span style="padding:4px 8px; font-size:12px; border-radius:4px; font-weight:bold; background-color:${m.status_keaktifan === 'Aktif' ? '#d4edda; color:#155724;' : '#f8d7da; color:#721c24;'}">${m.status_keaktifan || 'Aktif'}</span></td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editMurid('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusMurid('${d.id}')">Hapus</button></div></td>`;
-                                tbody.appendChild(tr);
-                            });
-                        } catch { tbody.innerHTML = '<tr><td colspan="6">Gagal memuat list.</td></tr>'; }
+                            snap.forEach(d => { const m = d.data(); const tr = document.createElement('tr'); tr.innerHTML = `<td>${idx++}</td><td>${m.nisn || '-'} / ${m.nis || '-'}</td><td><strong>${m.nama_lengkap}</strong></td><td>${m.id_kelas || '-'} / Absen: ${m.nomor_absen || '-'}</td><td>${m.status_keaktifan}</td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editMurid('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusMurid('${d.id}')">Hapus</button></div></td>`; tbody.appendChild(tr); });
+                        } catch { tbody.innerHTML = '<tr><td>Gagal.</td></tr>'; }
                     }
                     window.simpanDataMurid = async function(e) {
-                        e.preventDefault(); const btn = document.getElementById('btnSimpanMurid'); if(btn) { btn.disabled = true; btn.innerText = "Memproses..."; }
+                        e.preventDefault(); const btn = document.getElementById('btnSimpanMurid'); if(btn) btn.disabled = true;
                         const fields = ['nama_lengkap', 'nama_panggilan', 'nisn', 'nis', 'nik', 'no_akta', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'kewarganegaraan', 'anak_ke', 'jumlah_saudara', 'gol_darah', 'alamat_tinggal', 'kode_pos', 'tempat_tinggal_bersama', 'transportasi', 'no_hp_siswa', 'email_siswa', 'nama_ayah', 'nik_ayah', 'tahun_lahir_ayah', 'pendidikan_ayah', 'pekerjaan_ayah', 'penghasilan_ayah', 'nama_ibu', 'nik_ibu', 'tahun_lahir_ibu', 'pendidikan_ibu', 'pekerjaan_ibu', 'penghasilan_ibu', 'no_hp_ortu', 'nama_wali', 'nik_wali', 'hubungan_wali', 'pekerjaan_wali', 'no_hp_wali', 'status_murid', 'asal_sekolah', 'no_ijazah', 'no_skhun', 'tanggal_masuk', 'foto_profil', 'id_kelas', 'nomor_absen', 'status_keaktifan', 'username_murid', 'password_murid'];
-                        const payload = { updatedAt: serverTimestamp() }; fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
-                        const mid = document.getElementById('murid_id_hidden').value;
-                        try {
-                            if(mid) { await setDoc(doc(db, "students", mid), payload, { merge: true }); alert("Data Murid diupdate!"); } 
-                            else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "students", payload.username_murid), payload); alert("Murid baru disimpan!"); }
-                            kembaliKeTabelMurid();
-                        } catch { alert("Gagal memproses."); } finally { if(btn) { btn.disabled = false; btn.innerText = "Simpan Data Murid"; } }
+                        const payload = { updatedAt: serverTimestamp() }; fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; }); const mid = document.getElementById('murid_id_hidden').value;
+                        try { if(mid) { await setDoc(doc(db, "students", mid), payload, { merge: true }); } else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "students", payload.username_murid), payload); } kembaliKeTabelMurid(); } catch { alert("Gagal."); } finally { if(btn) btn.disabled = false; }
                     };
-                    window.editMurid = async function(id) {
-                        bukaFormMurid(); document.getElementById('formMuridTitle').innerText = "Edit Data Murid"; document.getElementById('murid_id_hidden').value = id;
-                        try { const snap = await getDoc(doc(db, "students", id)); if(snap.exists()) { const d = snap.data(); Object.keys(d).forEach(k => { const el = document.getElementById(k); if(el) el.value = d[k]; }); } } catch { alert("Gagal memuat detail."); }
-                    };
-                    window.hapusMurid = async function(id) { if(confirm("Hapus data murid ini?")) { await deleteDoc(doc(db, "students", id)); loadDaftarMurid(); } };
+                    window.editMurid = async function(id) { bukaFormMurid(); document.getElementById('murid_id_hidden').value = id; const snap = await getDoc(doc(db, "students", id)); if(snap.exists()) { const d = snap.data(); Object.keys(d).forEach(k => { const el = document.getElementById(k); if(el) el.value = d[k]; }); } };
+                    window.hapusMurid = async function(id) { if(confirm("Hapus?")) { await deleteDoc(doc(db, "students", id)); loadDaftarMurid(); } };
                     break;
 
                 case 'tahun-pelajaran':
-                    contentArea.innerHTML = `<p style="color: #999;">Memuat Modul Tahun Pelajaran...</p>`;
-                    try {
-                        const res = await fetch('tahunpelajaran.html'); contentArea.innerHTML = await res.text(); loadDaftarTP();
-                    } catch { contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul tahun pelajaran.</p>`; }
-
-                    window.bukaFormTP = function() {
-                        document.getElementById('viewTabelTP').style.display = 'none'; document.getElementById('viewFormTP').style.display = 'block';
-                        document.getElementById('formTP').reset(); document.getElementById('tp_id_hidden').value = ''; document.getElementById('status_aktif_checkbox').checked = false;
-                    };
-                    window.kembaliKeTabelTP = function() {
-                        document.getElementById('viewFormTP').style.display = 'none'; document.getElementById('viewTabelTP').style.display = 'block'; loadDaftarTP();
-                    };
+                    contentArea.innerHTML = `<p>Memuat...</p>`;
+                    try { const res = await fetch('tahunpelajaran.html'); contentArea.innerHTML = await res.text(); loadDaftarTP(); } catch { contentArea.innerHTML = `<p style="color: red;">Gagal.</p>`; }
+                    window.bukaFormTP = function() { document.getElementById('viewTabelTP').style.display = 'none'; document.getElementById('viewFormTP').style.display = 'block'; document.getElementById('formTP').reset(); document.getElementById('tp_id_hidden').value = ''; document.getElementById('status_aktif_checkbox').checked = false; };
+                    window.kembaliKeTabelTP = function() { document.getElementById('viewFormTP').style.display = 'none'; document.getElementById('viewTabelTP').style.display = 'block'; loadDaftarTP(); };
                     async function loadDaftarTP() {
-                        const tbody = document.getElementById('tbodyTP'); if(!tbody) return;
-                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Mengambil data...</td></tr>';
+                        const tbody = document.getElementById('tbodyTP'); if(!tbody) return; tbody.innerHTML = '<tr><td>Memuat...</td></tr>';
                         try {
                             const snap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("createdAt", "desc"))); tbody.innerHTML = ''; let idx = 1;
-                            snap.forEach(d => {
-                                const tp = d.data(); const isChecked = tp.status_aktif === 'Aktif' ? 'checked' : ''; const tr = document.createElement('tr');
-                                tr.innerHTML = `<td>${idx++}</td><td><code>${d.id}</code></td><td>${tp.tahun_mulai} / ${tp.tahun_berakhir}</td><td><strong>${tp.semester}</strong></td><td>${tp.tanggal_mulai} s.d ${tp.tanggal_berakhir}</td><td><label class="switch"><input type="checkbox" ${isChecked} onclick="toggleStatusTPDirect('${d.id}', this.checked)"><span class="slider"></span></label></td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editTP('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusTP('${d.id}')">Hapus</button></div></td>`;
-                                tbody.appendChild(tr);
-                            });
-                        } catch { tbody.innerHTML = '<tr><td colspan="7">Gagal memuat list.</td></tr>'; }
+                            snap.forEach(d => { const tp = d.data(); const isChecked = tp.status_aktif === 'Aktif' ? 'checked' : ''; const tr = document.createElement('tr'); tr.innerHTML = `<td>${idx++}</td><td><code>${d.id}</code></td><td>${tp.tahun_mulai} / ${tp.tahun_berakhir}</td><td><strong>${tp.semester}</strong></td><td>${tp.tanggal_mulai} s.d ${tp.tanggal_berakhir}</td><td><label class="switch"><input type="checkbox" ${isChecked} onclick="toggleStatusTPDirect('${d.id}', this.checked)"><span class="slider"></span></label></td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editTP('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusTP('${d.id}')">Hapus</button></div></td>`; tbody.appendChild(tr); });
+                        } catch { tbody.innerHTML = '<tr><td>Gagal.</td></tr>'; }
                     }
                     window.toggleStatusTPDirect = async function(id, isChecked) {
                         try {
-                            const statusBaru = isChecked ? 'Aktif' : 'Tidak Aktif';
-                            if (isChecked) {
-                                const snap = await getDocs(collection(db, "tahunpelajaran"));
-                                for (const d of snap.docs) { if (d.id !== id && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Aktif' }); }
-                            }
-                            await updateDoc(doc(db, "tahunpelajaran", id), { status_aktif: statusBaru, updatedAt: serverTimestamp() }); loadDaftarTP();
-                        } catch { alert("Gagal merubah status."); loadDaftarTP(); }
+                            if (isChecked) { const snap = await getDocs(collection(db, "tahunpelajaran")); for (const d of snap.docs) { if (d.id !== id && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Aktif' }); } }
+                            await updateDoc(doc(db, "tahunpelajaran", id), { status_aktif: isChecked ? 'Aktif' : 'Tidak Aktif', updatedAt: serverTimestamp() }); loadDaftarTP();
+                        } catch { alert("Gagal."); loadDaftarTP(); }
                     };
                     window.simpanDataTP = async function(e) {
                         e.preventDefault(); const btn = document.getElementById('btnSimpanTP'); if(btn) btn.disabled = true;
-                        const tMulai = document.getElementById('tahun_mulai').value.trim(); const tBerakhir = document.getElementById('tahun_berakhir').value.trim();
-                        const sem = document.getElementById('semester').value; const statusChecked = document.getElementById('status_aktif_checkbox').checked;
+                        const tMulai = document.getElementById('tahun_mulai').value.trim(); const tBerakhir = document.getElementById('tahun_berakhir').value.trim(); const sem = document.getElementById('semester').value; const statusChecked = document.getElementById('status_aktif_checkbox').checked;
                         const payload = { tahun_mulai: parseInt(tMulai), tahun_berakhir: parseInt(tBerakhir), semester: sem, tanggal_mulai: document.getElementById('tanggal_mulai').value, tanggal_berakhir: document.getElementById('tanggal_berakhir').value, status_aktif: statusChecked ? 'Aktif' : 'Tidak Aktif', updatedAt: serverTimestamp() };
                         const isEdit = document.getElementById('tp_id_hidden').value; const targetId = isEdit ? isEdit : `${tMulai}${tBerakhir}${(sem === "Ganjil") ? "1" : "2"}`;
                         try {
-                            if (statusChecked) {
-                                const snap = await getDocs(collection(db, "tahunpelajaran"));
-                                for (const d of snap.docs) { if (d.id !== targetId && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Aktif' }); }
-                            }
-                            if(isEdit) { await setDoc(doc(db, "tahunpelajaran", isEdit), payload, { merge: true }); } 
-                            else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "tahunpelajaran", targetId), payload); }
-                            kembaliKeTabelTP();
-                        } catch { alert("Gagal menyimpan."); } finally { if(btn) btn.disabled = false; }
+                            if (statusChecked) { const snap = await getDocs(collection(db, "tahunpelajaran")); for (const d of snap.docs) { if (d.id !== targetId && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Aktif' }); } }
+                            if(isEdit) { await setDoc(doc(db, "tahunpelajaran", isEdit), payload, { merge: true }); } else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "tahunpelajaran", targetId), payload); } kembaliKeTabelTP();
+                        } catch { alert("Gagal."); } finally { if(btn) btn.disabled = false; }
                     };
                     window.editTP = async function(id) {
                         bukaFormTP(); document.getElementById('tp_id_hidden').value = id;
-                        try {
-                            const snap = await getDoc(doc(db, "tahunpelajaran", id));
-                            if(snap.exists()) {
-                                const d = snap.data(); document.getElementById('tahun_mulai').value = d.tahun_mulai || ''; document.getElementById('tahun_berakhir').value = d.tahun_berakhir || '';
-                                document.getElementById('semester').value = d.semester || 'Ganjil'; document.getElementById('tanggal_mulai').value = d.tanggal_mulai || '';
-                                document.getElementById('tanggal_berakhir').value = d.tanggal_berakhir || ''; document.getElementById('status_aktif_checkbox').checked = d.status_aktif === 'Aktif';
-                            }
-                        } catch { alert("Gagal memuat detail."); }
+                        try { const snap = await getDoc(doc(db, "tahunpelajaran", id)); if(snap.exists()) { const d = snap.data(); document.getElementById('tahun_mulai').value = d.tahun_mulai || ''; document.getElementById('tahun_berakhir').value = d.tahun_berakhir || ''; document.getElementById('semester').value = d.semester || 'Ganjil'; document.getElementById('tanggal_mulai').value = d.tanggal_mulai || ''; document.getElementById('tanggal_berakhir').value = d.tanggal_berakhir || ''; document.getElementById('status_aktif_checkbox').checked = d.status_aktif === 'Aktif'; } } catch { alert("Gagal."); }
                     };
-                    window.hapusTP = async function(id) { if(confirm("Hapus data ini?")) { await deleteDoc(doc(db, "tahunpelajaran", id)); loadDaftarTP(); } };
+                    window.hapusTP = async function(id) { if(confirm("Hapus?")) { await deleteDoc(doc(db, "tahunpelajaran", id)); loadDaftarTP(); } };
                     break;
 
                 case 'kurikulum':
-                    contentArea.innerHTML = `<p style="color: #999;">Memuat Modul Kurikulum...</p>`;
+                    contentArea.innerHTML = `<p>Memuat...</p>`;
                     try {
                         const res = await fetch('kurikulum.html'); contentArea.innerHTML = await res.text();
                         const selectRelasi = document.getElementById('relasi_tahun_pelajaran');
-                        if (selectRelasi) {
-                            const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc")));
-                            tpSnap.forEach(tpDoc => {
-                                const tpData = tpDoc.data(); const opt = document.createElement('option');
-                                opt.value = tpDoc.id; opt.innerText = `${tpData.tahun_mulai}/${tpData.tahun_berakhir} - Semester ${tpData.semester}`;
-                                selectRelasi.appendChild(opt);
-                            });
-                        }
+                        if (selectRelasi) { const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc"))); tpSnap.forEach(tpDoc => { const tpData = tpDoc.data(); const opt = document.createElement('option'); opt.value = tpDoc.id; opt.innerText = `${tpData.tahun_mulai}/${tpData.tahun_berakhir} - Semester ${tpData.semester}`; selectRelasi.appendChild(opt); }); }
                         loadDaftarKurikulum();
-                    } catch (err) { console.error(err); contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul kurikulum.</p>`; }
-
-                    window.bukaFormKurikulum = function() {
-                        document.getElementById('viewTabelKurikulum').style.display = 'none'; document.getElementById('viewFormKurikulum').style.display = 'block';
-                        document.getElementById('formKurikulum').reset(); document.getElementById('kurikulum_id_hidden').value = ''; document.getElementById('kurikulum_aktif_checkbox').checked = false;
-                        document.getElementById('formKurikulumTitle').innerText = "Tambah Kurikulum Baru";
-                    };
-                    window.kembaliKeTabelKurikulum = function() {
-                        document.getElementById('viewFormKurikulum').style.display = 'none'; document.getElementById('viewTabelKurikulum').style.display = 'block'; loadDaftarKurikulum();
-                    };
+                    } catch { contentArea.innerHTML = `<p style="color: red;">Gagal.</p>`; }
+                    window.bukaFormKurikulum = function() { document.getElementById('viewTabelKurikulum').style.display = 'none'; document.getElementById('viewFormKurikulum').style.display = 'block'; document.getElementById('formKurikulum').reset(); document.getElementById('kurikulum_id_hidden').value = ''; document.getElementById('kurikulum_aktif_checkbox').checked = false; document.getElementById('formKurikulumTitle').innerText = "Tambah Kurikulum Baru"; };
+                    window.kembaliKeTabelKurikulum = function() { document.getElementById('viewFormKurikulum').style.display = 'none'; document.getElementById('viewTabelKurikulum').style.display = 'block'; loadDaftarKurikulum(); };
                     async function loadDaftarKurikulum() {
-                        const tbody = document.getElementById('tbodyKurikulum'); if(!tbody) return;
-                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#999;">Mengambil data...</td></tr>';
+                        const tbody = document.getElementById('tbodyKurikulum'); if(!tbody) return; tbody.innerHTML = '<tr><td>Memuat...</td></tr>';
                         try {
                             const snap = await getDocs(query(collection(db, "kurikulum"), orderBy("createdAt", "desc"))); tbody.innerHTML = ''; let idx = 1;
-                            if(snap.empty) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Belum ada data kurikulum.</td></tr>'; return; }
-                            snap.forEach(d => {
-                                const kr = d.data(); const isChecked = kr.status_aktif === 'Aktif' ? 'checked' : ''; const tr = document.createElement('tr');
-                                tr.innerHTML = `<td>${idx++}</td><td><code>${d.id}</code></td><td><strong>${kr.nama_kurikulum}</strong></td><td>${kr.jumlah_jenjang || '-'} Jenjang</td><td><code>${kr.relasi_tahun_pelajaran}</code></td><td><label class="switch"><input type="checkbox" ${isChecked} onclick="toggleStatusKurikulumDirect('${d.id}', this.checked)"><span class="slider"></span></label></td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editKurikulum('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusKurikulum('${d.id}')">Hapus</button></div></td>`;
-                                tbody.appendChild(tr);
-                            });
-                        } catch { tbody.innerHTML = '<tr><td colspan="7">Gagal memuat list.</td></tr>'; }
+                            if(snap.empty) { tbody.innerHTML = '<tr><td>Kosong.</td></tr>'; return; }
+                            snap.forEach(d => { const kr = d.data(); const isChecked = kr.status_aktif === 'Aktif' ? 'checked' : ''; const tr = document.createElement('tr'); tr.innerHTML = `<td>${idx++}</td><td><code>${d.id}</code></td><td><strong>${kr.nama_kurikulum}</strong></td><td>${kr.jumlah_jenjang || '-'} Jenjang</td><td><code>${kr.relasi_tahun_pelajaran}</code></td><td><label class="switch"><input type="checkbox" ${isChecked} onclick="toggleStatusKurikulumDirect('${d.id}', this.checked)"><span class="slider"></span></label></td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editKurikulum('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusKurikulum('${d.id}')">Hapus</button></div></td>`; tbody.appendChild(tr); });
+                        } catch { tbody.innerHTML = '<tr><td>Gagal.</td></tr>'; }
                     }
                     window.toggleStatusKurikulumDirect = async function(id, isChecked) {
                         try {
-                            const statusBaru = isChecked ? 'Aktif' : 'Tidak Aktif';
-                            if (isChecked) {
-                                const snap = await getDocs(collection(db, "kurikulum"));
-                                for (const d of snap.docs) { if (d.id !== id && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "kurikulum", d.id), { status_aktif: 'Tidak Aktif' }); }
-                            }
-                            await updateDoc(doc(db, "kurikulum", id), { status_aktif: statusBaru, updatedAt: serverTimestamp() }); loadDaftarKurikulum();
-                        } catch { alert("Gagal merubah status."); loadDaftarKurikulum(); }
+                            if (isChecked) { const snap = await getDocs(collection(db, "kurikulum")); for (const d of snap.docs) { if (d.id !== id && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "kurikulum", d.id), { status_aktif: 'Tidak Aktif' }); } }
+                            await updateDoc(doc(db, "kurikulum", id), { status_aktif: isChecked ? 'Aktif' : 'Tidak Aktif', updatedAt: serverTimestamp() }); loadDaftarKurikulum();
+                        } catch { alert("Gagal."); loadDaftarKurikulum(); }
                     };
                     window.simpanDataKurikulum = async function(e) {
                         e.preventDefault(); const btn = document.getElementById('btnSimpanKurikulum'); if(btn) { btn.disabled = true; btn.innerText = "Memproses..."; }
-                        const namaKr = document.getElementById('nama_kurikulum').value.trim(); 
-                        const jJenjang = document.getElementById('jumlah_jenjang').value;
-                        const relasiTp = document.getElementById('relasi_tahun_pelajaran').value;
-                        const statusChecked = document.getElementById('kurikulum_aktif_checkbox').checked;
-                        
-                        const payload = { 
-                            nama_kurikulum: namaKr, 
-                            jumlah_jenjang: parseInt(jJenjang),
-                            relasi_tahun_pelajaran: relasiTp, 
-                            status_aktif: statusChecked ? 'Aktif' : 'Tidak Aktif', 
-                            updatedAt: serverTimestamp() 
-                        };
+                        const namaKr = document.getElementById('nama_kurikulum').value.trim(); const jJenjang = document.getElementById('jumlah_jenjang').value; const relasiTp = document.getElementById('relasi_tahun_pelajaran').value; const statusChecked = document.getElementById('kurikulum_aktif_checkbox').checked;
+                        const payload = { nama_kurikulum: namaKr, jumlah_jenjang: parseInt(jJenjang), relasi_tahun_pelajaran: relasiTp, status_aktif: statusChecked ? 'Aktif' : 'Tidak Aktif', updatedAt: serverTimestamp() };
                         const isEdit = document.getElementById('kurikulum_id_hidden').value; const targetId = isEdit ? isEdit : "KR_" + Date.now().toString().slice(-6);
                         try {
-                            if (statusChecked) {
-                                const snap = await getDocs(collection(db, "kurikulum"));
-                                for (const d of snap.docs) { if (d.id !== targetId && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "kurikulum", d.id), { status_aktif: 'Tidak Aktif' }); }
-                            }
-                            if(isEdit) { await setDoc(doc(db, "kurikulum", isEdit), payload, { merge: true }); } 
-                            else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "kurikulum", targetId), payload); }
-                            kembaliKeTabelKurikulum();
-                        } catch { alert("Gagal menyimpan."); } finally { if(btn) { btn.disabled = false; btn.innerText = "Simpan Kurikulum"; } }
+                            if (statusChecked) { const snap = await getDocs(collection(db, "kurikulum")); for (const d of snap.docs) { if (d.id !== targetId && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "kurikulum", d.id), { status_aktif: 'Tidak Aktif' }); } }
+                            if(isEdit) { await setDoc(doc(db, "kurikulum", isEdit), payload, { merge: true }); } else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "kurikulum", targetId), payload); } kembaliKeTabelKurikulum();
+                        } catch { alert("Gagal."); } finally { if(btn) { btn.disabled = false; btn.innerText = "Simpan Kurikulum"; } }
                     };
                     window.editKurikulum = async function(id) {
                         bukaFormKurikulum(); document.getElementById('kurikulum_id_hidden').value = id;
-                        try {
-                            const snap = await getDoc(doc(db, "kurikulum", id));
-                            if(snap.exists()) {
-                                const d = snap.data(); 
-                                document.getElementById('nama_kurikulum').value = d.nama_kurikulum || '';
-                                document.getElementById('jumlah_jenjang').value = d.jumlah_jenjang || '';
-                                document.getElementById('relasi_tahun_pelajaran').value = d.relasi_tahun_pelajaran || ''; 
-                                document.getElementById('kurikulum_aktif_checkbox').checked = d.status_aktif === 'Aktif';
-                            }
-                        } catch { alert("Gagal memuat detail."); }
+                        try { const snap = await getDoc(doc(db, "kurikulum", id)); if(snap.exists()) { const d = snap.data(); document.getElementById('nama_kurikulum').value = d.nama_kurikulum || ''; document.getElementById('jumlah_jenjang').value = d.jumlah_jenjang || ''; document.getElementById('relasi_tahun_pelajaran').value = d.relasi_tahun_pelajaran || ''; document.getElementById('kurikulum_aktif_checkbox').checked = d.status_aktif === 'Aktif'; } } catch { alert("Gagal."); }
                     };
-                    window.hapusKurikulum = async function(id) { if(confirm("Hapus data kurikulum ini?")) { try { await deleteDoc(doc(db, "kurikulum", id)); alert("Data kurikulum dihapus."); loadDaftarKurikulum(); } catch { alert("Gagal."); } } };
+                    window.hapusKurikulum = async function(id) { if(confirm("Hapus?")) { try { await deleteDoc(doc(db, "kurikulum", id)); loadDaftarKurikulum(); } catch { alert("Gagal."); } } };
                     break;
 
                 case 'mata-pelajaran':
-                    contentArea.innerHTML = `<p style="color: #999;">Memuat Modul Mata Pelajaran...</p>`;
+                    contentArea.innerHTML = `<p>Memuat...</p>`;
                     try {
-                        const res = await fetch('matapelajaran.html');
-                        contentArea.innerHTML = await res.text();
-
+                        const res = await fetch('matapelajaran.html'); contentArea.innerHTML = await res.text();
                         const selectTp = document.getElementById('filter_tp_mapel');
                         if (selectTp) {
-                            selectTp.innerHTML = '';
-                            const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc")));
-                            
-                            let activeTpId = "";
-                            tpSnap.forEach(doc => {
-                                const d = doc.data();
-                                const opt = document.createElement('option');
-                                opt.value = doc.id;
-                                opt.innerText = `${d.tahun_mulai}/${d.tahun_berakhir} (${d.semester})`;
-                                if(d.status_aktif === "Aktif") {
-                                    opt.selected = true;
-                                    activeTpId = doc.id;
-                                }
-                                selectTp.appendChild(opt);
-                            });
-
-                            if(activeTpId) {
-                                selectTp.value = activeTpId;
-                                await handleFilterTpChange(activeTpId);
-                            }
+                            selectTp.innerHTML = ''; const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc")));
+                            let activeTpId = ""; tpSnap.forEach(doc => { const d = doc.data(); const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = `${d.tahun_mulai}/${d.tahun_berakhir} (${d.semester})`; if(d.status_aktif === "Aktif") { opt.selected = true; activeTpId = doc.id; } selectTp.appendChild(opt); });
+                            if(activeTpId) { selectTp.value = activeTpId; await handleFilterTpChange(activeTpId); }
                         }
-                    } catch (err) { console.error(err); contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul.</p>`; }
+                    } catch { contentArea.innerHTML = `<p style="color: red;">Gagal.</p>`; }
 
                     window.handleFilterTpChange = async function(forcedId) {
-                        const tpSelectValue = forcedId ? forcedId : document.getElementById('filter_tp_mapel').value;
-                        const kurikulumSelect = document.getElementById('filter_kurikulum_mapel');
-                        if(!kurikulumSelect) return;
-
-                        kurikulumSelect.innerHTML = '<option value="">-- Pilih Kurikulum --</option>';
-                        document.getElementById('btnTambahMapelTop').disabled = true;
-
+                        const tpSelectValue = forcedId ? forcedId : document.getElementById('filter_tp_mapel').value; const kurikulumSelect = document.getElementById('filter_kurikulum_mapel'); if(!kurikulumSelect) return;
+                        kurikulumSelect.innerHTML = '<option value="">-- Pilih Kurikulum --</option>'; document.getElementById('btnTambahMapelTop').disabled = true;
                         try {
-                            const q = query(collection(db, "kurikulum"), orderBy("createdAt", "desc"));
-                            const snap = await getDocs(q);
-                            
-                            let activeKrId = "";
-                            snap.forEach(doc => {
-                                const d = doc.data();
-                                if(d.relasi_tahun_pelajaran === tpSelectValue) {
-                                    const opt = document.createElement('option');
-                                    opt.value = doc.id;
-                                    opt.innerText = d.nama_kurikulum;
-                                    if(d.status_aktif === "Aktif") {
-                                        opt.selected = true;
-                                        activeKrId = doc.id;
-                                    }
-                                    kurikulumSelect.appendChild(opt);
-                                }
-                            });
-
-                            if(activeKrId) {
-                                kurikulumSelect.value = activeKrId;
-                            }
+                            const snap = await getDocs(query(collection(db, "kurikulum"), orderBy("createdAt", "desc"))); let activeKrId = "";
+                            snap.forEach(doc => { const d = doc.data(); if(d.relasi_tahun_pelajaran === tpSelectValue) { const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = d.nama_kurikulum; if(d.status_aktif === "Aktif") { opt.selected = true; activeKrId = doc.id; } kurikulumSelect.appendChild(opt); } });
+                            if(activeKrId) kurikulumSelect.value = activeKrId;
                             loadDaftarMapel();
-                        } catch(err) { console.error(err); }
+                        } catch {}
                     };
-
-                    window.bukaFormGrup = function() {
-                        document.getElementById('viewTabelMP').style.display = 'none';
-                        document.getElementById('viewFormGrup').style.display = 'block';
-                        document.getElementById('formGrupMP').reset();
-                        document.getElementById('grup_id_hidden').value = '';
-                        document.getElementById('formGrupTitle').innerText = "Buat Kelompok / Grup Mapel Baru";
-                    };
-
-                    window.bukaFormMapel = function(forcedParentId) {
-                        document.getElementById('viewTabelMP').style.display = 'none';
-                        document.getElementById('viewFormMapel').style.display = 'block';
-                        document.getElementById('formMapel').reset();
-                        document.getElementById('mapel_id_hidden').value = '';
-                        document.getElementById('formMapelTitle').innerText = "Tambah Mata Pelajaran Baru";
-                        if(forcedParentId) document.getElementById('mapel_parent_id').value = forcedParentId;
-                    };
-
-                    window.kembaliKeTabelMP = function() {
-                        document.getElementById('viewFormGrup').style.display = 'none';
-                        document.getElementById('viewFormMapel').style.display = 'none';
-                        document.getElementById('viewTabelMP').style.display = 'block';
-                        loadDaftarMapel();
-                    };
-
+                    window.bukaFormGrup = function() { document.getElementById('viewTabelMP').style.display = 'none'; document.getElementById('viewFormGrup').style.display = 'block'; document.getElementById('formGrupMP').reset(); document.getElementById('grup_id_hidden').value = ''; document.getElementById('formGrupTitle').innerText = "Buat Kelompok Baru"; };
+                    window.bukaFormMapel = function(forcedParentId) { document.getElementById('viewTabelMP').style.display = 'none'; document.getElementById('viewFormMapel').style.display = 'block'; document.getElementById('formMapel').reset(); document.getElementById('mapel_id_hidden').value = ''; document.getElementById('formMapelTitle').innerText = "Tambah Mata Pelajaran Baru"; if(forcedParentId) document.getElementById('mapel_parent_id').value = forcedParentId; };
+                    window.kembaliKeTabelMP = function() { document.getElementById('viewFormGrup').style.display = 'none'; document.getElementById('viewFormMapel').style.display = 'none'; document.getElementById('viewTabelMP').style.display = 'block'; loadDaftarMapel(); };
                     window.loadDaftarMapel = async function() {
-                        const tpId = document.getElementById('filter_tp_mapel').value;
-                        const krId = document.getElementById('filter_kurikulum_mapel').value;
-                        const tbody = document.getElementById('tbodyMP');
-                        const btnAddMapel = document.getElementById('btnTambahMapelTop');
-                        
-                        if(!tbody) return;
-                        if(!tpId || !krId) {
-                            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#666;">Silakan tentukan Tahun Pelajaran & Kurikulum di dropdown atas.</td></tr>';
-                            if(btnAddMapel) btnAddMapel.disabled = true;
-                            return;
-                        }
-
-                        if(btnAddMapel) btnAddMapel.disabled = false;
-                        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">Membaca struktur tabel...</td></tr>';
-
+                        const tpId = document.getElementById('filter_tp_mapel').value; const krId = document.getElementById('filter_kurikulum_mapel').value; const tbody = document.getElementById('tbodyMP'); const btnAddMapel = document.getElementById('btnTambahMapelTop');
+                        if(!tbody) return; if(!tpId || !krId) { tbody.innerHTML = '<tr><td>Tentukan filter atas.</td></tr>'; if(btnAddMapel) btnAddMapel.disabled = true; return; }
+                        if(btnAddMapel) btnAddMapel.disabled = false; tbody.innerHTML = '<tr><td>Memuat...</td></tr>';
                         try {
-                            const q = query(collection(db, "matapelajaran"), orderBy("createdAt", "asc"));
-                            const snap = await getDocs(q);
-                            
-                            const items = [];
-                            snap.forEach(d => {
-                                const data = d.data();
-                                if(data.tp_id === tpId && data.kurikulum_id === krId) {
-                                    items.push({ id: d.id, ...data });
-                                }
-                            });
-
-                            tbody.innerHTML = '';
-                            
-                            const parentSelect = document.getElementById('mapel_parent_id');
-                            if(parentSelect) parentSelect.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
-
-                            const kelompokGrup = items.filter(i => i.tipe === 'grup');
-                            const subMapel = items.filter(i => i.tipe === 'mapel');
-
-                            if(kelompokGrup.length === 0) {
-                                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">Belum ada kelompok belajar dibuat. Klik "Buat Grup Baru" untuk memulai.</td></tr>';
-                                return;
-                            }
-
+                            const snap = await getDocs(query(collection(db, "matapelajaran"), orderBy("createdAt", "asc"))); const items = []; snap.forEach(d => { const data = d.data(); if(data.tp_id === tpId && data.kurikulum_id === krId) items.push({ id: d.id, ...data }); });
+                            tbody.innerHTML = ''; const parentSelect = document.getElementById('mapel_parent_id'); if(parentSelect) parentSelect.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
+                            const kelompokGrup = items.filter(i => i.tipe === 'grup'); const subMapel = items.filter(i => i.tipe === 'mapel');
+                            if(kelompokGrup.length === 0) { tbody.innerHTML = '<tr><td>Belum ada grup.</td></tr>'; return; }
                             kelompokGrup.forEach(grup => {
-                                if(parentSelect) {
-                                    const opt = document.createElement('option');
-                                    opt.value = grup.id;
-                                    opt.innerText = grup.nama;
-                                    parentSelect.appendChild(opt);
-                                }
-
-                                const trG = document.createElement('tr');
-                                trG.className = 'tr-grup';
-                                trG.innerHTML = `
-                                    <td><code>${grup.grup_kode || '-'}</code></td>
-                                    <td>${grup.nama}</td>
-                                    <td>Kelompok Wadah</td>
-                                    <td>
-                                        <div class="btn-actions-mapel">
-                                            <button class="btn-edit-mp" onclick="editGrup('${grup.id}', '${grup.nama}', '${grup.grup_kode || ''}')">Edit</button>
-                                            <button class="btn-delete-mp" onclick="hapusKomponenMP('${grup.id}')">Hapus</button>
-                                        </div>
-                                    </td>
-                                `;
-                                tbody.appendChild(trG);
-
+                                if(parentSelect) { const opt = document.createElement('option'); opt.value = grup.id; opt.innerText = grup.nama; parentSelect.appendChild(opt); }
+                                const trG = document.createElement('tr'); trG.className = 'tr-grup'; trG.innerHTML = `<td><code>${grup.grup_kode || '-'}</code></td><td>${grup.nama}</td><td>Kelompok Wadah</td><td><div class="btn-actions-mapel"><button class="btn-edit-mp" onclick="editGrup('${grup.id}', '${grup.nama}', '${grup.grup_kode || ''}')">Edit</button><button class="btn-delete-mp" onclick="hapusKomponenMP('${grup.id}')">Hapus</button></div></td>`; tbody.appendChild(trG);
                                 const anakMapel = subMapel.filter(m => m.parent_id === grup.id);
-                                anakMapel.forEach(mapel => {
-                                    const trM = document.createElement('tr');
-                                    trM.innerHTML = `
-                                        <td class="td-sub-mapel"><code>${mapel.kode_pendek}</code></td>
-                                        <td class="td-sub-mapel">${mapel.nama}</td>
-                                        <td>Mata Pelajaran</td>
-                                        <td>
-                                            <div class="btn-actions-mapel">
-                                                <button class="btn-edit-mp" onclick="editMapel('${mapel.id}', '${mapel.nama}', '${mapel.kode_pendek}', '${mapel.parent_id}')">Edit</button>
-                                                <button class="btn-delete-mp" onclick="hapusKomponenMP('${mapel.id}')">Hapus</button>
-                                            </div>
-                                        </td>
-                                    `;
-                                    tbody.appendChild(trM);
-                                });
+                                anakMapel.forEach(mapel => { const trM = document.createElement('tr'); trM.innerHTML = `<td class="td-sub-mapel"><code>${mapel.kode_pendek}</code></td><td class="td-sub-mapel">${mapel.nama}</td><td>Mata Pelajaran</td><td><div class="btn-actions-mapel"><button class="btn-edit-mp" onclick="editMapel('${mapel.id}', '${mapel.nama}', '${mapel.kode_pendek}', '${mapel.parent_id}')">Edit</button><button class="btn-delete-mp" onclick="hapusKomponenMP('${mapel.id}')">Hapus</button></div></td>`; tbody.appendChild(trM); });
                             });
-
-                        } catch(err) {
-                            console.error(err);
-                            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Gagal merender data.</td></tr>';
-                        }
+                        } catch { tbody.innerHTML = '<tr><td>Gagal.</td></tr>'; }
                     };
-
                     window.simpanGrupMP = async function(e) {
-                        e.preventDefault();
-                        const tpId = document.getElementById('filter_tp_mapel').value;
-                        const krId = document.getElementById('filter_kurikulum_mapel').value;
-                        const namaGrup = document.getElementById('grup_nama').value.trim();
-                        const kodeGrup = document.getElementById('grup_kode').value.trim();
-                        const isEditId = document.getElementById('grup_id_hidden').value;
-
-                        const payload = {
-                            nama: namaGrup, grup_kode: kodeGrup, tipe: 'grup',
-                            tp_id: tpId, kurikulum_id: krId, updatedAt: serverTimestamp()
-                        };
-                        const targetId = isEditId ? isEditId : "GR_" + Date.now().toString().slice(-6);
-
-                        try {
-                            if(!isEditId) payload['createdAt'] = serverTimestamp();
-                            await setDoc(doc(db, "matapelajaran", targetId), payload, { merge: true });
-                            alert("Grup Kelompok berhasil disimpan!"); kembaliKeTabelMP();
-                        } catch { alert("Gagal memproses grup."); }
+                        e.preventDefault(); const tpId = document.getElementById('filter_tp_mapel').value; const krId = document.getElementById('filter_kurikulum_mapel').value; const namaGrup = document.getElementById('grup_nama').value.trim(); const kodeGrup = document.getElementById('grup_kode').value.trim(); const isEditId = document.getElementById('grup_id_hidden').value;
+                        const payload = { nama: namaGrup, grup_kode: kodeGrup, tipe: 'grup', tp_id: tpId, kurikulum_id: krId, updatedAt: serverTimestamp() }; const targetId = isEditId ? isEditId : "GR_" + Date.now().toString().slice(-6);
+                        try { if(!isEditId) payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "matapelajaran", targetId), payload, { merge: true }); kembaliKeTabelMP(); } catch { alert("Gagal."); }
                     };
-
                     window.simpanDataMapel = async function(e) {
-                        e.preventDefault();
-                        const tpId = document.getElementById('filter_tp_mapel').value;
-                        const krId = document.getElementById('filter_kurikulum_mapel').value;
-                        const parentId = document.getElementById('mapel_parent_id').value;
-                        const namaMapel = document.getElementById('mapel_nama').value.trim();
-                        const kodePendek = document.getElementById('mapel_kode_pendek').value.trim().toUpperCase();
-                        const isEditId = document.getElementById('mapel_id_hidden').value;
-
-                        const payload = {
-                            nama: namaMapel, kode_pendek: kodePendek, parent_id: parentId, tipe: 'mapel',
-                            tp_id: tpId, kurikulum_id: krId, updatedAt: serverTimestamp()
-                        };
-                        const targetId = isEditId ? isEditId : "MP_" + Date.now().toString().slice(-6);
-
-                        try {
-                            if(!isEditId) payload['createdAt'] = serverTimestamp();
-                            await setDoc(doc(db, "matapelajaran", targetId), payload, { merge: true });
-                            alert("Mata Pelajaran berhasil ditambahkan!"); kembaliKeTabelMP();
-                        } catch { alert("Gagal memproses mata pelajaran."); }
+                        e.preventDefault(); const tpId = document.getElementById('filter_tp_mapel').value; const krId = document.getElementById('filter_kurikulum_mapel').value; const parentId = document.getElementById('mapel_parent_id').value; const namaMapel = document.getElementById('mapel_nama').value.trim(); const kodePendek = document.getElementById('mapel_kode_pendek').value.trim().toUpperCase(); const isEditId = document.getElementById('mapel_id_hidden').value;
+                        const payload = { nama: namaMapel, kode_pendek: kodePendek, parent_id: parentId, tipe: 'mapel', tp_id: tpId, kurikulum_id: krId, updatedAt: serverTimestamp() }; const targetId = isEditId ? isEditId : "MP_" + Date.now().toString().slice(-6);
+                        try { if(!isEditId) payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "matapelajaran", targetId), payload, { merge: true }); kembaliKeTabelMP(); } catch { alert("Gagal."); }
                     };
-
-                    window.editGrup = function(id, nama, kode) {
-                        bukaFormGrup();
-                        document.getElementById('formGrupTitle').innerText = "Edit Kelompok Mata Pelajaran";
-                        document.getElementById('grup_id_hidden').value = id;
-                        document.getElementById('grup_nama').value = nama;
-                        document.getElementById('grup_kode').value = (kode === 'null' || kode === '-') ? '' : kode;
-                    };
-
-                    window.editMapel = function(id, nama, kode, parentId) {
-                        bukaFormMapel();
-                        document.getElementById('formMapelTitle').innerText = "Edit Mata Pelajaran";
-                        document.getElementById('mapel_id_hidden').value = id;
-                        document.getElementById('mapel_nama').value = nama;
-                        document.getElementById('mapel_kode_pendek').value = kode;
-                        document.getElementById('mapel_parent_id').value = parentId;
-                    };
-
-                    window.hapusKomponenMP = async function(id) {
-                        if(confirm("Apakah Anda yakin ingin menghapus data ini dari struktur kurikulum?")) {
-                            try {
-                                await deleteDoc(doc(db, "matapelajaran", id));
-                                alert("Data terhapus."); loadDaftarMapel();
-                            } catch { alert("Gagal menghapus."); }
-                        }
-                    };
+                    window.editGrup = function(id, nama, kode) { bukaFormGrup(); document.getElementById('grup_id_hidden').value = id; document.getElementById('grup_nama').value = nama; document.getElementById('grup_kode').value = (kode === 'null' || kode === '-') ? '' : kode; };
+                    window.editMapel = function(id, nama, kode, parentId) { bukaFormMapel(); document.getElementById('mapel_id_hidden').value = id; document.getElementById('mapel_nama').value = nama; document.getElementById('mapel_kode_pendek').value = kode; document.getElementById('mapel_parent_id').value = parentId; };
+                    window.hapusKomponenMP = async function(id) { if(confirm("Hapus?")) { try { await deleteDoc(doc(db, "matapelajaran", id)); loadDaftarMapel(); } catch {} } };
                     break;
 
                 case 'kelas':
-                    contentArea.innerHTML = `<h3>Data Kelas</h3><p>Manajemen pembagian rombongan belajar (rombel) dan penentuan wali kelas.</p>`;
+                    contentArea.innerHTML = `<p>Memuat Modul Rombel...</p>`;
+                    try {
+                        const res = await fetch('rombel.html'); contentArea.innerHTML = await res.text();
+                        
+                        // VARIABEL TRACKER STATE LOCAL FORM ROMBEL
+                        window.rombelSiswaList = [];
+                        window.rombelMapelList = [];
+                        window.masterSiswaArray = [];
+                        window.masterMapelArray = [];
+
+                        // 1. Sinkronisasi Dropdown TP Filter Utama
+                        const selectTp = document.getElementById('filter_tp_rombel');
+                        if (selectTp) {
+                            selectTp.innerHTML = ''; const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc")));
+                            let activeTpId = ""; tpSnap.forEach(doc => { const d = doc.data(); const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = `${d.tahun_mulai}/${d.tahun_berakhir} (${d.semester})`; if(d.status_aktif === "Aktif") { opt.selected = true; activeTpId = doc.id; } selectTp.appendChild(opt); });
+                            if(activeTpId) { selectTp.value = activeTpId; await handleFilterTpChangeRombel(activeTpId); }
+                        }
+                    } catch (err) { console.error(err); contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul Rombel.</p>`; }
+
+                    // HANDLER PERUBAHAN FILTER TP ROMBEL
+                    window.handleFilterTpChangeRombel = async function(forcedId) {
+                        const tpVal = forcedId ? forcedId : document.getElementById('filter_tp_rombel').value;
+                        const krSelect = document.getElementById('filter_kurikulum_rombel'); if(!krSelect) return;
+                        krSelect.innerHTML = '<option value="">-- Pilih Kurikulum --</option>';
+                        try {
+                            const snap = await getDocs(query(collection(db, "kurikulum"), orderBy("createdAt", "desc")));
+                            let activeKrId = "";
+                            snap.forEach(doc => { const d = doc.data(); if(d.relasi_tahun_pelajaran === tpVal) { const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = d.nama_kurikulum; if(d.status_aktif === "Aktif") { opt.selected = true; activeKrId = doc.id; } krSelect.appendChild(opt); } });
+                            if(activeKrId) krSelect.value = activeKrId;
+                            loadDaftarRombel();
+                        } catch {}
+                    };
+
+                    // FORM INJECT DATA MASTER UTK PILIHAN GURU, SISWA, MAPEL
+                    window.bukaFormRombel = async function() {
+                        document.getElementById('viewTabelRombel').style.display = 'none';
+                        document.getElementById('viewFormRombel').style.display = 'block';
+                        document.getElementById('formRombelMaster').reset();
+                        document.getElementById('rombel_id_hidden').value = '';
+                        document.getElementById('formRombelTitle').innerText = "Tambah Struktur Rombel Baru";
+                        
+                        window.rombelSiswaList = []; window.rombelMapelList = [];
+                        document.getElementById('siswaRombelContainer').innerHTML = '';
+                        document.getElementById('tbodyRombelMapel').innerHTML = '';
+
+                        const krId = document.getElementById('filter_kurikulum_rombel').value;
+                        
+                        try {
+                            // A. Isi Tipe Jenjang otomatis dari Kurikulum Terpilih
+                            const krSnap = await getDoc(doc(db, "kurikulum", krId));
+                            const jenjangSelect = document.getElementById('rombel_jenjang');
+                            if(jenjangSelect && krSnap.exists()) {
+                                jenjangSelect.innerHTML = '';
+                                const maxJenjang = krSnap.data().jumlah_jenjang || 1;
+                                for(let j=1; j<=maxJenjang; j++) {
+                                    const opt = document.createElement('option'); opt.value = j; opt.innerText = `Jenjang Tingkat ${j}`;
+                                    jenjangSelect.appendChild(opt);
+                                }
+                            }
+
+                            // B. Isi Dropdown Wali Kelas & Guru Pengampu ( teachers )
+                            const tSnap = await getDocs(query(collection(db, "teachers"), orderBy("nama_lengkap", "asc")));
+                            const waliSelect = document.getElementById('rombel_wali_id');
+                            const pengampuSelect = document.getElementById('select_tambah_guru_pengampu');
+                            if(waliSelect) waliSelect.innerHTML = '<option value="">-- Pilih Wali Kelas --</option>';
+                            if(pengampuSelect) pengampuSelect.innerHTML = '<option value="">-- Pilih Guru Pengampu --</option>';
+                            
+                            tSnap.forEach(tDoc => {
+                                const t = tDoc.data();
+                                const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`;
+                                const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) waliSelect.appendChild(optW);
+                                const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect) pengampuSelect.appendChild(optP);
+                            });
+
+                            // C. Simpan master array siswa untuk lookup nama badge ( students )
+                            const sSnap = await getDocs(query(collection(db, "students"), orderBy("nama_lengkap", "asc")));
+                            window.masterSiswaArray = [];
+                            const siswaSelect = document.getElementById('select_tambah_siswa');
+                            if(siswaSelect) siswaSelect.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+                            
+                            sSnap.forEach(sDoc => {
+                                const s = sDoc.data();
+                                window.masterSiswaArray.push({ id: sDoc.id, nama: s.nama_lengkap, nisn: s.nisn });
+                                const optS = document.createElement('option'); optS.value = sDoc.id; optS.innerText = `${s.nama_lengkap} (${s.nisn})`;
+                                if(siswaSelect) siswaSelect.appendChild(optS);
+                            });
+
+                            // D. Simpan master array mapel tipe 'mapel' ( matapelajaran )
+                            const tpId = document.getElementById('filter_tp_rombel').value;
+                            const mSnap = await getDocs(query(collection(db, "matapelajaran"), orderBy("createdAt", "asc")));
+                            window.masterMapelArray = [];
+                            const mSelect = document.getElementById('select_tambah_mapel');
+                            if(mSelect) mSelect.innerHTML = '<option value="">-- Pilih Mapel --</option>';
+                            
+                            mSnap.forEach(mDoc => {
+                                const m = mDoc.data();
+                                if(m.tipe === 'mapel' && m.tp_id === tpId && m.kurikulum_id === krId) {
+                                    window.masterMapelArray.push({ id: mDoc.id, nama: m.nama, kode: m.kode_pendek, parent_id: m.parent_id });
+                                    const optM = document.createElement('option'); optM.value = mDoc.id; optM.innerText = `${m.nama} [${m.kode_pendek}]`;
+                                    if(mSelect) mSelect.appendChild(optM);
+                                }
+                            });
+
+                        } catch (err) { console.error(err); }
+                    };
+
+                    window.kembaliKeTabelRombel = function() { document.getElementById('viewFormRombel').style.display = 'none'; document.getElementById('viewTabelRombel').style.display = 'block'; loadDaftarRombel(); };
+
+                    // SUB-CRUD ACTION: Tambah Siswa ke Array State Lokal
+                    window.addSiswaToRombelList = function() {
+                        const sId = document.getElementById('select_tambah_siswa').value; if(!sId) return;
+                        if(window.rombelSiswaList.includes(sId)) { alert("Siswa sudah ada dalam list rombel."); return; }
+                        window.rombelSiswaList.push(sId); renderSiswaBadges();
+                    };
+                    window.removeSiswaFromRombelList = function(sId) { window.rombelSiswaList = window.rombelSiswaList.filter(id => id !== sId); renderSiswaBadges(); };
+                    function renderSiswaBadges() {
+                        const container = document.getElementById('siswaRombelContainer'); if(!container) return; container.innerHTML = '';
+                        window.rombelSiswaList.forEach(id => {
+                            const sObj = window.masterSiswaArray.find(item => item.id === id);
+                            if(sObj) {
+                                const span = document.createElement('span'); className = 'tag-item'; span.className = 'tag-item';
+                                span.innerHTML = `${sObj.nama} <span class="remove-btn" onclick="removeSiswaFromRombelList('${id}')">&times;</span>`;
+                                container.appendChild(span);
+                            }
+                        });
+                    }
+
+                    // SUB-CRUD ACTION: Tambah Mapel & Guru Pengampu ke List Rombel
+                    window.addMapelToRombelList = function() {
+                        const mId = document.getElementById('select_tambah_mapel').value;
+                        const gId = document.getElementById('select_tambah_guru_pengampu').value;
+                        if(!mId || !gId) { alert("Pilih Mapel dan Guru Pengampu."); return; }
+                        if(window.rombelMapelList.some(item => item.mapel_id === mId)) { alert("Mata pelajaran ini sudah dikonfigurasi."); return; }
+                        window.rombelMapelList.push({ mapel_id: mId, guru_id: gId }); renderRombelMapelTable();
+                    };
+                    window.removeMapelFromRombelList = function(mId) { window.rombelMapelList = window.rombelMapelList.filter(item => item.mapel_id !== mId); renderRombelMapelTable(); };
+                    async function renderRombelMapelTable() {
+                        const tbody = document.getElementById('tbodyRombelMapel'); if(!tbody) return; tbody.innerHTML = '';
+                        try {
+                            // Tarik nama guru secara instant via DOM select element lookup
+                            const pengampuSelect = document.getElementById('select_tambah_guru_pengampu');
+                            
+                            window.rombelMapelList.forEach(item => {
+                                const mObj = window.masterMapelArray.find(m => m.id === item.mapel_id);
+                                let gName = "Guru Tidak Dikenal";
+                                if(pengampuSelect) {
+                                    const opt = Array.from(pengampuSelect.options).find(o => o.value === item.guru_id);
+                                    if(opt) gName = opt.innerText;
+                                }
+                                if(mObj) {
+                                    const tr = document.createElement('tr');
+                                    tr.innerHTML = `<td><code>${mObj.kode}</code></td><td><strong>${mObj.nama}</strong></td><td>${gName}</td><td><button type="button" class="btn-delete-mp" onclick="removeMapelFromRombelList('${item.mapel_id}')">&times;</button></td>`;
+                                    tbody.appendChild(tr);
+                                }
+                            });
+                        } catch {}
+                    }
+
+                    // RENDER DAFTAR INDUK UTAMA ROMBEL
+                    async function loadDaftarRombel() {
+                        const tpId = document.getElementById('filter_tp_rombel').value; const krId = document.getElementById('filter_kurikulum_rombel').value;
+                        const tbody = document.getElementById('tbodyRombel'); if(!tbody) return;
+                        if(!tpId || !krId) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Silakan filter data.</td></tr>'; return; }
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Memuat...</td></tr>';
+                        try {
+                            const snap = await getDocs(collection(db, "rombel")); tbody.innerHTML = ''; let idx = 1;
+                            let empty = true;
+                            snap.forEach(d => {
+                                const r = d.data();
+                                if(r.tp_id === tpId && r.kurikulum_id === krId) {
+                                    empty = false; const tr = document.createElement('tr');
+                                    tr.innerHTML = `<td>${idx++}</td><td><code>${d.id}</code></td><td>Tingkat ${r.jenjang}</td><td><strong>${r.nama_rombel}</strong></td><td><code>${r.wali_kelas_id}</code></td><td>${(r.siswa_ids || []).length} Siswa</td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editRombel('${d.id}')">✏️</button><button class="btn-delete" onclick="hapusRombel('${d.id}')">🗑️</button></div></td>`;
+                                    tbody.appendChild(tr);
+                                }
+                            });
+                            if(empty) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Belum ada Rombel di filter ini.</td></tr>';
+                        } catch { tbody.innerHTML = '<tr><td colspan="7">Gagal.</td></tr>'; }
+                    }
+
+                    // CORE ACTION: SIMPAN ROMBEL GLOBAL KE FIRESTORE
+                    window.simpanStrukturRombel = async function(e) {
+                        e.preventDefault();
+                        const tpId = document.getElementById('filter_tp_rombel').value;
+                        const krId = document.getElementById('filter_kurikulum_rombel').value;
+                        const name = document.getElementById('rombel_nama').value.trim();
+                        const jg = document.getElementById('rombel_jenjang').value;
+                        const wali = document.getElementById('rombel_wali_id').value;
+                        const isEdit = document.getElementById('rombel_id_hidden').value;
+
+                        if(!name || !jg || !wali) { alert("Lengkapi kolom data utama rombel."); return; }
+
+                        const payload = {
+                            nama_rombel: name, jenjang: parseInt(jg), wali_kelas_id: wali,
+                            tp_id: tpId, kurikulum_id: krId,
+                            siswa_ids: window.rombelSiswaList,
+                            mapel_paket: window.rombelMapelList,
+                            updatedAt: serverTimestamp()
+                        };
+                        const targetId = isEdit ? isEdit : "RB_" + Date.now().toString().slice(-6);
+
+                        try {
+                            if(!isEdit) payload['createdAt'] = serverTimestamp();
+                            await setDoc(doc(db, "rombel", targetId), payload, { merge: true });
+                            alert("Data Rombel Berhasil Disimpan!"); kembaliKeTabelRombel();
+                        } catch { alert("Gagal menyimpan rombel."); }
+                    };
+
+                    // CORE ACTION: EDIT ROMBEL LOAD STATE BACK
+                    window.editRombel = async function(id) {
+                        await bukaFormRombel();
+                        document.getElementById('formRombelTitle').innerText = "Edit Data Rombel";
+                        document.getElementById('rombel_id_hidden').value = id;
+                        try {
+                            const snap = await getDoc(doc(db, "rombel", id));
+                            if(snap.exists()) {
+                                const d = snap.data();
+                                document.getElementById('rombel_nama').value = d.nama_rombel || '';
+                                document.getElementById('rombel_jenjang').value = d.jenjang || 1;
+                                document.getElementById('rombel_wali_id').value = d.wali_kelas_id || '';
+                                
+                                window.rombelSiswaList = d.siswa_ids || [];
+                                window.rombelMapelList = d.mapel_paket || [];
+                                
+                                renderSiswaBadges(); renderRombelMapelTable();
+                            }
+                        } catch { alert("Gagal mengambil detail data."); }
+                    };
+
+                    // CORE ACTION: HAPUS ROMBEL
+                    window.hapusRombel = async function(id) {
+                        if(confirm("Hapus Rombel ini secara permanen?")) { try { await deleteDoc(doc(db, "rombel", id)); loadDaftarRombel(); } catch {} }
+                    };
                     break;
+
                 default:
                     contentArea.innerHTML = `<h3>Dashboard</h3><p>Silakan pilih menu di atas.</p>`;
             }
@@ -916,50 +559,21 @@
 
         window.handleRegisterKeyPress = function(event) { if (event.key === 'Enter') handleRegister(); }
         window.handleLoginKeyPress = function(event) { if (event.key === 'Enter') handleLogin(); }
-
         window.handleRegister = async function() {
-            const userInp = document.getElementById('reg-username').value.trim();
-            const passInp = document.getElementById('reg-password').value;
+            const userInp = document.getElementById('reg-username').value.trim(); const passInp = document.getElementById('reg-password').value;
             if (userInp === "" || passInp.trim() === "") { alert("Data tidak boleh kosong"); return; }
-            try {
-                await setDoc(doc(db, "users", userInp), { username: userInp, password: passInp, role: "administrator", createdAt: serverTimestamp() });
-                alert("Admin berhasil dibuat!"); showLogin();
-            } catch { alert("Gagal mendaftar."); }
+            try { await setDoc(doc(db, "users", userInp), { username: userInp, password: passInp, role: "administrator", createdAt: serverTimestamp() }); alert("Admin berhasil dibuat!"); showLogin(); } catch { alert("Gagal mendaftar."); }
         }
-
         window.handleLogin = async function() {
-            const userInp = document.getElementById('username').value.trim();
-            const passInp = document.getElementById('password').value;
-            try {
-                const userDocSnap = await getDoc(doc(db, "users", userInp));
-                if (userDocSnap.exists() && userDocSnap.data().password === passInp) {
-                    await updateDoc(doc(db, "users", userInp), { lastLogin: serverTimestamp() });
-                    localStorage.setItem('isLoggedIn', 'true');
-                    localStorage.setItem('username', userInp);
-                    showDashboard();
-                } else { alert('Username/Password salah'); }
-            } catch { alert("Kesalahan server database."); }
+            const userInp = document.getElementById('username').value.trim(); const passInp = document.getElementById('password').value;
+            try { const userDocSnap = await getDoc(doc(db, "users", userInp)); if (userDocSnap.exists() && userDocSnap.data().password === passInp) { await updateDoc(doc(db, "users", userInp), { lastLogin: serverTimestamp() }); localStorage.setItem('isLoggedIn', 'true'); localStorage.setItem('username', userInp); showDashboard(); } else { alert('Username/Password salah'); } } catch { alert("Kesalahan server database."); }
         }
-
-        window.handleLogout = function() {
-            localStorage.removeItem('isLoggedIn'); localStorage.removeItem('username');
-            document.getElementById('profileDropdown').classList.remove('show'); showLogin();
-        }
+        window.handleLogout = function() { localStorage.removeItem('isLoggedIn'); localStorage.removeItem('username'); document.getElementById('profileDropdown').classList.remove('show'); showLogin(); }
         window.toggleDropdown = function() { document.getElementById('profileDropdown').classList.toggle('show'); }
-
         function showRegister() { document.getElementById('register-page').style.display = 'flex'; document.getElementById('login-page').style.display = 'none'; document.getElementById('dashboard-page').style.display = 'none'; }
         function showLogin() { document.getElementById('register-page').style.display = 'none'; document.getElementById('login-page').style.display = 'flex'; document.getElementById('dashboard-page').style.display = 'none'; }
-        function showDashboard() {
-            document.getElementById('register-page').style.display = 'none'; document.getElementById('login-page').style.display = 'none'; document.getElementById('dashboard-page').style.display = 'block';
-            const b = document.querySelector('.nav-item'); if(b) switchMenu('beranda', b);
-        }
-
-        window.onclick = function(e) {
-            if (!e.target.matches('.profile-logo')) {
-                const d = document.getElementsByClassName("dropdown-menu");
-                for (let i = 0; i < d.length; i++) { if (d[i].classList.contains('show')) d[i].classList.remove('show'); }
-            }
-        }
+        function showDashboard() { document.getElementById('register-page').style.display = 'none'; document.getElementById('login-page').style.display = 'none'; document.getElementById('dashboard-page').style.display = 'block'; const b = document.querySelector('.nav-item'); if(b) switchMenu('beranda', b); }
+        window.onclick = function(e) { if (!e.target.matches('.profile-logo')) { const d = document.getElementsByClassName("dropdown-menu"); for (let i = 0; i < d.length; i++) { if (d[i].classList.contains('show')) d[i].classList.remove('show'); } } }
     </script>
 </body>
 </html>
