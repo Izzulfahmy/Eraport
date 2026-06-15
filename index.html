@@ -281,7 +281,6 @@
 </head>
 <body>
 
-    <!-- HALAMAN REGISTER -->
     <div id="register-page" class="auth-page">
         <div class="auth-container">
             <h2>Register Administrator</h2>
@@ -297,7 +296,6 @@
         </div>
     </div>
 
-    <!-- HALAMAN LOGIN -->
     <div id="login-page" class="auth-page">
         <div class="auth-container">
             <h2>Login</h2>
@@ -313,7 +311,6 @@
         </div>
     </div>
 
-    <!-- HALAMAN DASHBOARD -->
     <div id="dashboard-page">
         <nav class="navbar">
             <div class="nav-header-top">
@@ -341,7 +338,6 @@
             </div>
         </nav>
         
-        <!-- Konten Utama -->
         <div class="dashboard-content">
             <div class="content-card" id="mainContentArea">
                 <h3>Selamat Datang di Sistem Eraport</h3>
@@ -513,7 +509,6 @@
                         loadDaftarMurid();
                     } catch { contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul murid.</p>`; }
 
-                    // --- LOGIKA CRUD UTAN MODUL MURID ---
                     window.bukaFormMurid = function() {
                         document.getElementById('viewTabelMurid').style.display = 'none';
                         document.getElementById('viewFormMurid').style.display = 'block';
@@ -521,95 +516,169 @@
                         document.getElementById('murid_id_hidden').value = '';
                         document.getElementById('formMuridTitle').innerText = "Tambah Data Murid Baru";
                     };
-
                     window.kembaliKeTabelMurid = function() {
                         document.getElementById('viewFormMurid').style.display = 'none';
                         document.getElementById('viewTabelMurid').style.display = 'block';
                         loadDaftarMurid();
                     };
-
                     async function loadDaftarMurid() {
                         const tbody = document.getElementById('tbodyMurid'); if(!tbody) return;
                         tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#999;">Mengambil data...</td></tr>';
                         try {
                             const snap = await getDocs(query(collection(db, "students"), orderBy("createdAt", "desc")));
                             tbody.innerHTML = ''; let idx = 1;
-                            if(snap.empty) {
-                                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#999;">Belum ada data murid terdaftar.</td></tr>';
-                                return;
-                            }
+                            if(snap.empty) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#999;">Belum ada data murid terdaftar.</td></tr>'; return; }
                             snap.forEach(d => {
                                 const m = d.data();
                                 const tr = document.createElement('tr');
+                                tr.innerHTML = `<td>${idx++}</td><td>${m.nisn || '-'} / ${m.nis || '-'}</td><td><strong>${m.nama_lengkap}</strong></td><td>${m.id_kelas || '-'} / Absen: ${m.nomor_absen || '-'}</td><td><span style="padding:4px 8px; font-size:12px; border-radius:4px; font-weight:bold; background-color:${m.status_keaktifan === 'Aktif' ? '#d4edda; color:#155724;' : '#f8d7da; color:#721c24;'}">${m.status_keaktifan || 'Aktif'}</span></td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editMurid('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusMurid('${d.id}')">Hapus</button></div></td>`;
+                                tbody.appendChild(tr);
+                            });
+                        } catch { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Gagal memuat list murid.</td></tr>'; }
+                    }
+                    window.simpanDataMurid = async function(e) {
+                        e.preventDefault();
+                        const btn = document.getElementById('btnSimpanMurid');
+                        btn.disabled = true; btn.innerText = "Memproses...";
+                        const fields = ['nama_lengkap', 'nama_panggilan', 'nisn', 'nis', 'nik', 'no_akta', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'kewarganegaraan', 'anak_ke', 'jumlah_saudara', 'gol_darah', 'alamat_tinggal', 'kode_pos', 'tempat_tinggal_bersama', 'transportasi', 'no_hp_siswa', 'email_siswa', 'nama_ayah', 'nik_ayah', 'tahun_lahir_ayah', 'pendidikan_ayah', 'pekerjaan_ayah', 'penghasilan_ayah', 'nama_ibu', 'nik_ibu', 'tahun_lahir_ibu', 'pendidikan_ibu', 'pekerjaan_ibu', 'penghasilan_ibu', 'no_hp_ortu', 'nama_wali', 'nik_wali', 'hubungan_wali', 'pekerjaan_wali', 'no_hp_wali', 'status_murid', 'asal_sekolah', 'no_ijazah', 'no_skhun', 'tanggal_masuk', 'foto_profil', 'id_kelas', 'nomor_absen', 'status_keaktifan', 'username_murid', 'password_murid'];
+                        const payload = { updatedAt: serverTimestamp() };
+                        fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
+                        const mid = document.getElementById('murid_id_hidden').value;
+                        try {
+                            if(mid) { await setDoc(doc(db, "students", mid), payload, { merge: true }); alert("Data Murid berhasil diupdate!"); } 
+                            else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "students", payload.username_murid), payload); alert("Murid baru berhasil disimpan!"); }
+                            kembaliKeTabelMurid();
+                        } catch { alert("Gagal memproses ke database."); }
+                        finally { btn.disabled = false; btn.innerText = "Simpan Data Murid"; }
+                    };
+                    window.editMurid = async function(id) {
+                        bukaFormMurid(); document.getElementById('formMuridTitle').innerText = "Edit Data Murid"; document.getElementById('murid_id_hidden').value = id;
+                        try { const snap = await getDoc(doc(db, "students", id)); if(snap.exists()) { const d = snap.data(); Object.keys(d).forEach(k => { const el = document.getElementById(k); if(el) el.value = d[k]; }); } } catch { alert("Gagal memuat rincian data."); }
+                    };
+                    window.hapusMurid = async function(id) {
+                        if(confirm("Hapus data murid ini secara permanen?")) { try { await deleteDoc(doc(db, "students", id)); alert("Data murid berhasil dihapus."); loadDaftarMurid(); } catch { alert("Gagal menghapus."); } }
+                    };
+                    break;
+
+                case 'tahun-pelajaran':
+                    contentArea.innerHTML = `<p style="color: #999;">Memuat Modul Tahun Pelajaran...</p>`;
+                    try {
+                        const res = await fetch('tahunpelajaran.html');
+                        contentArea.innerHTML = await res.text();
+                        loadDaftarTP();
+                    } catch { contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul tahun pelajaran.</p>`; }
+
+                    // --- CRUD LOGIC TAHUN PELAJARAN ---
+                    window.bukaFormTP = function() {
+                        document.getElementById('viewTabelTP').style.display = 'none';
+                        document.getElementById('viewFormTP').style.display = 'block';
+                        document.getElementById('formTP').reset();
+                        document.getElementById('tp_id_hidden').value = '';
+                        document.getElementById('id_tp').disabled = false;
+                        document.getElementById('formTPTitle').innerText = "Tambah Tahun Pelajaran Baru";
+                    };
+
+                    window.kembaliKeTabelTP = function() {
+                        document.getElementById('viewFormTP').style.display = 'none';
+                        document.getElementById('viewTabelTP').style.display = 'block';
+                        loadDaftarTP();
+                    };
+
+                    async function loadDaftarTP() {
+                        const tbody = document.getElementById('tbodyTP'); if(!tbody) return;
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#999;">Mengambil data...</td></tr>';
+                        try {
+                            const snap = await getDocs(query(collection(db, "academic_years"), orderBy("createdAt", "desc")));
+                            tbody.innerHTML = ''; let idx = 1;
+                            if(snap.empty) {
+                                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#999;">Belum ada tahun pelajaran yang diatur.</td></tr>';
+                                return;
+                            }
+                            snap.forEach(d => {
+                                const tp = d.data();
+                                const tr = document.createElement('tr');
                                 tr.innerHTML = `
                                     <td>${idx++}</td>
-                                    <td>${m.nisn || '-'} / ${m.nis || '-'}</td>
-                                    <td><strong>${m.nama_lengkap}</strong></td>
-                                    <td>${m.id_kelas || '-'} / Absen: ${m.nomor_absen || '-'}</td>
-                                    <td><span style="padding:4px 8px; font-size:12px; border-radius:4px; font-weight:bold; background-color:${m.status_keaktifan === 'Aktif' ? '#d4edda; color:#155724;' : '#f8d7da; color:#721c24;'}">${m.status_keaktifan || 'Aktif'}</span></td>
+                                    <td><code>${d.id}</code></td>
+                                    <td>${tp.tahun_mulai} / ${tp.tahun_berakhir}</td>
+                                    <td><strong>${tp.semester}</strong></td>
+                                    <td>${tp.tanggal_mulai} s.d ${tp.tanggal_berakhir}</td>
+                                    <td><span style="padding:4px 8px; font-size:12px; border-radius:4px; font-weight:bold; background-color:${tp.status_aktif === 'Aktif' ? '#d4edda; color:#155724;' : '#e2e3e5; color:#383d41;'}">${tp.status_aktif || 'Tidak Aktif'}</span></td>
                                     <td>
                                         <div class="btn-group-actions">
-                                            <button class="btn-edit" onclick="editMurid('${d.id}')">Edit</button>
-                                            <button class="btn-delete" onclick="hapusMurid('${d.id}')">Hapus</button>
+                                            <button class="btn-edit" onclick="editTP('${d.id}')">Edit</button>
+                                            <button class="btn-delete" onclick="hapusTP('${d.id}')">Hapus</button>
                                         </div>
                                     </td>
                                 `;
                                 tbody.appendChild(tr);
                             });
-                        } catch { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Gagal memuat list murid.</td></tr>'; }
+                        } catch { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Gagal memuat list tahun pelajaran.</td></tr>'; }
                     }
 
-                    window.simpanDataMurid = async function(e) {
+                    window.simpanDataTP = async function(e) {
                         e.preventDefault();
-                        const btn = document.getElementById('btnSimpanMurid');
+                        const btn = document.getElementById('btnSimpanTP');
                         btn.disabled = true; btn.innerText = "Memproses...";
 
-                        const fields = ['nama_lengkap', 'nama_panggilan', 'nisn', 'nis', 'nik', 'no_akta', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'kewarganegaraan', 'anak_ke', 'jumlah_saudara', 'gol_darah', 'alamat_tinggal', 'kode_pos', 'tempat_tinggal_bersama', 'transportasi', 'no_hp_siswa', 'email_siswa', 'nama_ayah', 'nik_ayah', 'tahun_lahir_ayah', 'pendidikan_ayah', 'pekerjaan_ayah', 'penghasilan_ayah', 'nama_ibu', 'nik_ibu', 'tahun_lahir_ibu', 'pendidikan_ibu', 'pekerjaan_ibu', 'penghasilan_ibu', 'no_hp_ortu', 'nama_wali', 'nik_wali', 'hubungan_wali', 'pekerjaan_wali', 'no_hp_wali', 'status_murid', 'asal_sekolah', 'no_ijazah', 'no_skhun', 'tanggal_masuk', 'foto_profil', 'id_kelas', 'nomor_absen', 'status_keaktifan', 'username_murid', 'password_murid'];
-                        const payload = { updatedAt: serverTimestamp() };
-                        fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
-                        const mid = document.getElementById('murid_id_hidden').value;
+                        const fields = ['id_tp', 'tahun_mulai', 'tahun_berakhir', 'semester', 'tanggal_mulai', 'tanggal_akhir', 'status_aktif'];
+                        const payload = { 
+                            tahun_mulai: parseInt(document.getElementById('tahun_mulai').value),
+                            tahun_berakhir: parseInt(document.getElementById('tahun_berakhir').value),
+                            semester: document.getElementById('semester').value,
+                            tanggal_mulai: document.getElementById('tanggal_mulai').value,
+                            tanggal_berakhir: document.getElementById('tanggal_berakhir').value,
+                            status_aktif: document.getElementById('status_aktif').value,
+                            updatedAt: serverTimestamp() 
+                        };
+                        
+                        const docId = document.getElementById('id_tp').value.trim().toUpperCase();
+                        const isEdit = document.getElementById('tp_id_hidden').value;
 
                         try {
-                            if(mid) {
-                                await setDoc(doc(db, "students", mid), payload, { merge: true });
-                                alert("Data Murid berhasil diupdate!");
+                            if(isEdit) {
+                                await setDoc(doc(db, "academic_years", isEdit), payload, { merge: true });
+                                alert("Data Tahun Pelajaran berhasil diperbarui!");
                             } else {
                                 payload['createdAt'] = serverTimestamp();
-                                // Gunakan username_murid sebagai ID Dokumen agar mudah di-relasikan untuk login siswa nanti
-                                await setDoc(doc(db, "students", payload.username_murid), payload);
-                                alert("Murid baru berhasil disimpan!");
+                                await setDoc(doc(db, "academic_years", docId), payload);
+                                alert("Tahun Pelajaran baru berhasil disimpan!");
                             }
-                            kembaliKeTabelMurid();
-                        } catch { alert("Gagal memproses ke database."); }
-                        finally { btn.disabled = false; btn.innerText = "Simpan Data Murid"; }
+                            kembaliKeTabelTP();
+                        } catch { alert("Gagal menyimpan data tahun pelajaran."); }
+                        finally { btn.disabled = false; btn.innerText = "Simpan Tahun Pelajaran"; }
                     };
 
-                    window.editMurid = async function(id) {
-                        bukaFormMurid();
-                        document.getElementById('formMuridTitle').innerText = "Edit Data Murid";
-                        document.getElementById('murid_id_hidden').value = id;
+                    window.editTP = async function(id) {
+                        bukaFormTP();
+                        document.getElementById('formTPTitle').innerText = "Edit Tahun Pelajaran";
+                        document.getElementById('tp_id_hidden').value = id;
+                        document.getElementById('id_tp').value = id;
+                        document.getElementById('id_tp').disabled = true; // Kunci ID saat edit
                         try {
-                            const snap = await getDoc(doc(db, "students", id));
+                            const snap = await getDoc(doc(db, "academic_years", id));
                             if(snap.exists()) {
                                 const d = snap.data();
-                                Object.keys(d).forEach(k => { const el = document.getElementById(k); if(el) el.value = d[k]; });
+                                document.getElementById('tahun_mulai').value = d.tahun_mulai || '';
+                                document.getElementById('tahun_berakhir').value = d.tahun_berakhir || '';
+                                document.getElementById('semester').value = d.semester || 'Ganjil';
+                                document.getElementById('tanggal_mulai').value = d.tanggal_mulai || '';
+                                document.getElementById('tanggal_berakhir').value = d.tanggal_berakhir || '';
+                                document.getElementById('status_aktif').value = d.status_aktif || 'Tidak Aktif';
                             }
-                        } catch { alert("Gagal memuat rincian data."); }
+                        } catch { alert("Gagal memuat detail data tahun pelajaran."); }
                     };
 
-                    window.hapusMurid = async function(id) {
-                        if(confirm("Hapus data murid ini secara permanen?")) {
+                    window.hapusTP = async function(id) {
+                        if(confirm("Hapus data tahun pelajaran " + id + "?")) {
                             try {
-                                await deleteDoc(doc(db, "students", id));
-                                alert("Data murid berhasil dihapus."); loadDaftarMurid();
+                                await deleteDoc(doc(db, "academic_years", id));
+                                alert("Data tahun pelajaran berhasil dihapus."); loadDaftarTP();
                             } catch { alert("Gagal menghapus."); }
                         }
                     };
                     break;
 
-                case 'tahun-pelajaran':
-                    contentArea.innerHTML = `<h3>Tahun Pelajaran</h3><p>Pengaturan tahun ajaran aktif dan semester (Ganjil / Genap).</p>`;
-                    break;
                 case 'kurikulum':
                     contentArea.innerHTML = `<h3>Kurikulum</h3><p>Pengaturan jenis kurikulum yang digunakan (seperti Kurikulum Merdeka atau K-13).</p>`;
                     break;
