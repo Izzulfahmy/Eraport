@@ -208,7 +208,6 @@
             min-height: 250px;
         }
 
-        /* --- MEDIA QUERIES MOBILE OPTIMIZATION --- */
         @media (max-width: 768px) {
             .navbar {
                 padding: 10px 15px;
@@ -235,7 +234,6 @@
             .nav-menu { width: 100%; padding-bottom: 4px; }
             .nav-item { padding: 6px 12px; font-size: 13px; }
             .dashboard-content { padding: 15px; }
-            .content-card { padding: 20px; }
         }
     </style>
 </head>
@@ -389,28 +387,62 @@
                             'website', 'medsos'
                         ];
 
-                        fields.forEach(key => {
-                            const txtEl = document.getElementById(`txt_${key}`);
-                            const inputEl = document.getElementById(key);
-                            
-                            if(currentData[key]) {
-                                if(txtEl) txtEl.innerText = currentData[key];
-                                if(inputEl) inputEl.value = currentData[key];
-                            } else {
-                                if(txtEl) txtEl.innerText = '-';
-                            }
-                        });
+                        const labelMapping = {
+                            'nama_sekolah': 'Nama Resmi Sekolah', 'npsn': 'NPSN', 'nss_nds': 'NSS / NDS',
+                            'status_sekolah': 'Status Sekolah', 'jenjang': 'Bentuk Satuan Pendidikan',
+                            'status_kepemilikan': 'Status Kepemilikan', 'nama_pemilik': 'Nama Pemilik / Yayasan',
+                            'sk_pendirian': 'SK Pendirian Sekolah', 'sk_operasional': 'SK Izin Operasional',
+                            'tgl_berdiri': 'Tanggal Berdiri / SK Operasional', 'status_akreditasi': 'Status Akreditasi',
+                            'npwp_sekolah': 'Nomor Pokok Wajib Pajak (NPWP)', 'alamat_lengkap': 'Alamat Lengkap',
+                            'dusun': 'Dusun / Kampung', 'desa': 'Desa / Kelurahan', 'kecamatan': 'Kecamatan',
+                            'kabupaten': 'Kabupaten / Kota', 'provinsi': 'Provinsi', 'kode_pos': 'Kode Pos',
+                            'latitude': 'Garis Lintang (Latitude)', 'longitude': 'Garis Bujur (Longitude)',
+                            'no_telp': 'Nomor Telepon', 'fax': 'Nomor Faksimile (Fax)', 'no_wa': 'WhatsApp / Kontak Humas',
+                            'email_sekolah': 'Alamat Email Resmi', 'website': 'Situs Web Resmi', 'medsos': 'Media Sosial'
+                        };
 
-                        // DAFTARKAN TRIGER KLIK DI LEVEL GLOBAL SCRIPT INDUK
+                        const sec1 = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah'];
+                        const sec2 = ['alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude'];
+                        const sec3 = ['no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
+
+                        const renderFieldsToGrid = (fieldList, gridId) => {
+                            const gridEl = document.getElementById(gridId);
+                            if(!gridEl) return;
+                            gridEl.innerHTML = '';
+                            fieldList.forEach(key => {
+                                const valText = currentData[key] || '-';
+                                const inputEl = document.getElementById(key);
+                                if(inputEl) inputEl.value = currentData[key] || '';
+
+                                const fieldDiv = document.createElement('div');
+                                fieldDiv.className = 'read-field';
+                                fieldDiv.innerHTML = `<span class="label">${labelMapping[key]}</span><span class="value">${valText}</span>`;
+                                gridEl.appendChild(fieldDiv);
+                            });
+                        };
+
+                        renderFieldsToGrid(sec1, 'gridModeBaca1');
+                        renderFieldsToGrid(sec2, 'gridModeBaca2');
+                        renderFieldsToGrid(sec3, 'gridModeBaca3');
+
+                        // TRIGER SATU: MASUK KE MODE BOX FORM EDIT
                         window.aktifkanModeEdit = function() {
-                            const txtLabels = document.querySelectorAll('.profile-container .view-data');
-                            const formInputs = document.querySelectorAll('.profile-container input, .profile-container select');
-                            
-                            txtLabels.forEach(txt => txt.style.display = 'none');
-                            formInputs.forEach(inp => stroke => inp.style.display = 'block');
-                            
+                            document.getElementById('wrapperModeBaca').style.display = 'none';
                             document.getElementById('btnKeModeEdit').style.display = 'none';
+                            
+                            document.getElementById('formProfilSekolah').style.display = 'block';
+                            document.getElementById('btnBatalEdit').style.display = 'flex';
                             document.getElementById('btnSimpanProfil').style.display = 'flex';
+                        };
+
+                        // TRIGER DUA: BATALKAN DAN KEMBALI KE DETAIL STATIS
+                        window.batalkanModeEdit = function() {
+                            document.getElementById('formProfilSekolah').style.display = 'none';
+                            document.getElementById('btnBatalEdit').style.display = 'none';
+                            document.getElementById('btnSimpanProfil').style.display = 'none';
+                            
+                            document.getElementById('wrapperModeBaca').style.display = 'block';
+                            document.getElementById('btnKeModeEdit').style.display = 'flex';
                         };
 
                     } catch (err) {
@@ -473,7 +505,7 @@
                     }
                     window.simpanDataGuru = async function(e) {
                         e.preventDefault();
-                        const fields = ['nama_lengkap', 'gelar_depan', 'gelar_belakang', 'nik', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'gol_darah', 'status_pernikahan', 'nuptk', 'nip', 'niy_nigk', 'status_kepegawiain', 'jabatan', 'pangkat_golongan', 'tmt_pengangkatan', 'sk_pengangkatan', 'lembaga_pengangkat', 'npwp', 'tingkat_pendidikan', 'gelar_akademik', 'jurusan', 'universitas', 'tahun_kelulusan', 'alamat_rumah', 'kode_pos_guru', 'no_hp', 'email_pribadi', 'email_institusi', 'foto_profil', 'status_keaktifan', 'mapel_diampu', 'username_sistem', 'password_sistem'];
+                        const fields = ['nama_lengkap', 'gelar_depan', 'gelar_belakang', 'nik', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'gol_darah', 'status_pernikahan', 'nuptk', 'nip', 'niy_nigk', 'status_kepegawaian', 'jabatan', 'pangkat_golongan', 'tmt_pengangkatan', 'sk_pengangkatan', 'lembaga_pengangkat', 'npwp', 'tingkat_pendidikan', 'gelar_akademik', 'jurusan', 'universitas', 'tahun_kelulusan', 'alamat_rumah', 'kode_pos_guru', 'no_hp', 'email_pribadi', 'email_institusi', 'foto_profil', 'status_keaktifan', 'mapel_diampu', 'username_sistem', 'password_sistem'];
                         const payload = { updatedAt: serverTimestamp() };
                         fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
                         const id = document.getElementById('guru_id_hidden').value;
