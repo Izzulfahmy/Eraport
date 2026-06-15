@@ -227,56 +227,27 @@
                 align-items: stretch;
                 gap: 8px;
             }
-            
             .nav-header-top {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 width: 100%;
             }
-            
             .nav-left {
                 width: 100%;
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 8px;
             }
-            
-            .logo-brand {
-                font-size: 16px;
-            }
-            
-            .profile-logo {
-                width: 28px;
-                height: 28px;
-                font-size: 12px;
-            }
-            
-            .dropdown-menu {
-                top: 35px;
-            }
-            
-            .nav-menu {
-                width: 100%;
-                padding-bottom: 4px;
-            }
-            .nav-item {
-                padding: 6px 12px;
-                font-size: 13px;
-            }
-            
-            .dashboard-content {
-                padding: 15px;
-            }
-            .content-card {
-                padding: 20px;
-            }
-            .content-card h3 {
-                font-size: 18px;
-            }
-            .content-card p {
-                font-size: 14px;
-            }
+            .logo-brand { font-size: 16px; }
+            .profile-logo { width: 28px; height: 28px; font-size: 12px; }
+            .dropdown-menu { top: 35px; }
+            .nav-menu { width: 100%; padding-bottom: 4px; }
+            .nav-item { padding: 6px 12px; font-size: 13px; }
+            .dashboard-content { padding: 15px; }
+            .content-card { padding: 20px; }
+            .content-card h3 { font-size: 18px; }
+            .content-card p { font-size: 14px; }
         }
     </style>
 </head>
@@ -417,30 +388,76 @@
                     try {
                         const res = await fetch('profilsekolah.html');
                         contentArea.innerHTML = await res.text();
+                        
                         const docSnap = await getDoc(doc(db, "pengaturan", "profil_sekolah"));
-                        if (docSnap.exists()) {
-                            const data = docSnap.data();
-                            Object.keys(data).forEach(key => {
+                        
+                        // Kumpulan definisi label penamaan human-readable untuk diletakkan di Mode Baca
+                        const labelMapping = {
+                            'nama_sekolah': 'Nama Resmi Sekolah', 'npsn': 'NPSN', 'nss_nds': 'NSS / NDS',
+                            'status_sekolah': 'Status Sekolah', 'jenjang': 'Bentuk Satuan Pendidikan',
+                            'status_kepemilikan': 'Status Kepemilikan', 'nama_pemilik': 'Nama Pemilik / Yayasan',
+                            'sk_pendirian': 'SK Pendirian Sekolah', 'sk_operasional': 'SK Izin Operasional',
+                            'tgl_berdiri': 'Tanggal Berdiri / SK Operasional', 'status_akreditasi': 'Status Akreditasi',
+                            'npwp_sekolah': 'Nomor Pokok Wajib Pajak (NPWP)', 'alamat_lengkap': 'Alamat Lengkap',
+                            'dusun': 'Dusun / Kampung', 'desa': 'Desa / Kelurahan', 'kecamatan': 'Kecamatan',
+                            'kabupaten': 'Kabupaten / Kota', 'provinsi': 'Provinsi', 'kode_pos': 'Kode Pos',
+                            'latitude': 'Garis Lintang (Latitude)', 'longitude': 'Garis Bujur (Longitude)',
+                            'no_telp': 'Nomor Telepon', 'fax': 'Nomor Faksimile (Fax)', 'no_wa': 'WhatsApp / Kontak Humas',
+                            'email_sekolah': 'Alamat Email Resmi', 'website': 'Situs Web Resmi', 'medsos': 'Media Sosial'
+                        };
+
+                        const currentData = docSnap.exists() ? docSnap.data() : {};
+
+                        // Pemetaan grup section
+                        const sec1 = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah'];
+                        const sec2 = ['alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude'];
+                        const sec3 = ['no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
+
+                        // Fungsi internal pembentuk blok elemen teks mode baca
+                        const renderFieldsToGrid = (fieldList, gridId) => {
+                            const gridEl = document.getElementById(gridId);
+                            if(!gridEl) return;
+                            gridEl.innerHTML = '';
+                            fieldList.forEach(key => {
+                                const valText = currentData[key] || '-';
+                                // Set nilai ke input form edit di saat bersamaan
                                 const inputEl = document.getElementById(key);
-                                if (inputEl) inputEl.value = data[key];
+                                if(inputEl) inputEl.value = currentData[key] || '';
+
+                                const fieldDiv = document.createElement('div');
+                                fieldDiv.className = 'info-field';
+                                fieldDiv.innerHTML = `<span class="label">${labelMapping[key]}</span><span class="value">${valText}</span>`;
+                                gridEl.appendChild(fieldDiv);
                             });
-                        }
+                        };
+
+                        renderFieldsToGrid(sec1, 'gridModeBaca1');
+                        renderFieldsToGrid(sec2, 'gridModeBaca2');
+                        renderFieldsToGrid(sec3, 'gridModeBaca3');
+
                     } catch (err) {
+                        console.error(err);
                         contentArea.innerHTML = `<p style="color: red;">Gagal memuat profil sekolah.</p>`;
                     }
 
                     window.simpanProfilSekolah = async function(event) {
                         event.preventDefault();
-                        const btn = event.target.querySelector('.btn-save');
-                        if(btn) { btn.disabled = true; btn.innerText = "Menyimpan..."; }
+                        const btn = document.getElementById('btnSimpanProfil');
+                        if(btn) { btn.disabled = true; }
+                        
                         const fields = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah', 'alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude', 'no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
                         const payload = {};
                         fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
+                        
                         try {
                             await setDoc(doc(db, "pengaturan", "profil_sekolah"), payload);
-                            alert("Data Profil Sekolah disimpan!");
-                        } catch { alert("Gagal menyimpan."); }
-                        finally { if(btn) { btn.disabled = false; btn.innerText = "Simpan Perubahan"; } }
+                            alert("Data Profil Sekolah berhasil diperbarui!");
+                            // Segar beralih memuat ulang menu profil agar kembali ke Mode Baca ter-update
+                            switchMenu('profil-sekolah', document.querySelector('[onclick*="profil-sekolah"]'));
+                        } catch { 
+                            alert("Gagal menyimpan."); 
+                            if(btn) btn.disabled = false;
+                        }
                     };
                     break;
 
@@ -623,7 +640,6 @@
                     window.toggleStatusTPDirect = async function(id, isChecked) {
                         try {
                             const statusBaru = isChecked ? 'Aktif' : 'Tidak Aktif';
-                            
                             if (isChecked) {
                                 const snap = await getDocs(collection(db, "tahunpelajaran"));
                                 for (const d of snap.docs) {
@@ -632,7 +648,6 @@
                                     }
                                 }
                             }
-                            
                             await updateDoc(doc(db, "tahunpelajaran", id), { status_aktif: statusBaru, updatedAt: serverTimestamp() });
                             loadDaftarTP();
                         } catch (err) {
@@ -704,7 +719,6 @@
                                 document.getElementById('semester').value = d.semester || 'Ganjil';
                                 document.getElementById('tanggal_mulai').value = d.tanggal_mulai || '';
                                 document.getElementById('tanggal_berakhir').value = d.tanggal_berakhir || '';
-                                
                                 const isActive = d.status_aktif === 'Aktif';
                                 document.getElementById('status_aktif_checkbox').checked = isActive;
                             }
