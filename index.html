@@ -365,10 +365,13 @@
         const analytics = getAnalytics(app);
         const db = getFirestore(app);
 
-        adjustMobileLayout();
+        // DAFTARKAN EVENT RESIZE AGAR TETAP AKTIF SAAT LAYAR DIUBAH SQUEEZE
         window.addEventListener('resize', adjustMobileLayout);
 
         window.addEventListener('DOMContentLoaded', async () => {
+            // EKSEKUSI FORMAT LAYAR SETELAH DOM SIAP UTUH (MENCEGAH ERROR FREEZE)
+            adjustMobileLayout();
+
             const isLoggedIn = localStorage.getItem('isLoggedIn');
             if (isLoggedIn === 'true') {
                 showDashboard();
@@ -395,19 +398,22 @@
             const headerTop = document.querySelector('.nav-header-top');
             const navRight = document.querySelector('.nav-right');
             const navbar = document.querySelector('.navbar');
+            if (!headerTop || !navRight || !navbar) return; // Pengaman objek DOM
+            
             if (window.innerWidth <= 768) {
-                if (headerTop && navRight && navRight.parentElement === navbar) headerTop.appendChild(navRight);
+                if (navRight.parentElement === navbar) headerTop.appendChild(navRight);
             } else {
-                if (navbar && navRight && navRight.parentElement === headerTop) navbar.appendChild(navRight);
+                if (navRight.parentElement === headerTop) navbar.appendChild(navRight);
             }
         }
 
         window.switchMenu = async function(menuName, element) {
             const items = document.querySelectorAll('.nav-item');
             items.forEach(item => item.classList.remove('active'));
-            element.classList.add('active');
+            if(element) element.classList.add('active');
             
             const contentArea = document.getElementById('mainContentArea');
+            if(!contentArea) return;
             
             switch(menuName) {
                 case 'beranda':
@@ -434,7 +440,7 @@
                     window.simpanProfilSekolah = async function(event) {
                         event.preventDefault();
                         const btn = event.target.querySelector('.btn-save');
-                        btn.disabled = true; btn.innerText = "Menyimpan...";
+                        if(btn) { btn.disabled = true; btn.innerText = "Menyimpan..."; }
                         const fields = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah', 'alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude', 'no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
                         const payload = {};
                         fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
@@ -442,7 +448,7 @@
                             await setDoc(doc(db, "pengaturan", "profil_sekolah"), payload);
                             alert("Data Profil Sekolah disimpan!");
                         } catch { alert("Gagal menyimpan."); }
-                        finally { btn.disabled = false; btn.innerText = "Simpan Perubahan"; }
+                        finally { if(btn) { btn.disabled = false; btn.innerText = "Simpan Perubahan"; } }
                     };
                     break;
 
@@ -539,7 +545,7 @@
                     window.simpanDataMurid = async function(e) {
                         e.preventDefault();
                         const btn = document.getElementById('btnSimpanMurid');
-                        btn.disabled = true; btn.innerText = "Memproses...";
+                        if(btn) { btn.disabled = true; btn.innerText = "Memproses..."; }
                         const fields = ['nama_lengkap', 'nama_panggilan', 'nisn', 'nis', 'nik', 'no_akta', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'kewarganegaraan', 'anak_ke', 'jumlah_saudara', 'gol_darah', 'alamat_tinggal', 'kode_pos', 'tempat_tinggal_bersama', 'transportasi', 'no_hp_siswa', 'email_siswa', 'nama_ayah', 'nik_ayah', 'tahun_lahir_ayah', 'pendidikan_ayah', 'pekerjaan_ayah', 'penghasilan_ayah', 'nama_ibu', 'nik_ibu', 'tahun_lahir_ibu', 'pendidikan_ibu', 'pekerjaan_ibu', 'penghasilan_ibu', 'no_hp_ortu', 'nama_wali', 'nik_wali', 'hubungan_wali', 'pekerjaan_wali', 'no_hp_wali', 'status_murid', 'asal_sekolah', 'no_ijazah', 'no_skhun', 'tanggal_masuk', 'foto_profil', 'id_kelas', 'nomor_absen', 'status_keaktifan', 'username_murid', 'password_murid'];
                         const payload = { updatedAt: serverTimestamp() };
                         fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
@@ -549,7 +555,7 @@
                             else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "students", payload.username_murid), payload); alert("Murid baru berhasil disimpan!"); }
                             kembaliKeTabelMurid();
                         } catch { alert("Gagal memproses ke database."); }
-                        finally { btn.disabled = false; btn.innerText = "Simpan Data Murid"; }
+                        finally { if(btn) { btn.disabled = false; btn.innerText = "Simpan Data Murid"; } }
                     };
                     window.editMurid = async function(id) {
                         bukaFormMurid(); document.getElementById('formMuridTitle').innerText = "Edit Data Murid"; document.getElementById('murid_id_hidden').value = id;
@@ -617,7 +623,7 @@
                     window.simpanDataTP = async function(e) {
                         e.preventDefault();
                         const btn = document.getElementById('btnSimpanTP');
-                        btn.disabled = true; btn.innerText = "Memproses...";
+                        if(btn) { btn.disabled = true; btn.innerText = "Memproses..."; }
 
                         const tMulai = document.getElementById('tahun_mulai').value.trim();
                         const tBerakhir = document.getElementById('tahun_berakhir').value.trim();
@@ -637,12 +643,9 @@
 
                         try {
                             if(isEdit) {
-                                // Jika mode Edit, gunakan ID dokumen lama yang tersimpan di field tracker
                                 await setDoc(doc(db, "academic_years", isEdit), payload, { merge: true });
                                 alert("Data Tahun Pelajaran berhasil diperbarui!");
                             } else {
-                                // Jika mode Baru, buat ID Otomatis Berpola: [TahunMulai][TahunBerakhir][KodeSemester]
-                                // Ganjil = 1, Genap = 2 -> Mempermudah pengurutan data di sistem backend rapot nantinya
                                 const kodeSemester = (sem === "Ganjil") ? "1" : "2";
                                 const autoGeneratedId = `${tMulai}${tBerakhir}${kodeSemester}`;
 
@@ -655,8 +658,7 @@
                             console.error(err);
                             alert("Gagal menyimpan data tahun pelajaran."); 
                         } finally { 
-                            btn.disabled = false; 
-                            btn.innerText = "Simpan Tahun Pelajaran"; 
+                            if(btn) { btn.disabled = false; btn.innerText = "Simpan Tahun Pelajaran"; }
                         }
                     };
 
@@ -698,7 +700,7 @@
                     contentArea.innerHTML = `<h3>Data Kelas</h3><p>Manajemen pembagian rombongan belajar (rombel) dan penentuan wali kelas.</p>`;
                     break;
                 default:
-                    contentArea.innerHTML = `<h3>Dashboard</h3><p>Silakan pilih menu di atas.</p>';
+                    contentArea.innerHTML = `<h3>Dashboard</h3><p>Silakan pilih menu di atas.</p>`;
             }
         }
 
