@@ -13,7 +13,6 @@
         right: 0;
         z-index: 10;
     }
-    /* Tombol Ikon Bundar Minimalis */
     .btn-icon {
         width: 40px;
         height: 40px;
@@ -24,18 +23,11 @@
         justify-content: center;
         align-items: center;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        transition: background-color 0.2s;
     }
-    .btn-edit-mode {
-        background-color: #ffc107;
-        color: #333;
-    }
+    .btn-edit-mode { background-color: #ffc107; color: #333; }
     .btn-edit-mode:hover { background-color: #e0a800; }
     
-    .btn-save-mode {
-        background-color: #28a745;
-        color: white;
-    }
+    .btn-save-mode { background-color: #28a745; color: white; }
     .btn-save-mode:hover { background-color: #218838; }
 
     .section-title {
@@ -46,53 +38,45 @@
         margin-bottom: 15px;
         font-weight: bold;
     }
-    
-    /* Grid Layout */
     .info-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 15px 20px;
     }
     
-    /* Tampilan Baris Data Standar (Mode Baca) */
-    .info-field {
+    /* Kontainer komponen dinamis */
+    .profile-field {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        border-bottom: 1px solid #f0f0f0;
-        padding-bottom: 6px;
+        gap: 5px;
+        border-bottom: 1px solid #f4f4f4;
+        padding-bottom: 8px;
     }
-    .info-field .label {
+    .profile-field label {
         font-size: 12px;
         font-weight: 600;
         color: #777;
     }
-    .info-field .value {
+    
+    /* Mode Baca Text */
+    .profile-field .view-data {
         font-size: 14px;
         color: #333;
         font-weight: 500;
+        padding: 4px 0;
         word-break: break-word;
     }
-
-    /* Tampilan Form Input (Mode Edit) */
-    .form-field {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
-    .form-field label {
-        font-size: 12px;
-        font-weight: 600;
-        color: #007bff;
-    }
-    .form-field input, .form-field select {
+    
+    /* Mode Edit Input */
+    .profile-field input, .profile-field select {
+        display: none; /* Sembunyikan saat mode baca */
         padding: 8px 10px;
         border: 1px solid #ccc;
         border-radius: 4px;
         font-size: 14px;
-        background-color: #fff;
+        width: 100%;
     }
-    .form-field input:focus, .form-field select:focus {
+    .profile-field input:focus, .profile-field select:focus {
         border-color: #007bff;
         outline: none;
     }
@@ -113,69 +97,59 @@
         </button>
     </div>
 
-    <div id="wrapperModeBaca">
+    <form id="formProfilSekolah" onsubmit="simpanProfilSekolah(event)">
+        
         <div class="section-title">1. Data Administrasi dan Legalitas</div>
-        <div class="info-grid" id="gridModeBaca1">
-            </div>
+        <div class="info-grid">
+            <div class="profile-field"><label>Nama Resmi Sekolah</label><span id="txt_nama_sekolah" class="view-data">-</span><input type="text" id="nama_sekolah" required></div>
+            <div class="profile-field"><label>NPSN</label><span id="txt_npsn" class="view-data">-</span><input type="text" id="npsn" required></div>
+            <div class="profile-field"><label>NSS / NDS</label><span id="txt_nss_nds" class="view-data">-</span><input type="text" id="nss_nds"></div>
+            <div class="profile-field"><label>Status Sekolah</label><span id="txt_status_sekolah" class="view-data">-</span><select id="status_sekolah"><option value="Negeri">Negeri</option><option value="Swasta">Swasta</option></select></div>
+            <div class="profile-field"><label>Bentuk Satuan Pendidikan</label><span id="txt_jenjang" class="view-data">-</span><input type="text" id="jenjang"></div>
+            <div class="profile-field"><label>Status Kepemilikan</label><span id="txt_status_kepemilikan" class="view-data">-</span><select id="status_kepemilikan"><option value="Pemerintah">Pemerintah</option><option value="Yayasan">Yayasan</option><option value="Pribadi">Pribadi</option></select></div>
+            <div class="profile-field"><label>Nama Pemilik / Yayasan</label><span id="txt_nama_pemilik" class="view-data">-</span><input type="text" id="nama_pemilik"></div>
+            <div class="profile-field"><label>SK Pendirian Sekolah</label><span id="txt_sk_pendirian" class="view-data">-</span><input type="text" id="sk_pendirian"></div>
+            <div class="profile-field"><label>SK Izin Operasional</label><span id="txt_sk_operasional" class="view-data">-</span><input type="text" id="sk_operasional"></div>
+            <div class="profile-field"><label>Tanggal Berdiri / SK Operasional</label><span id="txt_tgl_berdiri" class="view-data">-</span><input type="date" id="tgl_berdiri"></div>
+            <div class="profile-field"><label>Status Akreditasi</label><span id="txt_status_akreditasi" class="view-data">-</span><input type="text" id="status_akreditasi"></div>
+            <div class="profile-field"><label>Nomor Pokok Wajib Pajak (NPWP)</label><span id="txt_npwp_sekolah" class="view-data">-</span><input type="text" id="npwp_sekolah"></div>
+        </div>
 
         <div class="section-title" style="margin-top: 25px;">2. Data Lokasi dan Geografis</div>
-        <div class="info-grid" id="gridModeBaca2">
-            </div>
+        <div class="info-grid">
+            <div class="profile-field"><label>Alamat Lengkap</label><span id="txt_alamat_lengkap" class="view-data">-</span><input type="text" id="alamat_lengkap" required></div>
+            <div class="profile-field"><label>Dusun / Kampung</label><span id="txt_dusun" class="view-data">-</span><input type="text" id="dusun"></div>
+            <div class="profile-field"><label>Desa / Kelurahan</label><span id="txt_desa" class="view-data">-</span><input type="text" id="desa" required></div>
+            <div class="profile-field"><label>Kecamatan</label><span id="txt_kecamatan" class="view-data">-</span><input type="text" id="kecamatan" required></div>
+            <div class="profile-field"><label>Kabupaten / Kota</label><span id="txt_kabupaten" class="view-data">-</span><input type="text" id="kabupaten" required></div>
+            <div class="profile-field"><label>Provinsi</label><span id="txt_provinsi" class="view-data">-</span><input type="text" id="provinsi" required></div>
+            <div class="profile-field"><label>Kode Pos</label><span id="txt_kode_pos" class="view-data">-</span><input type="text" id="kode_pos"></div>
+            <div class="profile-field"><label>Garis Lintang (Latitude)</label><span id="txt_latitude" class="view-data">-</span><input type="text" id="latitude"></div>
+            <div class="profile-field"><label>Garis Bujur (Longitude)</label><span id="txt_longitude" class="view-data">-</span><input type="text" id="longitude"></div>
+        </div>
 
         <div class="section-title" style="margin-top: 25px;">3. Data Kontak dan Media Resmi</div>
-        <div class="info-grid" id="gridModeBaca3">
-            </div>
-    </div>
-
-    <form id="formProfilSekolah" onsubmit="simpanProfilSekolah(event)" style="display: none;">
-        <div class="section-title">1. Data Administrasi dan Legalitas (Edit)</div>
         <div class="info-grid">
-            <div class="form-field"><label>Nama Resmi Sekolah</label><input type="text" id="nama_sekolah" required></div>
-            <div class="form-field"><label>NPSN</label><input type="text" id="npsn" required></div>
-            <div class="form-field"><label>NSS / NDS</label><input type="text" id="nss_nds"></div>
-            <div class="form-field"><label>Status Sekolah</label><select id="status_sekolah"><option value="Negeri">Negeri</option><option value="Swasta">Swasta</option></select></div>
-            <div class="form-field"><label>Bentuk Satuan Pendidikan</label><input type="text" id="jenjang"></div>
-            <div class="form-field"><label>Status Kepemilikan</label><select id="status_kepemilikan"><option value="Pemerintah">Pemerintah</option><option value="Yayasan">Yayasan</option><option value="Pribadi">Pribadi</option></select></div>
-            <div class="form-field"><label>Nama Pemilik / Yayasan</label><input type="text" id="nama_pemilik"></div>
-            <div class="form-field"><label>SK Pendirian Sekolah</label><input type="text" id="sk_pendirian"></div>
-            <div class="form-field"><label>SK Izin Operasional</label><input type="text" id="sk_operasional"></div>
-            <div class="form-field"><label>Tanggal Berdiri / SK Operasional</label><input type="date" id="tgl_berdiri"></div>
-            <div class="form-field"><label>Status Akreditasi</label><input type="text" id="status_akreditasi"></div>
-            <div class="form-field"><label>Nomor Pokok Wajib Pajak (NPWP)</label><input type="text" id="npwp_sekolah"></div>
-        </div>
-
-        <div class="section-title" style="margin-top: 25px;">2. Data Lokasi dan Geografis (Edit)</div>
-        <div class="info-grid">
-            <div class="form-field"><label>Alamat Lengkap</label><input type="text" id="alamat_lengkap" required></div>
-            <div class="form-field"><label>Dusun / Kampung</label><input type="text" id="dusun"></div>
-            <div class="form-field"><label>Desa / Kelurahan</label><input type="text" id="desa" required></div>
-            <div class="form-field"><label>Kecamatan</label><input type="text" id="kecamatan" required></div>
-            <div class="form-field"><label>Kabupaten / Kota</label><input type="text" id="kabupaten" required></div>
-            <div class="form-field"><label>Provinsi</label><input type="text" id="provinsi" required></div>
-            <div class="form-field"><label>Kode Pos</label><input type="text" id="kode_pos"></div>
-            <div class="form-field"><label>Garis Lintang (Latitude)</label><input type="text" id="latitude"></div>
-            <div class="form-field"><label>Garis Bujur (Longitude)</label><input type="text" id="longitude"></div>
-        </div>
-
-        <div class="section-title" style="margin-top: 25px;">3. Data Kontak dan Media Resmi (Edit)</div>
-        <div class="info-grid">
-            <div class="form-field"><label>Nomor Telepon</label><input type="text" id="no_telp"></div>
-            <div class="form-field"><label>Nomor Faksimile (Fax)</label><input type="text" id="fax"></div>
-            <div class="form-field"><label>WhatsApp / Kontak Humas</label><input type="text" id="no_wa"></div>
-            <div class="form-field"><label>Alamat Email Resmi</label><input type="email" id="email_sekolah"></div>
-            <div class="form-field"><label>Situs Web Resmi (Website)</label><input type="url" id="website"></div>
-            <div class="form-field"><label>Media Sosial</label><input type="text" id="medsos"></div>
+            <div class="profile-field"><label>Nomor Telepon</label><span id="txt_no_telp" class="view-data">-</span><input type="text" id="no_telp"></div>
+            <div class="form-field profile-field"><label>Nomor Faksimile (Fax)</label><span id="txt_fax" class="view-data">-</span><input type="text" id="fax"></div>
+            <div class="profile-field"><label>WhatsApp / Kontak Humas</label><span id="txt_no_wa" class="view-data">-</span><input type="text" id="no_wa"></div>
+            <div class="profile-field"><label>Alamat Email Resmi</label><span id="txt_email_sekolah" class="view-data">-</span><input type="email" id="email_sekolah"></div>
+            <div class="profile-field"><label>Situs Web Resmi (Website)</label><span id="txt_website" class="view-data">-</span><input type="url" id="website"></div>
+            <div class="profile-field"><label>Media Sosial</label><span id="txt_medsos" class="view-data">-</span><input type="text" id="medsos"></div>
         </div>
     </form>
 </div>
 
 <script>
-    // Fungsi berpindah dari Tampilan Identitas ke Form Kolom Pengisian
     function aktifkanModeEdit() {
-        document.getElementById('wrapperModeBaca').style.display = 'none';
-        document.getElementById('btnKeModeEdit').style.display = 'none';
+        // Sembunyikan elemen text biasa, tampilkan form input
+        const texts = document.querySelectorAll('.profile-container .view-data');
+        const inputs = document.querySelectorAll('.profile-container input, .profile-container select');
         
-        document.getElementById('formProfilSekolah').style.display = 'block';
+        texts.forEach(t => t.style.display = 'none');
+        inputs.forEach(i => i.style.display = 'block');
+        
+        document.getElementById('btnKeModeEdit').style.display = 'none';
         document.getElementById('btnSimpanProfil').style.display = 'flex';
     }
 </script>
