@@ -574,166 +574,341 @@
                 case 'kurikulum':
                     contentArea.innerHTML = `<p style="color: #999;">Memuat Modul Kurikulum...</p>`;
                     try {
-                        const res = await fetch('kurikulum.html');
-                        contentArea.innerHTML = await res.text();
-                        
-                        // 1. Tarik referensi Tahun Pelajaran secara dinamis untuk mengisi opsi dropdown relasi
+                        const res = await fetch('kurikulum.html'); contentArea.innerHTML = await res.text();
                         const selectRelasi = document.getElementById('relasi_tahun_pelajaran');
                         if (selectRelasi) {
                             const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc")));
                             tpSnap.forEach(tpDoc => {
-                                const tpData = tpDoc.data();
-                                const opt = document.createElement('option');
-                                opt.value = tpDoc.id; // Gunakan ID Sistem (Primary Key) sebagai Value Relasi
-                                opt.innerText = `${tpData.tahun_mulai}/${tpData.tahun_berakhir} - Semestet ${tpData.semester}`;
+                                const tpData = tpDoc.data(); const opt = document.createElement('option');
+                                opt.value = tpDoc.id; opt.innerText = `${tpData.tahun_mulai}/${tpData.tahun_berakhir} - Semester ${tpData.semester}`;
                                 selectRelasi.appendChild(opt);
                             });
                         }
-
                         loadDaftarKurikulum();
                     } catch (err) { console.error(err); contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul kurikulum.</p>`; }
 
-                    // --- CRUD LOGIC MODUL KURIKULUM (Koleksi: kurikulum) ---
                     window.bukaFormKurikulum = function() {
-                        document.getElementById('viewTabelKurikulum').style.display = 'none';
-                        document.getElementById('viewFormKurikulum').style.display = 'block';
-                        document.getElementById('formKurikulum').reset();
-                        document.getElementById('kurikulum_id_hidden').value = '';
-                        document.getElementById('kurikulum_aktif_checkbox').checked = false;
-                        document.getElementById('formKurikulumTitle').innerText = "Tambah Kurikulum Baru";
+                        document.getElementById('viewTabelKurikulum').style.display = 'none'; document.getElementById('viewFormKurikulum').style.display = 'block';
+                        document.getElementById('formKurikulum').reset(); document.getElementById('kurikulum_id_hidden').value = ''; document.getElementById('kurikulum_aktif_checkbox').checked = false;
                     };
-
                     window.kembaliKeTabelKurikulum = function() {
-                        document.getElementById('viewFormKurikulum').style.display = 'none';
-                        document.getElementById('viewTabelKurikulum').style.display = 'block';
-                        loadDaftarKurikulum();
+                        document.getElementById('viewFormKurikulum').style.display = 'none'; document.getElementById('viewTabelKurikulum').style.display = 'block'; loadDaftarKurikulum();
                     };
-
                     async function loadDaftarKurikulum() {
                         const tbody = document.getElementById('tbodyKurikulum'); if(!tbody) return;
                         tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#999;">Mengambil data...</td></tr>';
                         try {
-                            const snap = await getDocs(query(collection(db, "kurikulum"), orderBy("createdAt", "desc")));
-                            tbody.innerHTML = ''; let idx = 1;
-                            if(snap.empty) {
-                                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#999;">Belum ada data kurikulum.</td></tr>';
-                                return;
-                            }
+                            const snap = await getDocs(query(collection(db, "kurikulum"), orderBy("createdAt", "desc"))); tbody.innerHTML = ''; let idx = 1;
+                            if(snap.empty) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Belum ada data kurikulum.</td></tr>'; return; }
                             snap.forEach(d => {
-                                const kr = d.data();
-                                const isChecked = kr.status_aktif === 'Aktif' ? 'checked' : '';
-                                const tr = document.createElement('tr');
-                                tr.innerHTML = `
-                                    <td>${idx++}</td>
-                                    <td><code>${d.id}</code></td>
-                                    <td><strong>${kr.nama_kurikulum}</strong></td>
-                                    <td><code>${kr.relasi_tahun_pelajaran}</code></td>
-                                    <td>
-                                        <label class="switch">
-                                            <input type="checkbox" ${isChecked} onclick="toggleStatusKurikulumDirect('${d.id}', this.checked)">
-                                            <span class="slider"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group-actions">
-                                            <button class="btn-edit" onclick="editKurikulum('${d.id}')">Edit</button>
-                                            <button class="btn-delete" onclick="hapusKurikulum('${d.id}')">Hapus</button>
-                                        </div>
-                                    </td>
-                                `;
+                                const kr = d.data(); const isChecked = kr.status_aktif === 'Aktif' ? 'checked' : ''; const tr = document.createElement('tr');
+                                tr.innerHTML = `<td>${idx++}</td><td><code>${d.id}</code></td><td><strong>${kr.nama_kurikulum}</strong></td><td><code>${kr.relasi_tahun_pelajaran}</code></td><td><label class="switch"><input type="checkbox" ${isChecked} onclick="toggleStatusKurikulumDirect('${d.id}', this.checked)"><span class="slider"></span></label></td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editKurikulum('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusKurikulum('${d.id}')">Hapus</button></div></td>`;
                                 tbody.appendChild(tr);
                             });
-                        } catch { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Gagal memuat list kurikulum.</td></tr>'; }
+                        } catch { tbody.innerHTML = '<tr><td colspan="6">Gagal memuat list.</td></tr>'; }
                     }
-
                     window.toggleStatusKurikulumDirect = async function(id, isChecked) {
                         try {
                             const statusBaru = isChecked ? 'Aktif' : 'Tidak Aktif';
                             if (isChecked) {
-                                // Sifat pengunci Single-Active: matikan kurikulum lain
                                 const snap = await getDocs(collection(db, "kurikulum"));
-                                for (const d of snap.docs) {
-                                    if (d.id !== id && d.data().status_aktif === 'Aktif') {
-                                        await updateDoc(doc(db, "kurikulum", d.id), { status_aktif: 'Tidak Aktif' });
-                                    }
-                                }
+                                for (const d of snap.docs) { if (d.id !== id && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "kurikulum", d.id), { status_aktif: 'Tidak Aktif' }); }
                             }
-                            await updateDoc(doc(db, "kurikulum", id), { status_aktif: statusBaru, updatedAt: serverTimestamp() });
-                            loadDaftarKurikulum();
-                        } catch { alert("Gagal merubah status kurikulum."); loadDaftarKurikulum(); }
+                            await updateDoc(doc(db, "kurikulum", id), { status_aktif: statusBaru, updatedAt: serverTimestamp() }); loadDaftarKurikulum();
+                        } catch { alert("Gagal merubah status."); loadDaftarKurikulum(); }
                     };
-
                     window.simpanDataKurikulum = async function(e) {
-                        e.preventDefault();
-                        const btn = document.getElementById('btnSimpanKurikulum');
-                        if(btn) { btn.disabled = true; btn.innerText = "Memproses..."; }
-
-                        const namaKr = document.getElementById('nama_kurikulum').value.trim();
-                        const relasiTp = document.getElementById('relasi_tahun_pelajaran').value;
+                        e.preventDefault(); const btn = document.getElementById('btnSimpanKurikulum'); if(btn) { btn.disabled = true; btn.innerText = "Memproses..."; }
+                        const namaKr = document.getElementById('nama_kurikulum').value.trim(); const relasiTp = document.getElementById('relasi_tahun_pelajaran').value;
                         const statusChecked = document.getElementById('kurikulum_aktif_checkbox').checked;
-
-                        const payload = {
-                            nama_kurikulum: namaKr,
-                            relasi_tahun_pelajaran: relasiTp,
-                            status_aktif: statusChecked ? 'Aktif' : 'Tidak Aktif',
-                            updatedAt: serverTimestamp()
-                        };
-
-                        const isEdit = document.getElementById('kurikulum_id_hidden').value;
-                        // Auto-ID Sistem menggunakan prefix string acak berbasis milidetik waktu unik
-                        const targetId = isEdit ? isEdit : "KR_" + Date.now().toString().slice(-6);
-
+                        const payload = { nama_kurikulum: namaKr, relasi_tahun_pelajaran: relasiTp, status_aktif: statusChecked ? 'Aktif' : 'Tidak Aktif', updatedAt: serverTimestamp() };
+                        const isEdit = document.getElementById('kurikulum_id_hidden').value; const targetId = isEdit ? isEdit : "KR_" + Date.now().toString().slice(-6);
                         try {
                             if (statusChecked) {
                                 const snap = await getDocs(collection(db, "kurikulum"));
-                                for (const d of snap.docs) {
-                                    if (d.id !== targetId && d.data().status_aktif === 'Aktif') {
-                                        await updateDoc(doc(db, "kurikulum", d.id), { status_aktif: 'Tidak Aktif' });
-                                    }
-                                }
+                                for (const d of snap.docs) { if (d.id !== targetId && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "kurikulum", d.id), { status_aktif: 'Tidak Aktif' }); }
                             }
-
-                            if(isEdit) {
-                                await setDoc(doc(db, "kurikulum", isEdit), payload, { merge: true });
-                                alert("Data Kurikulum berhasil diupdate!");
-                            } else {
-                                payload['createdAt'] = serverTimestamp();
-                                await setDoc(doc(db, "kurikulum", targetId), payload);
-                                alert(`Kurikulum baru berhasil disimpan dengan ID: ${targetId}`);
-                            }
+                            if(isEdit) { await setDoc(doc(db, "kurikulum", isEdit), payload, { merge: true }); } 
+                            else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "kurikulum", targetId), payload); }
                             kembaliKeTabelKurikulum();
-                        } catch { alert("Gagal menyimpan data kurikulum."); }
-                        finally { if(btn) { btn.disabled = false; btn.innerText = "Simpan Kurikulum"; } }
+                        } catch { alert("Gagal menyimpan."); } finally { if(btn) { btn.disabled = false; btn.innerText = "Simpan Kurikulum"; } }
                     };
-
                     window.editKurikulum = async function(id) {
-                        bukaFormKurikulum();
-                        document.getElementById('formKurikulumTitle').innerText = "Edit Kurikulum";
-                        document.getElementById('kurikulum_id_hidden').value = id;
+                        bukaFormKurikulum(); document.getElementById('kurikulum_id_hidden').value = id;
                         try {
                             const snap = await getDoc(doc(db, "kurikulum", id));
                             if(snap.exists()) {
-                                const d = snap.data();
-                                document.getElementById('nama_kurikulum').value = d.nama_kurikulum || '';
-                                document.getElementById('relasi_tahun_pelajaran').value = d.relasi_tahun_pelajaran || '';
-                                document.getElementById('kurikulum_aktif_checkbox').checked = d.status_aktif === 'Aktif';
+                                const d = snap.data(); document.getElementById('nama_kurikulum').value = d.nama_kurikulum || '';
+                                document.getElementById('relasi_tahun_pelajaran').value = d.relasi_tahun_pelajaran || ''; document.getElementById('kurikulum_aktif_checkbox').checked = d.status_aktif === 'Aktif';
                             }
-                        } catch { alert("Gagal memuat detail data kurikulum."); }
+                        } catch { alert("Gagal memuat detail."); }
+                    };
+                    window.hapusKurikulum = async function(id) { if(confirm("Hapus data kurikulum ini?")) { try { await deleteDoc(doc(db, "kurikulum", id)); alert("Data kurikulum dihapus."); loadDaftarKurikulum(); } catch { alert("Gagal."); } } };
+                    break;
+
+                case 'mata-pelajaran':
+                    contentArea.innerHTML = `<p style="color: #999;">Memuat Modul Mata Pelajaran...</p>`;
+                    try {
+                        const res = await fetch('matapelajaran.html');
+                        contentArea.innerHTML = await res.text();
+
+                        // 1. Ambil daftar Tahun Pelajaran ke Dropdown filter atas
+                        const selectTp = document.getElementById('filter_tp_mapel');
+                        if (selectTp) {
+                            selectTp.innerHTML = '';
+                            const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc")));
+                            
+                            let activeTpId = "";
+                            tpSnap.forEach(doc => {
+                                const d = doc.data();
+                                const opt = document.createElement('option');
+                                opt.value = doc.id;
+                                opt.innerText = `${d.tahun_mulai}/${d.tahun_berakhir} (${d.semester})`;
+                                if(d.status_aktif === "Aktif") {
+                                    opt.selected = true;
+                                    activeTpId = doc.id; // Tangkap PK Tahun Pelajaran yang berstatus Aktif
+                                }
+                                selectTp.appendChild(opt);
+                            });
+
+                            // Jika ada TP aktif, jalankan penarikan Kurikulum otomatis
+                            if(activeTpId) {
+                                selectTp.value = activeTpId;
+                                await handleFilterTpChange(activeTpId);
+                            }
+                        }
+                    } catch (err) { console.error(err); contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul.</p>`; }
+
+                    // HANDLER FILTER TP: Mengubah opsi dropdown kurikulum berdasarkan TP terpilih
+                    window.handleFilterTpChange = async function(forcedId) {
+                        const tpSelectValue = forcedId ? forcedId : document.getElementById('filter_tp_mapel').value;
+                        const kurikulumSelect = document.getElementById('filter_kurikulum_mapel');
+                        if(!kurikulumSelect) return;
+
+                        kurikulumSelect.innerHTML = '<option value="">-- Pilih Kurikulum --</option>';
+                        document.getElementById('btnTambahMapelTop').disabled = true;
+
+                        try {
+                            const q = query(collection(db, "kurikulum"), orderBy("createdAt", "desc"));
+                            const snap = await getDocs(q);
+                            
+                            let activeKrId = "";
+                            snap.forEach(doc => {
+                                const d = doc.data();
+                                // Validasi kecocokan relasi
+                                if(d.relasi_tahun_pelajaran === tpSelectValue) {
+                                    const opt = document.createElement('option');
+                                    opt.value = doc.id;
+                                    opt.innerText = d.nama_kurikulum;
+                                    if(d.status_aktif === "Aktif") {
+                                        opt.selected = true;
+                                        activeKrId = doc.id;
+                                    }
+                                    kurikulumSelect.appendChild(opt);
+                                }
+                            });
+
+                            if(activeKrId) {
+                                kurikulumSelect.value = activeKrId;
+                            }
+                            loadDaftarMapel();
+                        } catch(err) { console.error(err); }
                     };
 
-                    window.hapusKurikulum = async function(id) {
-                        if(confirm("Apakah Anda yakin ingin menghapus data kurikulum ini?")) {
+                    // VIEW TRIGER SWITCH FORM
+                    window.bukaFormGrup = function() {
+                        document.getElementById('viewTabelMP').style.display = 'none';
+                        document.getElementById('viewFormGrup').style.display = 'block';
+                        document.getElementById('formGrupMP').reset();
+                        document.getElementById('grup_id_hidden').value = '';
+                        document.getElementById('formGrupTitle').innerText = "Buat Kelompok / Grup Mapel Baru";
+                    };
+
+                    window.bukaFormMapel = function(forcedParentId) {
+                        document.getElementById('viewTabelMP').style.display = 'none';
+                        document.getElementById('viewFormMapel').style.display = 'block';
+                        document.getElementById('formMapel').reset();
+                        document.getElementById('mapel_id_hidden').value = '';
+                        document.getElementById('formMapelTitle').innerText = "Tambah Mata Pelajaran Baru";
+                        if(forcedParentId) document.getElementById('mapel_parent_id').value = forcedParentId;
+                    };
+
+                    window.kembaliKeTabelMP = function() {
+                        document.getElementById('viewFormGrup').style.display = 'none';
+                        document.getElementById('viewFormMapel').style.display = 'none';
+                        document.getElementById('viewTabelMP').style.display = 'block';
+                        loadDaftarMapel();
+                    };
+
+                    // RENDER TREE TABLE SINKRON FIRESTORE
+                    window.loadDaftarMapel = async function() {
+                        const tpId = document.getElementById('filter_tp_mapel').value;
+                        const krId = document.getElementById('filter_kurikulum_mapel').value;
+                        const tbody = document.getElementById('tbodyMP');
+                        const btnAddMapel = document.getElementById('btnTambahMapelTop');
+                        
+                        if(!tbody) return;
+                        if(!tpId || !krId) {
+                            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#666;">Silakan tentukan Tahun Pelajaran & Kurikulum di dropdown atas.</td></tr>';
+                            if(btnAddMapel) btnAddMapel.disabled = true;
+                            return;
+                        }
+
+                        if(btnAddMapel) btnAddMapel.disabled = false;
+                        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">Membaca struktur tabel...</td></tr>';
+
+                        try {
+                            // Ambil seluruh mapel & grup yang terikat ke scope TP dan Kurikulum terpilih
+                            const q = query(collection(db, "matapelajaran"), orderBy("createdAt", "asc"));
+                            const snap = await getDocs(q);
+                            
+                            const items = [];
+                            snap.forEach(d => {
+                                const data = d.data();
+                                if(data.tp_id === tpId && data.kurikulum_id === krId) {
+                                    items.push({ id: d.id, ...data });
+                                }
+                            });
+
+                            tbody.innerHTML = '';
+                            
+                            // Ambil data Dropdown wadah parent_id untuk Form Mapel
+                            const parentSelect = document.getElementById('mapel_parent_id');
+                            if(parentSelect) parentSelect.innerHTML = '<option value="">-- Pilih Kelompok --</option>';
+
+                            const kelompokGrup = items.filter(i => i.tipe === 'grup');
+                            const subMapel = items.filter(i => i.tipe === 'mapel');
+
+                            if(kelompokGrup.length === 0) {
+                                tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#999;">Belum ada kelompok belajar dibuat. Klik "Buat Grup Baru" untuk memulai.</td></tr>';
+                                return;
+                            }
+
+                            kelompokGrup.forEach(grup => {
+                                // Masukkan ke opsi select form mapel
+                                if(parentSelect) {
+                                    const opt = document.createElement('option');
+                                    opt.value = grup.id;
+                                    opt.innerText = grup.nama;
+                                    parentSelect.appendChild(opt);
+                                }
+
+                                // Render Baris Grup (Warna Abu Biru Tebal)
+                                const trG = document.createElement('tr');
+                                trG.className = 'tr-grup';
+                                trG.innerHTML = `
+                                    <td><code>${grup.grup_kode || '-'}</code></td>
+                                    <td>${grup.nama}</td>
+                                    <td>Kelompok Wadah</td>
+                                    <td>
+                                        <div class="btn-actions-mapel">
+                                            <button class="btn-edit-mp" onclick="editGrup('${grup.id}', '${grup.nama}', '${grup.grup_kode || ''}')">Edit</button>
+                                            <button class="btn-delete-mp" onclick="hapusKomponenMP('${grup.id}')">Hapus</button>
+                                        </div>
+                                    </td>
+                                `;
+                                tbody.appendChild(trG);
+
+                                // Ambil anak mapel yang masuk kelompok ini
+                                const anakMapel = subMapel.filter(m => m.parent_id === grup.id);
+                                anakMapel.forEach(mapel => {
+                                    const trM = document.createElement('tr');
+                                    trM.innerHTML = `
+                                        <td class="td-sub-mapel"><code>${mapel.kode_pendek}</code></td>
+                                        <td class="td-sub-mapel">${mapel.nama}</td>
+                                        <td>Mata Pelajaran</td>
+                                        <td>
+                                            <div class="btn-actions-mapel">
+                                                <button class="btn-edit-mp" onclick="editMapel('${mapel.id}', '${mapel.nama}', '${mapel.kode_pendek}', '${mapel.parent_id}')">Edit</button>
+                                                <button class="btn-delete-mp" onclick="hapusKomponenMP('${mapel.id}')">Hapus</button>
+                                            </div>
+                                        </td>
+                                    `;
+                                    tbody.appendChild(trM);
+                                });
+                            });
+
+                        } catch(err) {
+                            console.error(err);
+                            tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Gagal merender data.</td></tr>';
+                        }
+                    };
+
+                    // ACTION SIMPAN GRUP
+                    window.simpanGrupMP = async function(e) {
+                        e.preventDefault();
+                        const tpId = document.getElementById('filter_tp_mapel').value;
+                        const krId = document.getElementById('filter_kurikulum_mapel').value;
+                        const namaGrup = document.getElementById('grup_nama').value.trim();
+                        const kodeGrup = document.getElementById('grup_kode').value.trim();
+                        const isEditId = document.getElementById('grup_id_hidden').value;
+
+                        const payload = {
+                            nama: namaGrup, grup_kode: kodeGrup, tipe: 'grup',
+                            tp_id: tpId, kurikulum_id: krId, updatedAt: serverTimestamp()
+                        };
+                        const targetId = isEditId ? isEditId : "GR_" + Date.now().toString().slice(-6);
+
+                        try {
+                            if(!isEditId) payload['createdAt'] = serverTimestamp();
+                            await setDoc(doc(db, "matapelajaran", targetId), payload, { merge: true });
+                            alert("Grup Kelompok berhasil disimpan!"); kembaliKeTabelMP();
+                        } catch { alert("Gagal memproses grup."); }
+                    };
+
+                    // ACTION SIMPAN MAPEL (SUB-TREE)
+                    window.simpanDataMapel = async function(e) {
+                        e.preventDefault();
+                        const tpId = document.getElementById('filter_tp_mapel').value;
+                        const krId = document.getElementById('filter_kurikulum_mapel').value;
+                        const parentId = document.getElementById('mapel_parent_id').value;
+                        const namaMapel = document.getElementById('mapel_nama').value.trim();
+                        const kodePendek = document.getElementById('mapel_kode_pendek').value.trim().toUpperCase();
+                        const isEditId = document.getElementById('mapel_id_hidden').value;
+
+                        const payload = {
+                            nama: namaMapel, kode_pendek: kodePendek, parent_id: parentId, tipe: 'mapel',
+                            tp_id: tpId, kurikulum_id: krId, updatedAt: serverTimestamp()
+                        };
+                        const targetId = isEditId ? isEditId : "MP_" + Date.now().toString().slice(-6);
+
+                        try {
+                            if(!isEditId) payload['createdAt'] = serverTimestamp();
+                            await setDoc(doc(db, "matapelajaran", targetId), payload, { merge: true });
+                            alert("Mata Pelajaran berhasil ditambahkan!"); kembaliKeTabelMP();
+                        } catch { alert("Gagal memproses mata pelajaran."); }
+                    };
+
+                    // ACTION EDIT GRUP
+                    window.editGrup = function(id, nama, kode) {
+                        bukaFormGrup();
+                        document.getElementById('formGrupTitle').innerText = "Edit Kelompok Mata Pelajaran";
+                        document.getElementById('grup_id_hidden').value = id;
+                        document.getElementById('grup_nama').value = nama;
+                        document.getElementById('grup_kode').value = (kode === 'null' || kode === '-') ? '' : kode;
+                    };
+
+                    // ACTION EDIT MAPEL
+                    window.editMapel = function(id, nama, kode, parentId) {
+                        bukaFormMapel();
+                        document.getElementById('formMapelTitle').innerText = "Edit Mata Pelajaran";
+                        document.getElementById('mapel_id_hidden').value = id;
+                        document.getElementById('mapel_nama').value = nama;
+                        document.getElementById('mapel_kode_pendek').value = kode;
+                        document.getElementById('mapel_parent_id').value = parentId;
+                    };
+
+                    // ACTION HAPUS KOMPONEN MULTI-TIPE
+                    window.hapusKomponenMP = async function(id) {
+                        if(confirm("Apakah Anda yakin ingin menghapus data ini dari struktur kurikulum?")) {
                             try {
-                                await deleteDoc(doc(db, "kurikulum", id));
-                                alert("Data kurikulum berhasil dihapus."); loadDaftarKurikulum();
+                                await deleteDoc(doc(db, "matapelajaran", id));
+                                alert("Data terhapus."); loadDaftarMapel();
                             } catch { alert("Gagal menghapus."); }
                         }
                     };
                     break;
 
-                case 'mata-pelajaran':
-                    contentArea.innerHTML = `<h3>Mata Pelajaran</h3><p>Kelola daftar muatan mata pelajaran, kelompok mapel, dan KKM/KKTP.</p>`;
-                    break;
                 case 'kelas':
                     contentArea.innerHTML = `<h3>Data Kelas</h3><p>Manajemen pembagian rombongan belajar (rombel) dan penentuan wali kelas.</p>`;
                     break;
