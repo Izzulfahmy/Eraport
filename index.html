@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eraport</title>
+    <!-- Favicon Logo Aplikasi Eraport -->
     <link rel="icon" type="image/png" href="https://izzulfahmy.github.io/Eraport/logoerapor.png">
     
+    <!-- Library jSpreadsheet CE v4 & jSuites Open Source -->
     <script src="https://bossanova.uk/jspreadsheet/v4/jexcel.js"></script>
     <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v4/jexcel.css" type="text/css" />
     <script src="https://jsuites.net/v4/jsuites.js"></script>
@@ -127,7 +129,7 @@
                     try {
                         const res = await fetch('profilsekolah.html'); contentArea.innerHTML = await res.text();
                         const docSnap = await getDoc(doc(db, "pengaturan", "profil_sekolah")); const currentData = docSnap.exists() ? docSnap.data() : {};
-                        const fields = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah', 'alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude', 'no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medSocial'];
+                        const fields = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah', 'alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude', 'no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
                         const labelMapping = { 'nama_sekolah': 'Nama Resmi Sekolah', 'npsn': 'NPSN', 'nss_nds': 'NSS / NDS', 'status_sekolah': 'Status Sekolah', 'jenjang': 'Bentuk Satuan Pendidikan', 'status_kepemilikan': 'Status Kepemilikan', 'nama_pemilik': 'Nama Pemilik / Yayasan', 'sk_pendirian': 'SK Pendirian Sekolah', 'sk_operasional': 'SK Izin Operasional', 'tgl_berdiri': 'Tanggal Berdiri / SK Operasional', 'status_akreditasi': 'Status Akreditasi', 'npwp_sekolah': 'Nomor Pokok Wajib Pajak (NPWP)', 'alamat_lengkap': 'Alamat Lengkap', 'dusun': 'Dusun / Kampung', 'desa': 'Desa / Kelurahan', 'kecamatan': 'Kecamatan', 'kabupaten': 'Kabupaten / Kota', 'provinsi': 'Provinsi', 'kode_pos': 'Kode Pos', 'latitude': 'Garis Lintang (Latitude)', 'longitude': 'Garis Bujur (Longitude)', 'no_telp': 'Nomor Telepon', 'fax': 'Nomor Faksimile (Fax)', 'no_wa': 'WhatsApp / Kontak Humas', 'email_sekolah': 'Alamat Email Resmi', 'website': 'Situs Web Resmi', 'medsos': 'Media Sosial' };
                         const sec1 = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah']; const sec2 = ['alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude']; const sec3 = ['no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
                         const renderFieldsToGrid = (fieldList, gridId) => {
@@ -224,7 +226,7 @@
                         const payload = { tahun_mulai: parseInt(tMulai), tahun_berakhir: parseInt(tBerakhir), semester: sem, tanggal_mulai: document.getElementById('tanggal_mulai').value, tanggal_berakhir: document.getElementById('tanggal_berakhir').value, status_aktif: statusChecked ? 'Aktif' : 'Tidak Aktif', updatedAt: serverTimestamp() };
                         const isEdit = document.getElementById('tp_id_hidden').value; const targetId = isEdit ? isEdit : `${tMulai}${tBerakhir}${(sem === "Ganjil") ? "1" : "2"}`;
                         try {
-                            if (statusChecked) { const snap = await getDocs(collection(db, "tahunpelajaran")); for (const d of snap.docs) { if (d.id !== targetId && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Aktif' }); } }
+                            if (statusChecked) { const snap = await getDocs(collection(db, "tahunpelajaran")); for (const d of snap.docs) { if (d.id !== targetId && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Atif' }); } }
                             if(isEdit) { await setDoc(doc(db, "tahunpelajaran", isEdit), payload, { merge: true }); } else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "tahunpelajaran", targetId), payload); } kembaliKeTabelTP();
                         } catch { alert("Gagal."); } finally { if(btn) btn.disabled = false; }
                     };
@@ -333,7 +335,7 @@
                     break;
 
                 case 'kelas':
-                    contentArea.innerHTML = `<p>Memuat Modul Rombel...</p>`;
+                    contentArea.innerHTML = `<p>Memuat Rombel...</p>`;
                     try {
                         const res = await fetch('rombel.html'); contentArea.innerHTML = await res.text();
                         window.rombelSiswaList = []; window.rombelMapelList = []; window.masterSiswaArray = []; window.masterMapelArray = []; window.siswaSudahAdaRombel = new Set();
@@ -397,7 +399,7 @@
                         const res = await fetch('penilaian.html'); contentArea.innerHTML = await res.text();
                         window.currentActiveRombelObj = null; window.loadedMasterMapelLookup = {};
                         window.activeJSpreadsheetInstance = null;
-                        window.activeSelectedMapelId = null; // Tracker mapel aktif global
+                        window.activeSelectedMapelId = null;
 
                         const selectTpPn = document.getElementById('filter_tp_penilaian');
                         if (selectTpPn) { selectTpPn.innerHTML = ''; const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc"))); let activeTpId = ""; tpSnap.forEach(doc => { const d = doc.data(); const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = `${d.tahun_mulai}/${d.tahun_berakhir} (${d.semester})`; if(d.status_aktif === "Aktif") { opt.selected = true; activeTpId = doc.id; } selectTpPn.appendChild(opt); }); if(activeTpId) { selectTpPn.value = activeTpId; await handleFilterTpChangePenilaian(activeTpId); } }
@@ -422,6 +424,14 @@
                             const rSnap = await getDocs(collection(db, "rombel")); const tSnap = await getDocs(collection(db, "teachers")); const teachersMap = {}; tSnap.forEach(d => { teachersMap[d.id] = d.data().nama_lengkap; });
                             tbody.innerHTML = ''; let idx = 1; let empty = true;
                             
+                            // MODIFIKASI REVISI: Menyimpan komparasi nama panjang & kode_pendek murni untuk lookup Tab[cite: 1]
+                            const mapelGlobalSnap = await getDocs(collection(db, "matapelajaran")); 
+                            window.loadedMasterMapelLookup = {}; 
+                            mapelGlobalSnap.forEach(d => { 
+                                const mData = d.data();
+                                window.loadedMasterMapelLookup[d.id] = mData.kode_pendek || mData.nama; 
+                            });
+
                             rSnap.forEach(doc => {
                                 const r = doc.data(); 
                                 if(r.tp_id === tpId && r.kurikulum_id === krId) { 
@@ -429,7 +439,6 @@
                                     const tr = document.createElement('tr'); 
                                     tr.className = 'clickable-row-kelas';
                                     tr.id = `row_id_pd_kelas_${doc.id}`;
-                                    // REVISI ACTION: Mengikat klik pada baris row untuk membuka manajemen struktur TP di card kanan secara realtime
                                     tr.setAttribute("onclick", `selectActiveRowKelasSplit('${doc.id}')`);
                                     const wName = teachersMap[r.wali_kelas_id] || r.wali_kelas_id; 
                                     tr.innerHTML = `<td>${idx++}</td><td><strong>${r.nama_rombel}</strong></td><td>${wName}</td><td style="text-align:center;" onclick="event.stopPropagation();"><button class="btn-icon btn-success" onclick="bukaInputNilaiSiswa('${doc.id}')" title="Input Nilai">📝</button></td>`; 
@@ -440,13 +449,14 @@
                         } catch(err) { console.error(err); }
                     }
 
-                    // TAB RENDERING ENGINE UTK PERPINDAHAN SPREADSHEET RESPONSIF
+                    // TAB RENDERING ENGINE SEKARANG MEMUAT KODE PENDEK (KAPITAL)[cite: 1]
                     window.renderTabsMapel = function(containerId, dataMapel, callbackFunction) {
                         const container = document.getElementById(containerId); if(!container) return;
                         container.innerHTML = '';
                         dataMapel.forEach((m, idx) => {
                             const div = document.createElement('div');
                             div.className = `tab-item ${idx === 0 ? 'active' : ''}`;
+                            // REVISI OPTIMASI: Memakai nama pendek hasil mapping dari DB[cite: 1]
                             div.innerText = window.loadedMasterMapelLookup[m.mapel_id] || m.mapel_id;
                             div.onclick = () => {
                                 const siblingTabs = container.querySelectorAll('.tab-item');
@@ -458,7 +468,6 @@
                         });
                     };
 
-                    // REVISI UTAMA ACTION: Fungsi menangani highlight row & buka struktur TP diklik langsung dari baris tabel kiri
                     window.selectActiveRowKelasSplit = function(rombelId) {
                         document.querySelectorAll('.clickable-row-kelas').forEach(el => el.classList.remove('selected-active-kelas'));
                         const targetRow = document.getElementById(`row_id_pd_kelas_${rombelId}`);
@@ -468,7 +477,6 @@
                     };
 
                     window.bukaManajemenTP = async function(rombelId) {
-                        // Aktifkan kembali disabled field form isian di card kanan
                         const fieldsToEnable = ['input_nama_topik', 'input_teks_tp', 'select_wadah_topik', 'btnSimpanTopikInduk', 'btnSimpanSubTPTeks'];
                         fieldsToEnable.forEach(id => {
                             const el = document.getElementById(id);
@@ -481,8 +489,6 @@
                         try {
                             const rSnap = await getDoc(doc(db, "rombel", rombelId)); window.currentActiveRombelObj = { id: rombelId, ...rSnap.data() };
                             document.getElementById('titleHeaderStrukturTPKanan').innerText = `🎯 STRUKTUR TOPIK & TP - KELAS ${window.currentActiveRombelObj.nama_rombel}`;
-                            
-                            const mapelGlobalSnap = await getDocs(collection(db, "matapelajaran")); window.loadedMasterMapelLookup = {}; mapelGlobalSnap.forEach(d => { window.loadedMasterMapelLookup[d.id] = d.data().nama; });
                             
                             const paketMapel = window.currentActiveRombelObj.mapel_paket || [];
                             if(paketMapel.length === 0) { 
@@ -599,7 +605,7 @@
                     };
                     window.hapusKomponenPenilaian = async function(id) { if(confirm("Hapus komponen struktur ini?")) { try { await deleteDoc(doc(db, "penilaian", id)); loadStrukturTopikDanTP(); } catch {} } };
                     
-                    // REVISI ACTION: Menyembunyikan split layout agar lembar pengisian tabel jSpreadsheet tampil FULL WIDTH 100%
+                    // REVISI ACTION FULL WIDTH: Menyembunyikan split layout agar lembar input JSpreadsheet me-render penuh 100% lebar layar
                     window.bukaInputNilaiSiswa = async function(rombelId) {
                         document.getElementById('wrapperLayoutSplitPenilaian').style.display = 'none'; 
                         document.getElementById('viewFormInputNilai').style.display = 'block';
@@ -607,7 +613,6 @@
                             const rSnap = await getDoc(doc(db, "rombel", rombelId)); window.currentActiveRombelObj = { id: rombelId, ...rSnap.data() };
                             document.getElementById('titleFormInputNilaiHeader').innerText = `📝 INPUT NILAI SPREADSHEET MURID - KELAS ${window.currentActiveRombelObj.nama_rombel}`;
                             
-                            const mapelGlobalSnap = await getDocs(collection(db, "matapelajaran")); window.loadedMasterMapelLookup = {}; mapelGlobalSnap.forEach(d => { window.loadedMasterMapelLookup[d.id] = d.data().nama; });
                             const muridSnap = await getDocs(collection(db, "murid")); window.masterMuridNamaMap = {}; muridSnap.forEach(d => { window.masterMuridNamaMap[d.id] = d.data().nama_lengkap; });
                             
                             const paketMapel = window.currentActiveRombelObj.mapel_paket || [];
@@ -619,7 +624,7 @@
                             });
                             
                             window.activeSelectedMapelId = paketMapel[0].mapel_id;
-                            window.renderJSpreadsheetCEDinamis();
+                            renderJSpreadsheetCEDinamis();
                         } catch(err) { console.error(err); }
                     };
 

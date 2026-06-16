@@ -37,10 +37,10 @@
         min-width: 180px;
     }
 
-    /* REVISI LAYOUT: Dibalik, Kiri Sempit untuk Kelas, Kanan Lebar Utama untuk Struktur TP */
+    /* SPLIT LAYOUT BERDAMPINGAN */
     .pn-split-layout {
         display: grid;
-        grid-template-columns: 380px 1fr; /* Sisi kiri dipersempit untuk Kelas, Sisi kanan melebar murni untuk Manajemen TP */
+        grid-template-columns: 380px 1fr; /* Sisi kiri Kelas, Sisi kanan Melebar murni untuk Manajemen TP */
         gap: 12px;
         align-items: start;
     }
@@ -80,7 +80,7 @@
     .btn-primary { background-color: #007bff; color: white; }
     .btn-del-small { background: #dc3545; color: white; border: none; padding: 1px 5px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 11px; }
 
-    /* SISTEM TAB MAPEL SPREADSHEET & TP */
+    /* SISTEM TAB MAPEL RINGKAS */
     .tab-container {
         display: flex;
         gap: 2px;
@@ -99,6 +99,7 @@
         color: #475569;
         border: 1px solid #cbd5e1;
         border-bottom: none;
+        text-transform: uppercase; /* Buat kode kependekan mapel kapital rapi */
     }
     .tab-item.active {
         background: #007bff;
@@ -125,7 +126,6 @@
         border-bottom: 1px solid #e2e8f0;
         vertical-align: middle;
     }
-    /* Mengubah pointer kursor row kelas agar interaktif saat di-klik */
     .clickable-row-kelas {
         cursor: pointer;
         transition: background-color 0.15s ease;
@@ -151,7 +151,6 @@
         box-shadow: 0 1px 3px rgba(0,0,0,0.02);
     }
     
-    /* Input Group Desain Khas Padat */
     .compact-input-group {
         display: flex;
         gap: 6px;
@@ -182,7 +181,7 @@
         background: #f8f9fa;
         padding: 6px;
         border-radius: 4px;
-        margin-top: 6px;
+        margin-top: 8px;
         display: flex;
         flex-direction: column;
         gap: 4px;
@@ -203,7 +202,7 @@
         align-items: center;
         font-weight: bold;
         color: #2b6cb0;
-        font-size: 11px;
+        font-size: 12px;
     }
     .tp-sub-list {
         display: flex;
@@ -223,7 +222,6 @@
         font-size: 11px;
     }
 
-    /* Lapisan Inline Editor */
     .editable-text-field {
         cursor: text;
         padding: 1px 4px;
@@ -252,7 +250,6 @@
         width: 100%;
     }
     
-    /* jSpreadsheet Layout Compressor */
     .jexcel { font-family: Arial, sans-serif !important; font-size: 11px !important; }
     .jexcel > thead > tr > td { background-color: #f1f5f9 !important; color: #1e293b !important; font-weight: 600 !important; padding: 4px !important; }
     .jexcel > tbody > tr > td { padding: 2px 4px !important; }
@@ -266,6 +263,7 @@
 
 <div class="pn-container">
     
+    <!-- BAR FILTER MINIMALIS ATAS -->
     <div class="filter-bar">
         <div class="filter-field">
             <label>Tahun Pelajaran:</label>
@@ -277,6 +275,7 @@
         </div>
     </div>
 
+    <!-- VIEW FULL SCREEN INPUT SPREADSHEET NILAI MURID -->
     <div id="viewFormInputNilai" style="display: none;" class="form-box-mode">
         <div class="action-bar" style="margin-bottom: 6px;">
             <h3 id="titleFormInputNilaiHeader">📝 INPUT NILAI MURID</h3>
@@ -290,6 +289,7 @@
             </div>
         </div>
         
+        <!-- Tab Navigasi Mapel (KODE PENDEK KAPITAL) -->
         <div id="nilai_tab_mapel" class="tab-container"></div>
         
         <div class="grid-wrapper-box">
@@ -297,8 +297,10 @@
         </div>
     </div>
 
+    <!-- UTUTAN SPLIT LAYOUT BERDAMPINGAN -->
     <div class="pn-split-layout" id="wrapperLayoutSplitPenilaian">
         
+        <!-- CARD KIRI: TABEL INDUK UTAMA DAFTAR KELAS -->
         <div id="viewTabelRombelPenilaian" class="form-box-mode">
             <div class="action-bar" style="margin-bottom: 6px;">
                 <h3>🏫 DAFTAR KELAS PENGISIAN</h3>
@@ -320,13 +322,16 @@
             </div>
         </div>
         
+        <!-- CARD KANAN: MANAGEMENT STRUKTUR TOPIK & TP -->
         <div class="form-box-mode" id="viewFormTP" style="display: block;">
             <div class="action-bar" style="margin-bottom: 6px;">
                 <h3 id="titleHeaderStrukturTPKanan">🎯 STRUKTUR TOPIK & TUJUAN PEMBELAJARAN (TP)</h3>
             </div>
             
+            <!-- Tab Navigasi Mapel (KODE PENDEK KAPITAL) -->
             <div id="tp_tab_mapel" class="tab-container"></div>
             
+            <!-- Form Input Judul Topik -->
             <div class="compact-input-group" style="background: #f0f7ff; border-color: #a3cfff;">
                 <label style="color: #0056b3;">1. Buat Topik:</label>
                 <input type="text" id="input_nama_topik" placeholder="Pilih kelas di kiri terlebih dahulu..." style="flex: 1;" disabled>
@@ -335,6 +340,7 @@
                 </button>
             </div>
 
+            <!-- Form Input Deskripsi TP Sub-Topik -->
             <div class="compact-input-group" style="background: #f0fdf4; border-color: #bce5cb;">
                 <label style="color: #1e4620;">2. Tambah TP:</label>
                 <select id="select_wadah_topik" style="width: 150px;" disabled>
@@ -346,6 +352,7 @@
                 </button>
             </div>
 
+            <!-- Tempat Rendring Realtime Pohon Kompetensi Bertingkat Editable -->
             <div class="tree-box" id="containerPohonStruktur">
                 <p style="text-align: center; color: #94a3b8; font-size: 12px; padding: 20px;">Silakan klik salah satu baris kelas di sebelah kiri untuk memuat pemetaan kompetensi.</p>
             </div>
