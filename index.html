@@ -4,26 +4,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eraport</title>
-    <!-- Favicon Logo Aplikasi Eraport -->
     <link rel="icon" type="image/png" href="https://izzulfahmy.github.io/Eraport/logoerapor.png">
     
-    <!-- Library jSpreadsheet CE v4 & jSuites Open Source -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
     <script src="https://bossanova.uk/jspreadsheet/v4/jexcel.js"></script>
     <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v4/jexcel.css" type="text/css" />
     <script src="https://jsuites.net/v4/jsuites.js"></script>
     <link rel="stylesheet" href="https://jsuites.net/v4/jsuites.css" type="text/css" />
 
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        body { background-color: #f4f4f4; color: #333; }
-        .auth-page { display: none; justify-content: center; align-items: center; height: 100vh; padding: 20px; }
-        .auth-container { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
-        .auth-container h2 { margin-bottom: 20px; text-align: center; color: #333; font-size: 24px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-size: 14px; }
-        .form-group input { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
-        .btn-submit { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; }
-        .btn-submit:hover { background-color: #0056b3; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: #fffdf5; color: #000000; }
+        
+        /* IMPLMENTASI DESAIN NEUBRUTALISM UNTUK HALAMAN AUTH */
+        .auth-page { 
+            display: none; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            padding: 20px; 
+            background-color: #ffd23f; /* Dominan Hero Background Yellow */
+        }
+        .auth-container { 
+            background: #fffdf5; /* Neutral Surface */
+            padding: 40px 30px; 
+            border: 4px solid #000000; /* Heavy Black Outline */
+            border-radius: 0px; /* Angular & Square Corners */
+            box-shadow: 8px 8px 0px #000000; /* Hard Shadow Offset (No Blur) */
+            width: 100%; 
+            max-width: 420px; 
+        }
+        .auth-container h2 { 
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 25px; 
+            text-align: left; 
+            color: #000000; 
+            font-size: 32px; 
+            font-weight: 700;
+            letter-spacing: -1px;
+            text-transform: uppercase;
+            border-bottom: 4px solid #000000;
+            padding-bottom: 10px;
+        }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px; 
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-group input { 
+            width: 100%; 
+            padding: 12px 16px; 
+            border: 3px solid #000000; 
+            border-radius: 0px; /* Square Corners */
+            font-size: 16px; 
+            color: #000000;
+            background-color: #ffffff;
+            transition: all 0.15s ease;
+        }
+        .form-group input:focus {
+            outline: none;
+            background-color: #7fdde0; /* Cyan Accent Interrupt on Focus */
+            box-shadow: 4px 4px 0px #000000;
+        }
+        .btn-submit { 
+            width: 100%; 
+            padding: 12px; 
+            background-color: #ff6b6b; /* Coral Accent/Tertiary Button */
+            color: #000000; 
+            border: 3px solid #000000; 
+            border-radius: 0px; 
+            cursor: pointer; 
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 16px; 
+            font-weight: 700; 
+            text-transform: uppercase;
+            box-shadow: 4px 4px 0px #000000;
+            transition: all 0.1s ease;
+        }
+        .btn-submit:hover { 
+            background-color: #7fdde0; /* Cyan Hover Interrupt */
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #000000;
+        }
+        .btn-submit:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000000;
+        }
+
+        /* DASHBOARD & NAVBAR WORKSPACE LAYOUT */
         #dashboard-page { display: none; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
         .navbar { background-color: #ffffff; height: 60px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; position: sticky; top: 0; z-index: 1000; }
         .nav-header-top { display: flex; justify-content: space-between; align-items: center; width: auto; }
@@ -61,8 +137,35 @@
 </head>
 <body>
 
-    <div id="register-page" class="auth-page"><div class="auth-container"><h2>Register Administrator</h2><div class="form-group"><label>Username</label><input type="text" id="reg-username" onkeydown="handleRegisterKeyPress(event)"></div><div class="form-group"><label>Password</label><input type="password" id="reg-password" onkeydown="handleRegisterKeyPress(event)"></div><button class="btn-submit" onclick="handleRegister()">Buat Akun Admin</button></div></div>
-    <div id="login-page" class="auth-page"><div class="auth-container"><h2>Login</h2><div class="form-group"><label>Username</label><input type="text" id="username" onkeydown="handleLoginKeyPress(event)"></div><div class="form-group"><label>Password</label><input type="password" id="password" onkeydown="handleLoginKeyPress(event)"></div><button class="btn-submit" onclick="handleLogin()">Login</button></div></div>
+    <div id="register-page" class="auth-page">
+        <div class="auth-container">
+            <h2>Register Admin</h2>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="reg-username" onkeydown="handleRegisterKeyPress(event)">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="reg-password" onkeydown="handleRegisterKeyPress(event)">
+            </div>
+            <button class="btn-submit" onclick="handleRegister()">Buat Akun Admin</button>
+        </div>
+    </div>
+
+    <div id="login-page" class="auth-page">
+        <div class="auth-container">
+            <h2>Login</h2>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="username" onkeydown="handleLoginKeyPress(event)">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="password" onkeydown="handleLoginKeyPress(event)">
+            </div>
+            <button class="btn-submit" onclick="handleLogin()">Login</button>
+        </div>
+    </div>
 
     <div id="dashboard-page">
         <nav class="navbar">
@@ -198,7 +301,7 @@
                     };
                     window.editMurid = async function(id) {
                         bukaFormMurid(); document.getElementById('formMuridTitle').innerText = "Edit Data Murid"; document.getElementById('murid_id_hidden').value = id;
-                        try { const snap = await getDoc(doc(db, "murid", id)); if(snap.exists()) { const d = snap.data(); Object.keys(d).forEach(k => { const el = document.getElementById(k); if(el) el.value = d[k]; }); document.getElementById('nis').disabled = true; } } catch { alert("Gagal memuat."); }
+                        try { const snap = await getDoc(doc(db, "murid", id)); if(snap.exists()) { const d = snap.data(); Object.keys(d).forEach(k => { const el = document.getElementById(k); if(el) el.value = d[k]; }); document.getElementById('nis').disabled = true; } } catch { alert("Gagal manaat."); }
                     };
                     window.hapusMurid = async function(id) { if(confirm("Hapus murid?")) { try { await deleteDoc(doc(db, "murid", id)); loadDaftarMurid(); } catch {} } }; break;
 
@@ -335,7 +438,7 @@
                     break;
 
                 case 'kelas':
-                    contentArea.innerHTML = `<p>Memuat Rombel...</p>`;
+                    contentArea.innerHTML = `<p>Memuat Modul Rombel...</p>`;
                     try {
                         const res = await fetch('rombel.html'); contentArea.innerHTML = await res.text();
                         window.rombelSiswaList = []; window.rombelMapelList = []; window.masterSiswaArray = []; window.masterMapelArray = []; window.siswaSudahAdaRombel = new Set();
@@ -356,7 +459,7 @@
                             const krSnap = await getDoc(doc(db, "kurikulum", krId)); const jenjangSelect = document.getElementById('rombel_jenjang');
                             if(jenjangSelect && krSnap.exists()) { jenjangSelect.innerHTML = ''; const maxJenjang = krSnap.data().jumlah_jenjang || 1; for(let j=1; j<=maxJenjang; j++) { const opt = document.createElement('option'); opt.value = j; opt.innerText = `Jenjang Tingkat ${j}`; jenjangSelect.appendChild(opt); } }
                             const tSnap = await getDocs(query(collection(db, "teachers"), orderBy("nama_lengkap", "asc"))); const waliSelect = document.getElementById('rombel_wali_id'); const pengampuSelect = document.getElementById('select_tambah_guru_pengampu'); if(waliSelect) waliSelect.innerHTML = '<option value="">-- Pilih Wali Kelas --</option>'; if(pengampuSelect) pengampuSelect.innerHTML = '<option value="">-- Pilih Guru Pengampu --</option>';
-                            tSnap.forEach(tDoc => { const t = tDoc.data(); const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`; const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) waliSelect.appendChild(optW); const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect) pengampuSelect.appendChild(optP); });
+                            tSnap.forEach(tDoc => { const t = tDoc.data(); const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`; const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) waliSelect.appendChild(optW); const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect)  pengampuSelect.appendChild(optP); });
                             const sSnap = await getDocs(query(collection(db, "murid"), orderBy("nama_lengkap", "asc"))); window.masterSiswaArray = []; sSnap.forEach(sDoc => { const s = sDoc.data(); window.masterSiswaArray.push({ id: sDoc.id, nama: s.nama_lengkap, nisn: s.nisn }); }); window.refreshSiswaDropdownOptions();
                             const mSnap = await getDocs(query(collection(db, "matapelajaran"), orderBy("createdAt", "asc"))); window.masterMapelArray = []; const mSelect = document.getElementById('select_tambah_mapel'); if(mSelect) mSelect.innerHTML = '<option value="">-- Pilih Mapel --</option>';
                             mSnap.forEach(mDoc => { const m = mDoc.data(); if(m.tipe === 'mapel' && m.tp_id === tpId && m.kurikulum_id === krId) { window.masterMapelArray.push({ id: mDoc.id, nama: m.nama, kode: m.kode_pendek, parent_id: m.parent_id }); const optM = document.createElement('option'); optM.value = mDoc.id; optM.innerText = `${m.nama} [${m.kode_pendek}]`; if(mSelect) mSelect.appendChild(optM); } });
@@ -399,7 +502,7 @@
                         const res = await fetch('penilaian.html'); contentArea.innerHTML = await res.text();
                         window.currentActiveRombelObj = null; window.loadedMasterMapelLookup = {};
                         window.activeJSpreadsheetInstance = null;
-                        window.activeSelectedMapelId = null;
+                        window.activeSelectedMapelId = null; 
 
                         const selectTpPn = document.getElementById('filter_tp_penilaian');
                         if (selectTpPn) { selectTpPn.innerHTML = ''; const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc"))); let activeTpId = ""; tpSnap.forEach(doc => { const d = doc.data(); const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = `${d.tahun_mulai}/${d.tahun_berakhir} (${d.semester})`; if(d.status_aktif === "Aktif") { opt.selected = true; activeTpId = doc.id; } selectTpPn.appendChild(opt); }); if(activeTpId) { selectTpPn.value = activeTpId; await handleFilterTpChangePenilaian(activeTpId); } }
@@ -424,7 +527,6 @@
                             const rSnap = await getDocs(collection(db, "rombel")); const tSnap = await getDocs(collection(db, "teachers")); const teachersMap = {}; tSnap.forEach(d => { teachersMap[d.id] = d.data().nama_lengkap; });
                             tbody.innerHTML = ''; let idx = 1; let empty = true;
                             
-                            // MODIFIKASI REVISI: Menyimpan komparasi nama panjang & kode_pendek murni untuk lookup Tab[cite: 1]
                             const mapelGlobalSnap = await getDocs(collection(db, "matapelajaran")); 
                             window.loadedMasterMapelLookup = {}; 
                             mapelGlobalSnap.forEach(d => { 
@@ -449,14 +551,12 @@
                         } catch(err) { console.error(err); }
                     }
 
-                    // TAB RENDERING ENGINE SEKARANG MEMUAT KODE PENDEK (KAPITAL)[cite: 1]
                     window.renderTabsMapel = function(containerId, dataMapel, callbackFunction) {
                         const container = document.getElementById(containerId); if(!container) return;
                         container.innerHTML = '';
                         dataMapel.forEach((m, idx) => {
                             const div = document.createElement('div');
                             div.className = `tab-item ${idx === 0 ? 'active' : ''}`;
-                            // REVISI OPTIMASI: Memakai nama pendek hasil mapping dari DB[cite: 1]
                             div.innerText = window.loadedMasterMapelLookup[m.mapel_id] || m.mapel_id;
                             div.onclick = () => {
                                 const siblingTabs = container.querySelectorAll('.tab-item');
@@ -605,15 +705,12 @@
                     };
                     window.hapusKomponenPenilaian = async function(id) { if(confirm("Hapus komponen struktur ini?")) { try { await deleteDoc(doc(db, "penilaian", id)); loadStrukturTopikDanTP(); } catch {} } };
                     
-                    // REVISI ACTION FULL WIDTH: Menyembunyikan split layout agar lembar input JSpreadsheet me-render penuh 100% lebar layar
                     window.bukaInputNilaiSiswa = async function(rombelId) {
                         document.getElementById('wrapperLayoutSplitPenilaian').style.display = 'none'; 
                         document.getElementById('viewFormInputNilai').style.display = 'block';
                         try {
                             const rSnap = await getDoc(doc(db, "rombel", rombelId)); window.currentActiveRombelObj = { id: rombelId, ...rSnap.data() };
                             document.getElementById('titleFormInputNilaiHeader').innerText = `📝 INPUT NILAI SPREADSHEET MURID - KELAS ${window.currentActiveRombelObj.nama_rombel}`;
-                            
-                            const muridSnap = await getDocs(collection(db, "murid")); window.masterMuridNamaMap = {}; muridSnap.forEach(d => { window.masterMuridNamaMap[d.id] = d.data().nama_lengkap; });
                             
                             const paketMapel = window.currentActiveRombelObj.mapel_paket || [];
                             if(paketMapel.length === 0) { document.getElementById('nilai_tab_mapel').innerHTML = '<span>Mapel Rombel Kosong</span>'; return; }
@@ -624,7 +721,7 @@
                             });
                             
                             window.activeSelectedMapelId = paketMapel[0].mapel_id;
-                            renderJSpreadsheetCEDinamis();
+                            window.renderJSpreadsheetCEDinamis();
                         } catch(err) { console.error(err); }
                     };
 
