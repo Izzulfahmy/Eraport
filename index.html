@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eraport</title>
+    <!-- Favicon Logo Aplikasi Eraport -->
     <link rel="icon" type="image/png" href="https://izzulfahmy.github.io/Eraport/logoerapor.png">
     
+    <!-- Library jSpreadsheet CE v4 & jSuites Open Source -->
     <script src="https://bossanova.uk/jspreadsheet/v4/jexcel.js"></script>
     <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v4/jexcel.css" type="text/css" />
     <script src="https://jsuites.net/v4/jsuites.js"></script>
@@ -182,7 +184,7 @@
                             const snap = await getDocs(query(collection(db, "murid"), orderBy("createdAt", "desc"))); tbody.innerHTML = ''; let idx = 1;
                             if(snap.empty) { tbody.innerHTML = '<tr><td>Belum ada data murid terdaftar.</td></tr>'; return; }
                             snap.forEach(d => { const m = d.data(); const tr = document.createElement('tr'); tr.innerHTML = `<td>${idx++}</td><td><strong>${d.id}</strong> / ${m.nisn || '-'}</td><td><strong>${m.nama_lengkap}</strong></td><td>${m.id_kelas || '-'} / Absen: ${m.nomor_absen || '-'}</td><td><span style="padding:4px 8px; font-size:12px; border-radius:4px; font-weight:bold; background-color:${m.status_keaktifan === 'Aktif' ? '#d4edda; color:#155724;' : '#f8d7da; color:#721c24;'}">${m.status_keaktifan || 'Aktif'}</span></td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editMurid('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusMurid('${d.id}')">Hapus</button></div></td>`; tbody.appendChild(tr); });
-                        } catch { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Gagal memuat list murid.</td></tr>'; }
+                        } catch { tbody.innerHTML = '<tr><td>Gagal memuat list murid.</td></tr>'; }
                     }
                     window.simpanDataMurid = async function(e) {
                         e.preventDefault(); const btn = document.getElementById('btnSimpanMurid'); if(btn) { btn.disabled = true; btn.innerText = "Memproses..."; }
@@ -354,7 +356,7 @@
                             const krSnap = await getDoc(doc(db, "kurikulum", krId)); const jenjangSelect = document.getElementById('rombel_jenjang');
                             if(jenjangSelect && krSnap.exists()) { jenjangSelect.innerHTML = ''; const maxJenjang = krSnap.data().jumlah_jenjang || 1; for(let j=1; j<=maxJenjang; j++) { const opt = document.createElement('option'); opt.value = j; opt.innerText = `Jenjang Tingkat ${j}`; jenjangSelect.appendChild(opt); } }
                             const tSnap = await getDocs(query(collection(db, "teachers"), orderBy("nama_lengkap", "asc"))); const waliSelect = document.getElementById('rombel_wali_id'); const pengampuSelect = document.getElementById('select_tambah_guru_pengampu'); if(waliSelect) waliSelect.innerHTML = '<option value="">-- Pilih Wali Kelas --</option>'; if(pengampuSelect) pengampuSelect.innerHTML = '<option value="">-- Pilih Guru Pengampu --</option>';
-                            tSnap.forEach(tDoc => { const t = tDoc.data(); const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`; const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) waliSelect.appendChild(optW); const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect)  pengampuSelect.appendChild(optP); });
+                            tSnap.forEach(tDoc => { const t = tDoc.data(); const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`; const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) waliSelect.appendChild(optW); const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect) pengampuSelect.appendChild(optP); });
                             const sSnap = await getDocs(query(collection(db, "murid"), orderBy("nama_lengkap", "asc"))); window.masterSiswaArray = []; sSnap.forEach(sDoc => { const s = sDoc.data(); window.masterSiswaArray.push({ id: sDoc.id, nama: s.nama_lengkap, nisn: s.nisn }); }); window.refreshSiswaDropdownOptions();
                             const mSnap = await getDocs(query(collection(db, "matapelajaran"), orderBy("createdAt", "asc"))); window.masterMapelArray = []; const mSelect = document.getElementById('select_tambah_mapel'); if(mSelect) mSelect.innerHTML = '<option value="">-- Pilih Mapel --</option>';
                             mSnap.forEach(mDoc => { const m = mDoc.data(); if(m.tipe === 'mapel' && m.tp_id === tpId && m.kurikulum_id === krId) { window.masterMapelArray.push({ id: mDoc.id, nama: m.nama, kode: m.kode_pendek, parent_id: m.parent_id }); const optM = document.createElement('option'); optM.value = mDoc.id; optM.innerText = `${m.nama} [${m.kode_pendek}]`; if(mSelect) mSelect.appendChild(optM); } });
@@ -442,13 +444,20 @@
 
                     window.bukaManajemenTP = async function(rombelId) {
                         document.getElementById('viewTabelRombelPenilaian').style.display = 'none'; document.getElementById('viewFormTP').style.display = 'block';
-                        document.getElementById('input_nama_topik').value = ''; document.getElementById('input_teks_tp').value = '';
+                        // RESET ELEMENT INPUT
+                        const nameInp = document.getElementById('input_nama_topik'); if(nameInp) nameInp.value = '';
+                        const textInp = document.getElementById('input_teks_tp'); if(textInp) textInp.value = '';
+                        
                         try {
                             const rSnap = await getDoc(doc(db, "rombel", rombelId)); window.currentActiveRombelObj = { id: rombelId, ...rSnap.data() };
                             const mapelGlobalSnap = await getDocs(collection(db, "matapelajaran")); window.loadedMasterMapelLookup = {}; mapelGlobalSnap.forEach(d => { window.loadedMasterMapelLookup[d.id] = d.data().nama; });
                             
                             const paketMapel = window.currentActiveRombelObj.mapel_paket || [];
-                            if(paketMapel.length === 0) { document.getElementById('tp_tab_mapel').innerHTML = '<span>Mapel Paketan Kosong</span>'; document.getElementById('containerPohonStruktur').innerHTML = ''; return; }
+                            if(paketMapel.length === 0) { 
+                                const tabContainer = document.getElementById('tp_tab_mapel'); if(tabContainer) tabContainer.innerHTML = '<span>Mapel Paketan Kosong</span>'; 
+                                const treeContainer = document.getElementById('containerPohonStruktur'); if(treeContainer) treeContainer.innerHTML = ''; 
+                                return; 
+                            }
                             
                             window.renderTabsMapel('tp_tab_mapel', paketMapel, (mapelId) => {
                                 window.activeSelectedMapelId = mapelId;
@@ -457,7 +466,7 @@
                             
                             window.activeSelectedMapelId = paketMapel[0].mapel_id;
                             loadStrukturTopikDanTP();
-                        } catch {}
+                        } catch(err) { console.error(err); }
                     };
 
                     window.loadStrukturTopikDanTP = async function() {
@@ -466,21 +475,20 @@
                         if(!window.activeSelectedMapelId) { container.innerHTML = '<p>Pilih mapel.</p>'; return; } container.innerHTML = '<span>Membongkar pohon kompetensi...</span>';
                         try {
                             const snap = await getDocs(query(collection(db, "penilaian"), orderBy("createdAt", "asc"))); const items = []; snap.forEach(d => { const data = d.data(); if(data.rombel_id === window.currentActiveRombelObj.id && data.mapel_id === window.activeSelectedMapelId) { items.push({ id: d.id, ...data }); } });
-                            container.innerHTML = '';
+                            container.innerHTML = ''; 
                             
-                            // REVISI FIX: Mengganti salah ketik 'theme_komponen' menjadi 'tipe_komponen' agar data ter-render sempurna
                             const listTopik = items.filter(i => i.tipe_komponen === 'topik'); 
                             const listTP = items.filter(i => i.tipe_komponen === 'tp');
                             
                             if(listTopik.length === 0) { container.innerHTML = '<p style="color:#999; text-align:center; font-size:13px; padding:15px;">Belum ada nama Topik/Bab dibuat.</p>'; return; }
                             listTopik.forEach(topik => {
                                 const opt = document.createElement('option'); opt.value = topik.id; opt.innerText = topik.nama_topik; selectWadahTopik.appendChild(opt);
-                                const divTopik = document.createElement('div'); divTopik.className = 'topik-group'; divTopik.innerHTML = `<div class="topik-header"><span>${topik.nama_topik}</span><button class="btn-del-small" onclick="hapusKomponenPenilaian('${topik.id}')">&times;</button></div>`;
+                                const divTopik = document.createElement('div'); divTopik.className = 'topik-group'; divTopik.innerHTML = `<div class="topik-header"><span>📂 ${topik.nama_topik}</span><button class="btn-del-small" onclick="hapusKomponenPenilaian('${topik.id}')">&times;</button></div>`;
                                 const divSubList = document.createElement('div'); divSubList.className = 'tp-sub-list'; const anakTP = listTP.filter(t => t.parent_topik_id === topik.id);
                                 anakTP.forEach((tp, idx) => { const divTP = document.createElement('div'); divTP.className = 'tp-item-row'; divTP.innerHTML = `<span><strong>TP ${idx+1}:</strong> ${tp.teks_tujuan}</span><button class="btn-del-small" onclick="hapusKomponenPenilaian('${tp.id}')">&times;</button></div>`; divSubList.appendChild(divTP); });
                                 divTopik.appendChild(divSubList); container.appendChild(divTopik);
                             });
-                        } catch {}
+                        } catch(err) { console.error(err); }
                     };
 
                     window.simpanTopikBaru = async function() {
