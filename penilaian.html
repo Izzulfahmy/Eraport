@@ -70,7 +70,7 @@
     .btn-secondary { background-color: #6c757d; color: white; }
     .btn-secondary:hover { background-color: #5a6268; }
 
-    /* DESAIN SISTEM TAB MINIMALIS MURNI GRATING */
+    /* TAB NAVIGASI MAPEL DIATAS FORM */
     .tab-container {
         display: flex;
         gap: 3px;
@@ -131,7 +131,7 @@
         border: 1px solid #e2e8f0;
     }
     
-    /* Kelompok Form Input Ringkas */
+    /* Input Group Desain Tipis Excel */
     .compact-input-group {
         display: flex;
         gap: 8px;
@@ -254,6 +254,7 @@
 
 <div class="pn-container">
     
+    <!-- BAR FILTER MINIMALIS -->
     <div class="filter-bar">
         <div class="filter-field">
             <label>Tahun Pelajaran:</label>
@@ -267,6 +268,7 @@
         </div>
     </div>
 
+    <!-- VIEW 1: SELEKSI ROMBEL KELAS -->
     <div id="viewTabelRombelPenilaian">
         <div class="action-bar">
             <h3>Daftar Kelas Pengisian Penilaian</h3>
@@ -289,6 +291,7 @@
         </div>
     </div>
 
+    <!-- VIEW 2: COMPACT CARD - SCREEN MANAGEMENT STRUKTUR TOPIK & TP -->
     <div id="viewFormTP" style="display: none;">
         <div class="action-bar">
             <h3>Struktur Topik & Tujuan Pembelajaran (TP)</h3>
@@ -298,8 +301,10 @@
         </div>
 
         <div class="form-box-mode">
+            <!-- Pilihan Tab Navigasi Mapel Otomatis -->
             <div id="tp_tab_mapel" class="tab-container"></div>
             
+            <!-- 1. Pembuat Nama Topik / Bab -->
             <div class="compact-input-group" style="background: #f0f7ff; border-color: #a3cfff;">
                 <label style="color: #0056b3;">1. Nama Topik / Bab:</label>
                 <input type="text" id="input_nama_topik" placeholder="Contoh: Bab 1 Bilangan Bulat" style="flex: 1;">
@@ -308,6 +313,7 @@
                 </button>
             </div>
 
+            <!-- 2. Mengikat Sub-TP ke Topik Wadah -->
             <div class="compact-input-group" style="background: #f0fdf4; border-color: #bce5cb;">
                 <label style="color: #1e4620;">2. Deskripsi Teks TP:</label>
                 <select id="select_wadah_topik" style="width: 220px;">
@@ -319,12 +325,14 @@
                 </button>
             </div>
 
+            <!-- Bagan Pohon Kompetensi Bertingkat -->
             <div style="margin-top:10px;">
                 <div class="tree-box" id="containerPohonStruktur"></div>
             </div>
         </div>
     </div>
 
+    <!-- VIEW 3: FORM INPUT SPREADSHEET NILAI -->
     <div id="viewFormInputNilai" style="display: none;">
         <div class="action-bar">
             <h3>Input Nilai Murid</h3>
@@ -339,6 +347,7 @@
         </div>
 
         <div class="form-box-mode">
+            <!-- Pilihan Tab Navigasi Mapel Input Nilai -->
             <div id="nilai_tab_mapel" class="tab-container"></div>
             
             <div class="grid-wrapper-box">
