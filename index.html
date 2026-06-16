@@ -226,7 +226,7 @@
                         const payload = { tahun_mulai: parseInt(tMulai), tahun_berakhir: parseInt(tBerakhir), semester: sem, tanggal_mulai: document.getElementById('tanggal_mulai').value, tanggal_berakhir: document.getElementById('tanggal_berakhir').value, status_aktif: statusChecked ? 'Aktif' : 'Tidak Aktif', updatedAt: serverTimestamp() };
                         const isEdit = document.getElementById('tp_id_hidden').value; const targetId = isEdit ? isEdit : `${tMulai}${tBerakhir}${(sem === "Ganjil") ? "1" : "2"}`;
                         try {
-                            if (statusChecked) { const snap = await getDocs(collection(db, "tahunpelajaran")); for (const d of snap.docs) { if (d.id !== targetId && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Aktif' }); } }
+                            if (statusChecked) { const snap = await getDocs(collection(db, "tahunpelajaran")); for (const d of snap.docs) { if (d.id !== targetId && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Atif' }); } }
                             if(isEdit) { await setDoc(doc(db, "tahunpelajaran", isEdit), payload, { merge: true }); } else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "tahunpelajaran", targetId), payload); } kembaliKeTabelTP();
                         } catch { alert("Gagal."); } finally { if(btn) btn.disabled = false; }
                     };
@@ -321,7 +321,7 @@
                     };
                     window.simpanGrupMP = async function(e) {
                         e.preventDefault(); const tpId = document.getElementById('filter_tp_mapel').value; const krId = document.getElementById('filter_kurikulum_mapel').value; const namaGrup = document.getElementById('grup_nama').value.trim(); const kodeGrup = document.getElementById('grup_kode').value.trim(); const isEditId = document.getElementById('grup_id_hidden').value;
-                        const payload = { nama: namaGrup, grup_kode: kodeGrup, tipe: 'grup', tp_id: tpId, kriculum_id: krId, updatedAt: serverTimestamp() }; const targetId = isEditId ? isEditId : "GR_" + Date.now().toString().slice(-6);
+                        const payload = { nama: namaGrup, grup_kode: kodeGrup, tipe: 'grup', tp_id: tpId, kurikulum_id: krId, updatedAt: serverTimestamp() }; const targetId = isEditId ? isEditId : "GR_" + Date.now().toString().slice(-6);
                         try { if(!isEditId) payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "matapelajaran", targetId), payload, { merge: true }); kembaliKeTabelMP(); } catch {}
                     };
                     window.simpanDataMapel = async function(e) {
@@ -399,7 +399,7 @@
                         const res = await fetch('penilaian.html'); contentArea.innerHTML = await res.text();
                         window.currentActiveRombelObj = null; window.loadedMasterMapelLookup = {};
                         window.activeJSpreadsheetInstance = null;
-                        window.activeSelectedMapelId = null; // State tracker mapel aktif global
+                        window.activeSelectedMapelId = null;
 
                         const selectTpPn = document.getElementById('filter_tp_penilaian');
                         if (selectTpPn) { selectTpPn.innerHTML = ''; const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc"))); let activeTpId = ""; tpSnap.forEach(doc => { const d = doc.data(); const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = `${d.tahun_mulai}/${d.tahun_berakhir} (${d.semester})`; if(d.status_aktif === "Aktif") { opt.selected = true; activeTpId = doc.id; } selectTpPn.appendChild(opt); }); if(activeTpId) { selectTpPn.value = activeTpId; await handleFilterTpChangePenilaian(activeTpId); } }
@@ -424,7 +424,6 @@
                         } catch {}
                     }
 
-                    // TAB RENDERING ENGINE UTK PERPINDAHAN SPREADSHEET RESPONSIF
                     window.renderTabsMapel = function(containerId, dataMapel, callbackFunction) {
                         const container = document.getElementById(containerId); if(!container) return;
                         container.innerHTML = '';
@@ -444,15 +443,17 @@
 
                     window.bukaManajemenTP = async function(rombelId) {
                         document.getElementById('viewTabelRombelPenilaian').style.display = 'none'; document.getElementById('viewFormTP').style.display = 'block';
-                        document.getElementById('input_nama_topik').value = ''; document.getElementById('input_teks_tp').value = '';
+                        const nameInp = document.getElementById('input_nama_topik'); if(nameInp) nameInp.value = '';
+                        const textInp = document.getElementById('input_teks_tp'); if(textInp) textInp.value = '';
+                        
                         try {
                             const rSnap = await getDoc(doc(db, "rombel", rombelId)); window.currentActiveRombelObj = { id: rombelId, ...rSnap.data() };
                             const mapelGlobalSnap = await getDocs(collection(db, "matapelajaran")); window.loadedMasterMapelLookup = {}; mapelGlobalSnap.forEach(d => { window.loadedMasterMapelLookup[d.id] = d.data().nama; });
                             
                             const paketMapel = window.currentActiveRombelObj.mapel_paket || [];
                             if(paketMapel.length === 0) { 
-                                document.getElementById('tp_tab_mapel').innerHTML = '<span>Mapel Paketan Kosong</span>'; 
-                                document.getElementById('containerPohonStruktur').innerHTML = ''; 
+                                const tabContainer = document.getElementById('tp_tab_mapel'); if(tabContainer) tabContainer.innerHTML = '<span>Mapel Paketan Kosong</span>'; 
+                                const treeContainer = document.getElementById('containerPohonStruktur'); if(treeContainer) treeContainer.innerHTML = ''; 
                                 return; 
                             }
                             
@@ -480,12 +481,80 @@
                             if(listTopik.length === 0) { container.innerHTML = '<p style="color:#999; text-align:center; font-size:13px; padding:15px;">Belum ada nama Topik/Bab dibuat.</p>'; return; }
                             listTopik.forEach(topik => {
                                 const opt = document.createElement('option'); opt.value = topik.id; opt.innerText = topik.nama_topik; selectWadahTopik.appendChild(opt);
-                                const divTopik = document.createElement('div'); divTopik.className = 'topik-group'; divTopik.innerHTML = `<div class="topik-header"><span>${topik.nama_topik}</span><button class="btn-del-small" onclick="hapusKomponenPenilaian('${topik.id}')">&times;</button></div>`;
-                                const divSubList = document.createElement('div'); divSubList.className = 'tp-sub-list'; const anakTP = listTP.filter(t => t.parent_topik_id === topik.id);
-                                anakTP.forEach((tp, idx) => { const divTP = document.createElement('div'); divTP.className = 'tp-item-row'; divTP.innerHTML = `<span><strong>TP ${idx+1}:</strong> ${tp.teks_tujuan}</span><button class="btn-del-small" onclick="hapusKomponenPenilaian('${tp.id}')">&times;</button></div>`; divSubList.appendChild(divTP); });
-                                divTopik.appendChild(divSubList); container.appendChild(divTopik);
+                                
+                                // LOGIKA TERBARU: Menyematkan contenteditable="true" & listener update data otomatis untuk nama TOPIK
+                                const divTopik = document.createElement('div'); 
+                                divTopik.className = 'topik-group'; 
+                                divTopik.innerHTML = `
+                                    <div class="topik-header">
+                                        <span contenteditable="true" 
+                                              class="editable-text-field" 
+                                              onblur="updateInlineKomponenPenilaian('${topik.id}', 'topik', this.innerText)"
+                                              onkeydown="handleInlineEnterKey(event, this)">${topik.nama_topik}</span>
+                                        <button class="btn-del-small" onclick="hapusKomponenPenilaian('${topik.id}')">&times;</button>
+                                    </div>
+                                    <div id="tp_list_sub_${topik.id}" class="tp-sub-list"></div>
+                                `;
+                                container.appendChild(divTopik);
+                                
+                                const subContainer = document.getElementById(`tp_list_sub_${topik.id}`);
+                                const anakTP = listTP.filter(t => t.parent_topik_id === topik.id);
+                                anakTP.forEach((tp, idx) => {
+                                    const divTP = document.createElement('div'); 
+                                    divTP.className = 'tp-item-row'; 
+                                    // LOGIKA TERBARU: Menyematkan contenteditable="true" & listener update data otomatis untuk teks deskripsi TP
+                                    divTP.innerHTML = `
+                                        <div>
+                                            <strong>TP ${idx+1}: </strong>
+                                            <span contenteditable="true" 
+                                                  class="editable-text-field" 
+                                                  onblur="updateInlineKomponenPenilaian('${tp.id}', 'tp', this.innerText)"
+                                                  onkeydown="handleInlineEnterKey(event, this)">${tp.teks_tujuan}</span>
+                                        </div>
+                                        <button class="btn-del-small" onclick="hapusKomponenPenilaian('${tp.id}')">&times;</button>
+                                    `;
+                                    if(subContainer) subContainer.appendChild(divTP);
+                                });
                             });
                         } catch(err) { console.error(err); }
+                    };
+
+                    // FUNGSI API UTAMA: UPDATE REALTIME DATA EDITABLE LANGSUNG KE FIRESTORE[cite: 1]
+                    window.updateInlineKomponenPenilaian = async function(docId, tipe, teksBaru) {
+                        const teksBersih = teksBaru.trim();
+                        if(teksBersih === "") {
+                            alert("Teks tidak boleh kosong!");
+                            loadStrukturTopikDanTP();
+                            return;
+                        }
+                        try {
+                            const docRef = doc(db, "penilaian", docId);
+                            if(tipe === 'topik') {
+                                await updateDoc(docRef, { nama_topik: teksBersih, updatedAt: serverTimestamp() });[cite: 1]
+                            } else if(tipe === 'tp') {
+                                await updateDoc(docRef, { teks_tujuan: teksBersih, updatedAt: serverTimestamp() });[cite: 1]
+                            }
+                            // Segar kembali tampilan dropdown seleksi wadah tanpa reload total
+                            const snap = await getDocs(query(collection(db, "penilaian"), orderBy("createdAt", "asc")));
+                            const selectWadahTopik = document.getElementById('select_wadah_topik');
+                            if(selectWadahTopik) {
+                                selectWadahTopik.innerHTML = '<option value="">-- Pilih Wadah Topik --</option>';
+                                snap.forEach(d => {
+                                    const data = d.data();
+                                    if(data.rombel_id === window.currentActiveRombelObj.id && data.mapel_id === window.activeSelectedMapelId && data.tipe_komponen === 'topik') {
+                                        selectWadahTopik.innerHTML += `<option value="${d.id}">${data.nama_topik}</option>`;
+                                    }
+                                });
+                            }
+                        } catch(err) { console.error("Gagal memperbarui komponen: ", err); }
+                    };
+
+                    // Mengamankan aksi tombol enter agar otomatis melakukan blur / trigger save database
+                    window.handleInlineEnterKey = function(event, element) {
+                        if(event.key === 'Enter') {
+                            event.preventDefault();
+                            element.blur(); // Pemicu otomatis onblur eksekusi database
+                        }
                     };
 
                     window.simpanTopikBaru = async function() {

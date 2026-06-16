@@ -1,9 +1,5 @@
 <style>
-    .pn-container {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
+    .pn-container { display: flex; flex-direction: column; gap: 10px; }
     
     /* Bar Filter Horizontal Tipis */
     .filter-bar {
@@ -209,6 +205,26 @@
         cursor: pointer;
         font-weight: bold;
         font-size: 11px;
+    }
+
+    /* INDIKATOR EDITABLE AGAR GURU MUDAH PAHAM BISA DIEDIT DI TEMPAT */
+    .editable-text-field {
+        cursor: text;
+        padding: 2px 6px;
+        border-radius: 3px;
+        transition: background 0.15s;
+        display: inline-block;
+        min-width: 150px;
+    }
+    .editable-text-field:hover {
+        background: #f1f5f9;
+        text-decoration: underline dashed #007bff 1px;
+    }
+    .editable-text-field:focus {
+        background: #ffffff;
+        outline: 2px solid #007bff;
+        text-decoration: none;
+        box-shadow: 0 0 4px rgba(0,123,255,0.2);
     }
 
     .grid-wrapper-box {
