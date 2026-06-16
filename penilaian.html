@@ -124,20 +124,6 @@
         box-sizing: border-box;
     }
     
-    .input-nilai-siswa {
-        width: 70px !important;
-        padding: 6px !important;
-        text-align: center;
-        font-weight: bold;
-        border: 1px solid #cbd5e1;
-        border-radius: 4px;
-    }
-    .input-nilai-siswa:focus {
-        border-color: #28a745;
-        outline: none;
-        background-color: #f0fdf4;
-    }
-
     /* Tampilan Tree List Box */
     .tree-box {
         background: #f8f9fa;
@@ -188,11 +174,24 @@
         cursor: pointer;
         font-weight: bold;
     }
+
+    /* KONTEN BOX KHUSUS CONTAINER DATAGRIDXL */
+    .grid-wrapper-box {
+        background: white;
+        border: 1px solid #cbd5e1;
+        border-radius: 6px;
+        padding: 10px;
+        margin-top: 15px;
+    }
+    #dgxl_container_nilai {
+        width: 100%;
+        height: 450px;
+        background-color: #f8fafc;
+    }
 </style>
 
 <div class="pn-container">
     
-    <!-- FILTER BAR -->
     <div class="filter-bar">
         <div class="filter-field">
             <label>Tahun Pelajaran</label>
@@ -206,7 +205,6 @@
         </div>
     </div>
 
-    <!-- VIEW 1: DAFTAR ROMBEL -->
     <div id="viewTabelRombelPenilaian">
         <div class="action-bar" style="margin-bottom: 15px;">
             <h3 style="font-size: 18px; color: #333;">Daftar Kelas Pengisian Penilaian</h3>
@@ -219,7 +217,7 @@
                         <th>Nama Rombel</th>
                         <th>Jenjang</th>
                         <th>Wali Kelas</th>
-                        <th>Aksi Manajemen Penilaian</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
                 <tbody id="tbodyRombelPenilaian">
@@ -229,7 +227,6 @@
         </div>
     </div>
 
-    <!-- VIEW 2: SCREEN SETTING TOPIK & TUJUAN PEMBELAJARAN (TP) -->
     <div id="viewFormTP" style="display: none;">
         <div class="action-bar" style="margin-bottom: 15px;">
             <h3 style="font-size: 17px; color: #333;">Struktur Topik & Tujuan Pembelajaran (TP)</h3>
@@ -246,7 +243,6 @@
                 </div>
             </div>
             
-            <!-- Tambah Topik Wadah Utama -->
             <div style="border-top:1px dashed #cbd5e1; margin-top:15px; padding-top:15px; background: #f0f7ff; padding: 15px; border-radius: 6px;">
                 <label style="font-size:13px; font-weight:bold; color:#0056b3; display:block; margin-bottom:8px;">1. Buat Nama Topik / Bab</label>
                 <div style="display:flex; gap:10px;">
@@ -257,7 +253,6 @@
                 </div>
             </div>
 
-            <!-- Tambah TP Bersub ke Topik -->
             <div style="margin-top:15px; background: #f0fdf4; padding: 15px; border-radius: 6px; border: 1px solid #bce5cb;">
                 <label style="font-size:13px; font-weight:bold; color:#1e4620; display:block; margin-bottom:8px;">2. Tambah Tujuan Pembelajaran (TP) pada Topik</label>
                 <div style="display:grid; grid-template-columns: 200px 1fr auto; gap:10px;">
@@ -273,22 +268,19 @@
 
             <div style="margin-top:20px;">
                 <label style="font-size:13px; font-weight:bold; color:#444;">Pohon Struktur Pemetaan Kompetensi:</label>
-                <div class="tree-box" id="containerPohonStruktur">
-                    <!-- Tree View Topik -> Sub TP -->
-                </div>
+                <div class="tree-box" id="containerPohonStruktur"></div>
             </div>
         </div>
     </div>
 
-    <!-- VIEW 3: SCREEN INPUT NILAI -->
     <div id="viewFormInputNilai" style="display: none;">
         <div class="action-bar" style="margin-bottom: 15px;">
-            <h3 style="font-size: 17px; color: #333;">Input Nilai Murid</h3>
+            <h3 style="font-size: 17px; color: #333;">Input Nilai Spreadsheet Murid</h3>
             <div style="display:flex; gap:8px;">
                 <button type="button" class="btn-icon btn-secondary" onclick="kembaliKeTabelRombelPenilaian()" title="Kembali">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><path d="M12 19l-7-7 7-7"></path></svg>
                 </button>
-                <button type="button" class="btn-icon btn-success" onclick="simpanKumpulanNilaiKeFirestore()" title="Simpan">
+                <button type="button" class="btn-icon btn-success" onclick="simpanKumpulanNilaiDataGridXL()" title="Simpan Semua Nilai">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                 </button>
             </div>
@@ -298,15 +290,12 @@
             <div class="form-grid">
                 <div class="form-field">
                     <label>Pilih Mata Pelajaran</label>
-                    <select id="nilai_select_mapel" onchange="renderFormTabelNilaiDinamis()"></select>
+                    <select id="nilai_select_mapel" onchange="renderDataGridXLDinamis()"></select>
                 </div>
             </div>
 
-            <div class="table-responsive" style="margin-top:15px; border:1px solid #e2e8f0;">
-                <table class="table-pn" id="tabelInputNilaiMaster">
-                    <thead id="theadNilaiDinamis"></thead>
-                    <tbody id="tbodyNilaiDinamis"></tbody>
-                </table>
+            <div class="grid-wrapper-box">
+                <div id="dgxl_container_nilai"></div>
             </div>
         </div>
     </div>
