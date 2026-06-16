@@ -175,18 +175,54 @@
         font-weight: bold;
     }
 
-    /* KONTEN BOX KHUSUS CONTAINER DATAGRIDXL */
-    .grid-wrapper-box {
-        background: white;
-        border: 1px solid #cbd5e1;
-        border-radius: 6px;
-        padding: 10px;
-        margin-top: 15px;
-    }
-    #dgxl_container_nilai {
+    /* STYLE DESAIN UTAMA SPREADSHEET MANUAL */
+    .excel-table {
+        border-collapse: collapse;
         width: 100%;
-        height: 450px;
-        background-color: #f8fafc;
+        background: white;
+    }
+    .excel-table th {
+        background: #f1f5f9;
+        color: #1e293b;
+        font-weight: 600;
+        border: 1px solid #cbd5e1;
+        padding: 10px;
+        font-size: 13px;
+    }
+    .excel-table td {
+        border: 1px solid #e2e8f0;
+        padding: 0; /* Nol agar area input memenuhi cell */
+        font-size: 14px;
+        color: #333;
+    }
+    .excel-table td.read-only-cell {
+        background: #f8fafc;
+        padding: 10px;
+        color: #475569;
+        font-weight: 500;
+    }
+    /* Kotak Input Pengganti DataGridXL */
+    .cell-input-excel {
+        width: 100%;
+        height: 100%;
+        border: none;
+        padding: 10px;
+        font-size: 14px;
+        text-align: center;
+        font-weight: bold;
+        box-sizing: border-box;
+        background: transparent;
+    }
+    .cell-input-excel:focus {
+        outline: 2px solid #28a745;
+        background: #f0fdf4;
+        z-index: 5;
+    }
+    /* Sembunyikan panah spin up/down default input type number */
+    .cell-input-excel::-webkit-inner-spin-button,
+    .cell-input-excel::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
     }
 </style>
 
@@ -275,12 +311,12 @@
 
     <div id="viewFormInputNilai" style="display: none;">
         <div class="action-bar" style="margin-bottom: 15px;">
-            <h3 style="font-size: 17px; color: #333;">Input Nilai Spreadsheet Murid</h3>
+            <h3 style="font-size: 17px; color: #333;">Input Nilai Spreadsheet Rapor</h3>
             <div style="display:flex; gap:8px;">
                 <button type="button" class="btn-icon btn-secondary" onclick="kembaliKeTabelRombelPenilaian()" title="Kembali">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><path d="M12 19l-7-7 7-7"></path></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l-7-7 7-7"></path></svg>
                 </button>
-                <button type="button" class="btn-icon btn-success" onclick="simpanKumpulanNilaiDataGridXL()" title="Simpan Semua Nilai">
+                <button type="button" class="btn-icon btn-success" onclick="simpanKumpulanNilaiSpreadsheetManual()" title="Simpan Semua Nilai">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                 </button>
             </div>
@@ -290,12 +326,17 @@
             <div class="form-grid">
                 <div class="form-field">
                     <label>Pilih Mata Pelajaran</label>
-                    <select id="nilai_select_mapel" onchange="renderDataGridXLDinamis()"></select>
+                    <select id="nilai_select_mapel" onchange="renderSpreadsheetManualDinamis()"></select>
                 </div>
             </div>
 
-            <div class="grid-wrapper-box">
-                <div id="dgxl_container_nilai"></div>
+            <div class="table-responsive" style="margin-top:15px; border:1px solid #cbd5e1; border-radius: 4px;">
+                <table class="excel-table" id="tabelExcelManualPenilaian">
+                    <thead id="theadExcelManual">
+                        </thead>
+                    <tbody id="tbodyExcelManual">
+                        </tbody>
+                </table>
             </div>
         </div>
     </div>
