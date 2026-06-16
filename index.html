@@ -356,7 +356,7 @@
                             const krSnap = await getDoc(doc(db, "kurikulum", krId)); const jenjangSelect = document.getElementById('rombel_jenjang');
                             if(jenjangSelect && krSnap.exists()) { jenjangSelect.innerHTML = ''; const maxJenjang = krSnap.data().jumlah_jenjang || 1; for(let j=1; j<=maxJenjang; j++) { const opt = document.createElement('option'); opt.value = j; opt.innerText = `Jenjang Tingkat ${j}`; jenjangSelect.appendChild(opt); } }
                             const tSnap = await getDocs(query(collection(db, "teachers"), orderBy("nama_lengkap", "asc"))); const waliSelect = document.getElementById('rombel_wali_id'); const pengampuSelect = document.getElementById('select_tambah_guru_pengampu'); if(waliSelect) waliSelect.innerHTML = '<option value="">-- Pilih Wali Kelas --</option>'; if(pengampuSelect) pengampuSelect.innerHTML = '<option value="">-- Pilih Guru Pengampu --</option>';
-                            tSnap.forEach(tDoc => { const t = tDoc.data(); const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`; const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) waliSelect.appendChild(optW); const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect)  pengampuSelect.appendChild(optP); });
+                            tSnap.forEach(tDoc => { const t = tDoc.data(); const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`; const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) waliSelect.appendChild(optW); const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect) pengampuSelect.appendChild(optP); });
                             const sSnap = await getDocs(query(collection(db, "murid"), orderBy("nama_lengkap", "asc"))); window.masterSiswaArray = []; sSnap.forEach(sDoc => { const s = sDoc.data(); window.masterSiswaArray.push({ id: sDoc.id, nama: s.nama_lengkap, nisn: s.nisn }); }); window.refreshSiswaDropdownOptions();
                             const mSnap = await getDocs(query(collection(db, "matapelajaran"), orderBy("createdAt", "asc"))); window.masterMapelArray = []; const mSelect = document.getElementById('select_tambah_mapel'); if(mSelect) mSelect.innerHTML = '<option value="">-- Pilih Mapel --</option>';
                             mSnap.forEach(mDoc => { const m = mDoc.data(); if(m.tipe === 'mapel' && m.tp_id === tpId && m.kurikulum_id === krId) { window.masterMapelArray.push({ id: mDoc.id, nama: m.nama, kode: m.kode_pendek, parent_id: m.parent_id }); const optM = document.createElement('option'); optM.value = mDoc.id; optM.innerText = `${m.nama} [${m.kode_pendek}]`; if(mSelect) mSelect.appendChild(optM); } });
@@ -508,7 +508,6 @@
                                 return;
                             }
 
-                            // REVISI UX: Hilangkan emoji folder (📂) dari baris horizontal topik teratas
                             const rawNestedHeadersArray = [
                                 { title: "Identitas Utama Murid", colspan: "2" }
                             ];
@@ -522,7 +521,6 @@
                             listTopik.forEach(topik => {
                                 const anakTP = listTP.filter(t => t.parent_topik_id === topik.id);
                                 if(anakTP.length > 0) {
-                                    // REVISI UX: Disajikan string murni bersih tanpa imbuhan ikon folder bawaan
                                     rawNestedHeadersArray.push({
                                         title: `${topik.nama_topik}`,
                                         colspan: anakTP.length.toString()
