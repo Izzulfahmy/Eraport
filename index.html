@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eraport</title>
-    <!-- Favicon Logo Aplikasi Eraport -->
     <link rel="icon" type="image/png" href="https://izzulfahmy.github.io/Eraport/logoerapor.png">
     
-    <!-- Library jSpreadsheet CE v4 & jSuites Open Source -->
     <script src="https://bossanova.uk/jspreadsheet/v4/jexcel.js"></script>
     <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v4/jexcel.css" type="text/css" />
     <script src="https://jsuites.net/v4/jsuites.js"></script>
@@ -399,7 +397,7 @@
                         const res = await fetch('penilaian.html'); contentArea.innerHTML = await res.text();
                         window.currentActiveRombelObj = null; window.loadedMasterMapelLookup = {};
                         window.activeJSpreadsheetInstance = null;
-                        window.activeSelectedMapelId = null;
+                        window.activeSelectedMapelId = null; // State tracker mapel aktif global
 
                         const selectTpPn = document.getElementById('filter_tp_penilaian');
                         if (selectTpPn) { selectTpPn.innerHTML = ''; const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc"))); let activeTpId = ""; tpSnap.forEach(doc => { const d = doc.data(); const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = `${d.tahun_mulai}/${d.tahun_berakhir} (${d.semester})`; if(d.status_aktif === "Aktif") { opt.selected = true; activeTpId = doc.id; } selectTpPn.appendChild(opt); }); if(activeTpId) { selectTpPn.value = activeTpId; await handleFilterTpChangePenilaian(activeTpId); } }
@@ -424,6 +422,7 @@
                         } catch {}
                     }
 
+                    // TAB RENDERING ENGINE UTK PERPINDAHAN SPREADSHEET RESPONSIF
                     window.renderTabsMapel = function(containerId, dataMapel, callbackFunction) {
                         const container = document.getElementById(containerId); if(!container) return;
                         container.innerHTML = '';
@@ -482,7 +481,6 @@
                             listTopik.forEach(topik => {
                                 const opt = document.createElement('option'); opt.value = topik.id; opt.innerText = topik.nama_topik; selectWadahTopik.appendChild(opt);
                                 
-                                // LOGIKA TERBARU: Menyematkan contenteditable="true" & listener update data otomatis untuk nama TOPIK
                                 const divTopik = document.createElement('div'); 
                                 divTopik.className = 'topik-group'; 
                                 divTopik.innerHTML = `
@@ -502,7 +500,6 @@
                                 anakTP.forEach((tp, idx) => {
                                     const divTP = document.createElement('div'); 
                                     divTP.className = 'tp-item-row'; 
-                                    // LOGIKA TERBARU: Menyematkan contenteditable="true" & listener update data otomatis untuk teks deskripsi TP
                                     divTP.innerHTML = `
                                         <div>
                                             <strong>TP ${idx+1}: </strong>
@@ -519,7 +516,6 @@
                         } catch(err) { console.error(err); }
                     };
 
-                    // FUNGSI API UTAMA: UPDATE REALTIME DATA EDITABLE LANGSUNG KE FIRESTORE[cite: 1]
                     window.updateInlineKomponenPenilaian = async function(docId, tipe, teksBaru) {
                         const teksBersih = teksBaru.trim();
                         if(teksBersih === "") {
@@ -530,11 +526,11 @@
                         try {
                             const docRef = doc(db, "penilaian", docId);
                             if(tipe === 'topik') {
-                                await updateDoc(docRef, { nama_topik: teksBersih, updatedAt: serverTimestamp() });[cite: 1]
+                                await updateDoc(docRef, { nama_topik: teksBersih, updatedAt: serverTimestamp() });
                             } else if(tipe === 'tp') {
-                                await updateDoc(docRef, { teks_tujuan: teksBersih, updatedAt: serverTimestamp() });[cite: 1]
+                                await updateDoc(docRef, { teks_tujuan: teksBersih, updatedAt: serverTimestamp() });
                             }
-                            // Segar kembali tampilan dropdown seleksi wadah tanpa reload total
+                            
                             const snap = await getDocs(query(collection(db, "penilaian"), orderBy("createdAt", "asc")));
                             const selectWadahTopik = document.getElementById('select_wadah_topik');
                             if(selectWadahTopik) {
@@ -546,14 +542,13 @@
                                     }
                                 });
                             }
-                        } catch(err) { console.error("Gagal memperbarui komponen: ", err); }
+                        } catch(err) { console.error("Gagal memperbarui: ", err); }
                     };
 
-                    // Mengamankan aksi tombol enter agar otomatis melakukan blur / trigger save database
                     window.handleInlineEnterKey = function(event, element) {
                         if(event.key === 'Enter') {
                             event.preventDefault();
-                            element.blur(); // Pemicu otomatis onblur eksekusi database
+                            element.blur();
                         }
                     };
 
@@ -711,7 +706,7 @@
                 default:
                     contentArea.innerHTML = `<h3>Dashboard</h3><p>Silakan pilih menu di atas.</p>`;
             }
-        }
+        }; // Tutup switchMenu murni aman dari error syntax expected
 
         window.handleRegisterKeyPress = function(event) { if (event.key === 'Enter') handleRegister(); }
         window.handleLoginKeyPress = function(event) { if (event.key === 'Enter') handleLogin(); }
