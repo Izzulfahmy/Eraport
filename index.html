@@ -127,7 +127,7 @@
                     try {
                         const res = await fetch('profilsekolah.html'); contentArea.innerHTML = await res.text();
                         const docSnap = await getDoc(doc(db, "pengaturan", "profil_sekolah")); const currentData = docSnap.exists() ? docSnap.data() : {};
-                        const fields = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah', 'alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude', 'no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
+                        const fields = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemipikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah', 'alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude', 'no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
                         const labelMapping = { 'nama_sekolah': 'Nama Resmi Sekolah', 'npsn': 'NPSN', 'nss_nds': 'NSS / NDS', 'status_sekolah': 'Status Sekolah', 'jenjang': 'Bentuk Satuan Pendidikan', 'status_kepemilikan': 'Status Kepemilikan', 'nama_pemilik': 'Nama Pemilik / Yayasan', 'sk_pendirian': 'SK Pendirian Sekolah', 'sk_operasional': 'SK Izin Operasional', 'tgl_berdiri': 'Tanggal Berdiri / SK Operasional', 'status_akreditasi': 'Status Akreditasi', 'npwp_sekolah': 'Nomor Pokok Wajib Pajak (NPWP)', 'alamat_lengkap': 'Alamat Lengkap', 'dusun': 'Dusun / Kampung', 'desa': 'Desa / Kelurahan', 'kecamatan': 'Kecamatan', 'kabupaten': 'Kabupaten / Kota', 'provinsi': 'Provinsi', 'kode_pos': 'Kode Pos', 'latitude': 'Garis Lintang (Latitude)', 'longitude': 'Garis Bujur (Longitude)', 'no_telp': 'Nomor Telepon', 'fax': 'Nomor Faksimile (Fax)', 'no_wa': 'WhatsApp / Kontak Humas', 'email_sekolah': 'Alamat Email Resmi', 'website': 'Situs Web Resmi', 'medsos': 'Media Sosial' };
                         const sec1 = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah']; const sec2 = ['alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude']; const sec3 = ['no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
                         const renderFieldsToGrid = (fieldList, gridId) => {
@@ -273,7 +273,7 @@
                         bukaFormKurikulum(); document.getElementById('kurikulum_id_hidden').value = id;
                         try { const snap = await getDoc(doc(db, "kurikulum", id)); if(snap.exists()) { const d = snap.data(); document.getElementById('nama_kurikulum').value = d.nama_kurikulum || ''; document.getElementById('jumlah_jenjang').value = d.jumlah_jenjang || ''; document.getElementById('relasi_tahun_pelajaran').value = d.relasi_tahun_pelajaran || ''; document.getElementById('kurikulum_aktif_checkbox').checked = d.status_aktif === 'Aktif'; } } catch { alert("Gagal."); }
                     };
-                    window.hapusKurikulum = async function(id) { if(confirm("Hapus data kurikulum ini?")) { try { await deleteDoc(doc(db, "kurikulum", id)); loadDaftarKurikulum(); } catch { alert("Gagal."); } } };
+                    window.hapusKurikulum = async function(id) { if(confirm("Hapus data kurikulum ini?")) { try { await deleteDoc(doc(db, "kurikulum", id)); alert("Data kurikulum dihapus."); loadDaftarKurikulum(); } catch { alert("Gagal."); } } };
                     break;
 
                 case 'mata-pelajaran':
@@ -354,7 +354,7 @@
                             const krSnap = await getDoc(doc(db, "kurikulum", krId)); const jenjangSelect = document.getElementById('rombel_jenjang');
                             if(jenjangSelect && krSnap.exists()) { jenjangSelect.innerHTML = ''; const maxJenjang = krSnap.data().jumlah_jenjang || 1; for(let j=1; j<=maxJenjang; j++) { const opt = document.createElement('option'); opt.value = j; opt.innerText = `Jenjang Tingkat ${j}`; jenjangSelect.appendChild(opt); } }
                             const tSnap = await getDocs(query(collection(db, "teachers"), orderBy("nama_lengkap", "asc"))); const waliSelect = document.getElementById('rombel_wali_id'); const pengampuSelect = document.getElementById('select_tambah_guru_pengampu'); if(waliSelect) waliSelect.innerHTML = '<option value="">-- Pilih Wali Kelas --</option>'; if(pengampuSelect) pengampuSelect.innerHTML = '<option value="">-- Pilih Guru Pengampu --</option>';
-                            tSnap.forEach(tDoc => { const t = tDoc.data(); const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`; const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) waliSelect.appendChild(optW); const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect)  pengampuSelect.appendChild(optP); });
+                            tSnap.forEach(tDoc => { const t = tDoc.data(); const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`; const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) waliSelect.appendChild(optW); const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect) pengampuSelect.appendChild(optP); });
                             const sSnap = await getDocs(query(collection(db, "murid"), orderBy("nama_lengkap", "asc"))); window.masterSiswaArray = []; sSnap.forEach(sDoc => { const s = sDoc.data(); window.masterSiswaArray.push({ id: sDoc.id, nama: s.nama_lengkap, nisn: s.nisn }); }); window.refreshSiswaDropdownOptions();
                             const mSnap = await getDocs(query(collection(db, "matapelajaran"), orderBy("createdAt", "asc"))); window.masterMapelArray = []; const mSelect = document.getElementById('select_tambah_mapel'); if(mSelect) mSelect.innerHTML = '<option value="">-- Pilih Mapel --</option>';
                             mSnap.forEach(mDoc => { const m = mDoc.data(); if(m.tipe === 'mapel' && m.tp_id === tpId && m.kurikulum_id === krId) { window.masterMapelArray.push({ id: mDoc.id, nama: m.nama, kode: m.kode_pendek, parent_id: m.parent_id }); const optM = document.createElement('option'); optM.value = mDoc.id; optM.innerText = `${m.nama} [${m.kode_pendek}]`; if(mSelect) mSelect.appendChild(optM); } });
@@ -396,7 +396,7 @@
                     try {
                         const res = await fetch('penilaian.html'); contentArea.innerHTML = await res.text();
                         window.currentActiveRombelObj = null; window.loadedMasterMapelLookup = {};
-                        window.activeJSpreadsheetInstance = null; // Handler instance jSpreadsheet
+                        window.activeJSpreadsheetInstance = null;
 
                         const selectTpPn = document.getElementById('filter_tp_penilaian');
                         if (selectTpPn) { selectTpPn.innerHTML = ''; const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc"))); let activeTpId = ""; tpSnap.forEach(doc => { const d = doc.data(); const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = `${d.tahun_mulai}/${d.tahun_berakhir} (${d.semester})`; if(d.status_aktif === "Aktif") { opt.selected = true; activeTpId = doc.id; } selectTpPn.appendChild(opt); }); if(activeTpId) { selectTpPn.value = activeTpId; await handleFilterTpChangePenilaian(activeTpId); } }
@@ -461,31 +461,15 @@
                         try { await setDoc(doc(db, "penilaian", idTP), { tipe_komponen: "tp", parent_topik_id: parentTopikId, rombel_id: window.currentActiveRombelObj.id, mapel_id: mapelId, teks_tujuan: teksTp, createdAt: serverTimestamp() }); document.getElementById('input_teks_tp').value = ''; loadStrukturTopikDanTP(); } catch { alert("Gagal."); }
                     };
                     window.hapusKomponenPenilaian = async function(id) { if(confirm("Hapus komponen struktur ini?")) { try { await deleteDoc(doc(db, "penilaian", id)); loadStrukturTopikDanTP(); } catch {} } };
-                    
-                    window.bukaInputNilaiSiswa = async function(rombelId) {
-                        document.getElementById('viewTabelRombelPenilaian').style.display = 'none'; document.getElementById('viewFormInputNilai').style.display = 'block';
-                        try {
-                            const rSnap = await getDoc(doc(db, "rombel", rombelId)); window.currentActiveRombelObj = { id: rombelId, ...rSnap.data() };
-                            const nSelect = document.getElementById('nilai_select_mapel'); if(!nSelect) return; nSelect.innerHTML = '';
-                            const mapelGlobalSnap = await getDocs(collection(db, "matapelajaran")); window.loadedMasterMapelLookup = {}; mapelGlobalSnap.forEach(d => { window.loadedMasterMapelLookup[d.id] = d.data().nama; });
-                            const muridSnap = await getDocs(collection(db, "murid")); window.masterMuridNamaMap = {}; muridSnap.forEach(d => { window.masterMuridNamaMap[d.id] = d.data().nama_lengkap; });
-                            const paketMapel = window.currentActiveRombelObj.mapel_paket || [];
-                            if(paketMapel.length === 0) { nSelect.innerHTML = '<option>Mapel Kosong</option>'; return; }
-                            paketMapel.forEach(item => { const opt = document.createElement('option'); opt.value = item.mapel_id; opt.innerText = window.loadedMasterMapelLookup[item.mapel_id] || item.mapel_id; nSelect.appendChild(opt); });
-                            
-                            window.renderJSpreadsheetCEDinamis();
-                        } catch {}
-                    };
 
                     // ==========================================================
-                    // IMPLEMENTASI DINAMIS JSPREADSHEET CE 100% GRATIS TANPA WATERMARK XL
+                    // SINKRONISASI JSPREADSHEET REVISI: TANPA PAGINATION, NO, DAN SEARCH
                     // ==========================================================
                     window.renderJSpreadsheetCEDinamis = async function() {
                         const mapelId = document.getElementById('nilai_select_mapel').value;
                         const containerEl = document.getElementById('jspreadsheet_container_nilai');
                         if(!containerEl || !mapelId) return;
 
-                        // Reset instance lama agar tidak terjadi penumpukan render tabel
                         if(window.activeJSpreadsheetInstance) {
                             window.activeJSpreadsheetInstance.destroy();
                             window.activeJSpreadsheetInstance = null;
@@ -493,7 +477,6 @@
                         containerEl.innerHTML = '';
 
                         try {
-                            // 1. Tarik daftar sub-TP aktif
                             const snap = await getDocs(query(collection(db, "penilaian"), orderBy("createdAt", "asc")));
                             window.currentActiveTPListArray = [];
                             snap.forEach(d => {
@@ -508,27 +491,25 @@
                                 return;
                             }
 
-                            // 2. Tarik data nilai tersimpan di Firestore
                             const skorSnap = await getDoc(doc(db, "penilaian", `SCORE_${window.currentActiveRombelObj.id}_${mapelId}`));
                             const skorSiswaMap = skorSnap.exists() ? (skorSnap.data().skor_map || {}) : {};
 
-                            // 3. Konfigurasi Definisi Kolom Header Spreadsheet jExcel
+                            // REVISI: Kolom No dieliminasi, kolom pertama langsung NIS & Nama
                             const headerColumns = [
-                                { title: "No", width: 55, readOnly: true },
-                                { title: "NIS", width: 100, readOnly: true },
-                                { title: "Nama Lengkap Murid", width: 250, readOnly: true }
+                                { title: "NIS", width: 120, readOnly: true },
+                                { title: "Nama Lengkap Murid", width: 280, readOnly: true }
                             ];
                             window.currentActiveTPListArray.forEach((tp, idx) => {
-                                headerColumns.push({ title: `TP ${idx+1}`, width: 100, type: "text" });
+                                headerColumns.push({ title: `TP ${idx+1}`, width: 110, type: "text" });
                             });
 
-                            // 4. Transformasi Matrix Baris Data Siswa
                             const matrixRowsData = [];
                             const arraySiswaRombel = window.currentActiveRombelObj.siswa_ids || [];
                             
-                            arraySiswaRombel.forEach((nisId, index) => {
+                            arraySiswaRombel.forEach(nisId => {
                                 const sNama = window.masterMuridNamaMap[nisId] || "Siswa Terhapus";
-                                const rowCells = [index + 1, nisId, sNama];
+                                // Baris data langsung diisi [NIS, Nama, Nilai...]
+                                const rowCells = [nisId, sNama];
                                 
                                 window.currentActiveTPListArray.forEach(tp => {
                                     const nilaiLama = (skorSiswaMap[nisId] && skorSiswaMap[nisId][tp.id] !== undefined) ? skorSiswaMap[nisId][tp.id] : '';
@@ -537,7 +518,7 @@
                                 matrixRowsData.push(rowCells);
                             });
 
-                            // 5. Inisialisasi jSpreadsheet CE
+                            // REVISI KONFIGURASI: Matikan search & pagination agar tampil seluruhnya memanjang
                             window.activeJSpreadsheetInstance = jspreadsheet(containerEl, {
                                 data: matrixRowsData,
                                 columns: headerColumns,
@@ -547,35 +528,28 @@
                                 allowInsertColumn: false,
                                 allowManualInsertColumn: false,
                                 allowDeleteColumn: false,
-                                search: true, // Memunculkan kolom box search pencarian otomatis siswa
-                                pagination: 30
+                                search: false,       // REVISI: Sembunyikan search box
+                                pagination: false    // REVISI: Matikan pagination, tampilkan seluruh baris
                             });
 
                         } catch(err) { console.error(err); }
-                    };
-
-                    // EKSTRAKSI INTEGRASI DATA JSPREADSHEET CE KEMBALI KE FIRESTORE doc
-                    window.simpanKumpulanNilaiJanuariCE = async function() {
-                        // Alias pemicu tombol submit penilaian.html
-                        window.simpanKumpulanNilaiJSpreadsheetCE();
                     };
 
                     window.simpanKumpulanNilaiJSpreadsheetCE = async function() {
                         if(!window.activeJSpreadsheetInstance) return;
                         const mapelId = document.getElementById('nilai_select_mapel').value; if(!mapelId) return;
 
-                        // Ambil seluruh data matrix jSpreadsheet menggunakan built-in API .getData()
                         const spreadsheetRows = window.activeJSpreadsheetInstance.getData();
                         const skorSiswaMap = {};
 
                         spreadsheetRows.forEach(row => {
-                            const nis = row[1]; // Kolom indeks ke-1 adalah NIS
+                            const nis = row[0]; // REVISI: Karena kolom NO dibuang, NIS bergeser menjadi indeks ke-0
                             if(!nis) return;
 
                             skorSiswaMap[nis] = {};
-                            // Nilai TP berelasi berurutan dimulai dari indeks sel ke-3
+                            // REVISI: Karena kolom NO dibuang, Nilai TP bergeser mulai dari indeks ke-2
                             window.currentActiveTPListArray.forEach((tp, idx) => {
-                                const cellValue = row[3 + idx];
+                                const cellValue = row[2 + idx];
                                 const parsedValue = (cellValue === '' || cellValue === undefined || cellValue === null) ? '' : parseInt(cellValue);
                                 skorSiswaMap[nis][tp.id] = parsedValue;
                             });

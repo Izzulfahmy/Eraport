@@ -186,7 +186,6 @@
     #jspreadsheet_container_nilai {
         width: 100%;
     }
-    /* override style kecil untuk mempercantik jspreadsheet */
     .jexcel {
         font-family: Arial, sans-serif !important;
     }
@@ -195,6 +194,13 @@
         color: #1e293b !important;
         font-weight: 600 !important;
         padding: 8px !important;
+    }
+    
+    /* REVISI UX: Mengubah warna font kolom NIS & Nama (Read-Only) menjadi hitam pekat */
+    .jexcel > tbody > tr > td.readonly {
+        color: #000000 !important;
+        font-weight: 500;
+        background-color: #f8fafc !important;
     }
 </style>
 
