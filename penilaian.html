@@ -174,7 +174,6 @@
         font-weight: bold;
     }
 
-    /* KONTEN BOX KHUSUS CONTAINER SPREADSHEET JSPREADSHEET CE */
     .grid-wrapper-box {
         background: white;
         border: 1px solid #cbd5e1;
@@ -195,17 +194,26 @@
         font-weight: 600 !important;
         padding: 8px !important;
     }
-    
-    /* REVISI UX: Mengubah warna font kolom NIS & Nama (Read-Only) menjadi hitam pekat */
     .jexcel > tbody > tr > td.readonly {
         color: #000000 !important;
         font-weight: 500;
         background-color: #f8fafc !important;
     }
+
+    /* REVISI UX: Mengoptimalkan ukuran font baris horizontal Topik agar otomatis mengecil jika tidak muat */
+    .jexcel_nested_headers td {
+        font-size: 11px !important; /* Diperkecil dari standar bawaan */
+        padding: 6px 4px !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Berikan penanda titik tiga jika teks memotong batas kolom */
+        max-width: 150px;
+    }
 </style>
 
 <div class="pn-container">
     
+    <!-- FILTER BAR -->
     <div class="filter-bar">
         <div class="filter-field">
             <label>Tahun Pelajaran</label>
@@ -219,6 +227,7 @@
         </div>
     </div>
 
+    <!-- VIEW 1: DAFTAR ROMBEL -->
     <div id="viewTabelRombelPenilaian">
         <div class="action-bar" style="margin-bottom: 15px;">
             <h3 style="font-size: 18px; color: #333;">Daftar Kelas Pengisian Penilaian</h3>
@@ -241,6 +250,7 @@
         </div>
     </div>
 
+    <!-- VIEW 2: SCREEN SETTING TOPIK & TP -->
     <div id="viewFormTP" style="display: none;">
         <div class="action-bar" style="margin-bottom: 15px;">
             <h3 style="font-size: 17px; color: #333;">Struktur Topik & Tujuan Pembelajaran (TP)</h3>
@@ -287,6 +297,7 @@
         </div>
     </div>
 
+    <!-- VIEW 3: SCREEN INPUT NILAI -->
     <div id="viewFormInputNilai" style="display: none;">
         <div class="action-bar" style="margin-bottom: 15px;">
             <h3 style="font-size: 17px; color: #333;">Input Nilai jSpreadsheet Murid</h3>
