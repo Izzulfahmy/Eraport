@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eraport</title>
-    <!-- Favicon Logo Aplikasi Eraport -->
     <link rel="icon" type="image/png" href="https://izzulfahmy.github.io/Eraport/logoerapor.png">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
@@ -39,6 +38,17 @@
         .read-field { display: flex; flex-direction: column; gap: 4px; border-bottom: 1px solid #f4f4f4; padding-bottom: 8px; }
         .read-field .label { font-size: 12px; font-weight: 600; color: #777; }
         .read-field .value { font-size: 14px; color: #333; font-weight: 500; word-break: break-word; padding: 4px 0; }
+        @media (max-width: 768px) {
+            .navbar { padding: 10px 15px; height: auto; flex-direction: column; align-items: stretch; gap: 8px; }
+            .nav-header-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+            .nav-left { width: 100%; flex-direction: column; align-items: flex-start; gap: 8px; }
+            .logo-brand { font-size: 16px; }
+            .profile-logo { width: 28px; height: 28px; font-size: 12px; }
+            .dropdown-menu { top: 35px; }
+            .nav-menu { width: 100%; padding-bottom: 4px; }
+            .nav-item { padding: 6px 12px; font-size: 13px; }
+            .dashboard-content { padding: 15px; }
+        }
     </style>
 </head>
 <body>
@@ -122,8 +132,21 @@
                             });
                         };
                         renderFieldsToGrid(sec1, 'gridModeBaca1'); renderFieldsToGrid(sec2, 'gridModeBaca2'); renderFieldsToGrid(sec3, 'gridModeBaca3');
-                        window.aktifkanModeEdit = function() { document.getElementById('wrapperModeBaca').style.display = 'none'; document.getElementById('btnKeModeEdit').style.display = 'none'; document.getElementById('formProfilSekolah').style.display = 'block'; document.getElementById('btnBatalEdit').style.display = 'flex'; document.getElementById('btnSimpanProfil').style.display = 'flex'; };
-                        window.batalkanModeEdit = function() { document.getElementById('formProfilSekolah').style.display = 'none'; document.getElementById('btnBatalEdit').style.display = 'none'; document.getElementById('btnSimpanProfil').style.display = 'none'; document.getElementById('wrapperModeBaca').style.display = 'block'; document.getElementById('btnKeModeEdit').style.display = 'flex'; };
+                        
+                        window.aktifkanModeEdit = function() { 
+                            document.getElementById('wrapperModeBaca').style.display = 'none'; 
+                            document.getElementById('btnKeModeEdit').style.display = 'none'; 
+                            document.getElementById('formProfilSekolah').style.display = 'block'; 
+                            document.getElementById('btnBatalEdit').style.display = 'flex'; 
+                            document.getElementById('btnSimpanProfil').style.display = 'flex'; 
+                        };
+                        window.batalkanModeEdit = function() { 
+                            document.getElementById('formProfilSekolah').style.display = 'none'; 
+                            document.getElementById('btnBatalEdit').style.display = 'none'; 
+                            document.getElementById('btnSimpanProfil').style.display = 'none'; 
+                            document.getElementById('wrapperModeBaca').style.display = 'block'; 
+                            document.getElementById('btnKeModeEdit').style.display = 'flex'; 
+                        };
                     } catch { contentArea.innerHTML = `<p style="color: red;">Gagal memuat profil sekolah.</p>`; }
                     window.simpanProfilSekolah = async function(event) {
                         event.preventDefault(); const btn = document.getElementById('btnSimpanProfil'); if(btn) btn.disabled = true;
@@ -338,7 +361,7 @@
                             const krSnap = await getDoc(doc(db, "kurikulum", krId)); const jenjangSelect = document.getElementById('rombel_jenjang');
                             if(jenjangSelect && krSnap.exists()) { jenjangSelect.innerHTML = ''; const maxJenjang = krSnap.data().jumlah_jenjang || 1; for(let j=1; j<=maxJenjang; j++) { const opt = document.createElement('option'); opt.value = j; opt.innerText = `Jenjang Tingkat ${j}`; jenjangSelect.appendChild(opt); } }
                             const tSnap = await getDocs(query(collection(db, "teachers"), orderBy("nama_lengkap", "asc"))); const waliSelect = document.getElementById('rombel_wali_id'); const pengampuSelect = document.getElementById('select_tambah_guru_pengampu'); if(waliSelect) waliSelect.innerHTML = '<option value="">-- Pilih Wali Kelas --</option>'; if(pengampuSelect) pengampuSelect.innerHTML = '<option value="">-- Pilih Guru Pengampu --</option>';
-                            tSnap.forEach(tDoc => { const t = tDoc.data(); const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`; const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) .appendChild(optW); const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect) .appendChild(optP); });
+                            tSnap.forEach(tDoc => { const t = tDoc.data(); const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`; const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) waliSelect.appendChild(optW); const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect) pengampuSelect.appendChild(optP); });
                             const sSnap = await getDocs(query(collection(db, "murid"), orderBy("nama_lengkap", "asc"))); window.masterSiswaArray = []; sSnap.forEach(sDoc => { const s = sDoc.data(); window.masterSiswaArray.push({ id: sDoc.id, nama: s.nama_lengkap, nisn: s.nisn }); }); window.refreshSiswaDropdownOptions();
                             const mSnap = await getDocs(query(collection(db, "matapelajaran"), orderBy("createdAt", "asc"))); window.masterMapelArray = []; const mSelect = document.getElementById('select_tambah_mapel'); if(mSelect) mSelect.innerHTML = '<option value="">-- Pilih Mapel --</option>';
                             mSnap.forEach(mDoc => { const m = mDoc.data(); if(m.tipe === 'mapel' && m.tp_id === tpId && m.kurikulum_id === krId) { window.masterMapelArray.push({ id: mDoc.id, nama: m.nama, kode: m.kode_pendek, parent_id: m.parent_id }); const optM = document.createElement('option'); optM.value = mDoc.id; optM.innerText = `${m.nama} [${m.kode_pendek}]`; if(mSelect) mSelect.appendChild(optM); } });
@@ -380,10 +403,7 @@
                     contentArea.innerHTML = `<p style="color: #999;">Memuat Modul Penilaian Terintegrasi...</p>`;
                     try {
                         const res = await fetch('penilaian.html'); contentArea.innerHTML = await res.text();
-                        
-                        window.currentActiveRombelObj = null; 
-                        window.loadedMasterMapelLookup = {};
-
+                        window.currentActiveRombelObj = null; window.loadedMasterMapelLookup = {};
                         const selectTpPn = document.getElementById('filter_tp_penilaian');
                         if (selectTpPn) { selectTpPn.innerHTML = ''; const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc"))); let activeTpId = ""; tpSnap.forEach(doc => { const d = doc.data(); const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = `${d.tahun_mulai}/${d.tahun_berakhir} (${d.semester})`; if(d.status_aktif === "Aktif") { opt.selected = true; activeTpId = doc.id; } selectTpPn.appendChild(opt); }); if(activeTpId) { selectTpPn.value = activeTpId; await handleFilterTpChangePenilaian(activeTpId); } }
                     } catch {}
@@ -392,9 +412,7 @@
                         const tpVal = forcedId ? forcedId : document.getElementById('filter_tp_penilaian').value; const krSelect = document.getElementById('filter_kurikulum_penilaian'); if(!krSelect) return; krSelect.innerHTML = '<option value="">-- Pilih Kurikulum --</option>';
                         try { const snap = await getDocs(query(collection(db, "kurikulum"), orderBy("createdAt", "desc"))); let activeKrId = ""; snap.forEach(doc => { const d = doc.data(); if(d.relasi_tahun_pelajaran === tpVal) { const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = d.nama_kurikulum; if(d.status_aktif === "Aktif") { opt.selected = true; activeKrId = doc.id; } krSelect.appendChild(opt); } }); if(activeKrId) krSelect.value = activeKrId; loadDaftarRombelPenilaian(); } catch {}
                     };
-                    
                     window.kembaliKeTabelRombelPenilaian = function() { document.getElementById('viewFormTP').style.display = 'none'; document.getElementById('viewFormInputNilai').style.display = 'none'; document.getElementById('viewTabelRombelPenilaian').style.display = 'block'; loadDaftarRombelPenilaian(); };
-                    
                     async function loadDaftarRombelPenilaian() {
                         const tpId = document.getElementById('filter_tp_penilaian').value; const krId = document.getElementById('filter_kurikulum_penilaian').value; const tbody = document.getElementById('tbodyRombelPenilaian'); if(!tbody) return;
                         if(!tpId || !krId) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Silakan filter data.</td></tr>'; return; } tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Mengatur struktur...</td></tr>';
@@ -405,11 +423,9 @@
                             if(empty) tbody.innerHTML = '<tr><td colspan="5">Kosong.</td></tr>';
                         } catch {}
                     }
-
                     window.bukaManajemenTP = async function(rombelId) {
                         document.getElementById('viewTabelRombelPenilaian').style.display = 'none'; document.getElementById('viewFormTP').style.display = 'block';
-                        document.getElementById('input_nama_topik').value = '';
-                        document.getElementById('input_teks_tp').value = '';
+                        document.getElementById('input_nama_topik').value = ''; document.getElementById('input_teks_tp').value = '';
                         try {
                             const rSnap = await getDoc(doc(db, "rombel", rombelId)); window.currentActiveRombelObj = { id: rombelId, ...rSnap.data() };
                             const mSelect = document.getElementById('tp_select_mapel'); if(!mSelect) return; mSelect.innerHTML = '';
@@ -420,111 +436,35 @@
                             loadStrukturTopikDanTP();
                         } catch {}
                     };
-
-                    // REVISI CORE: RENDER POHON BERSUB (TOPIK -> TP TEKS)
                     window.loadStrukturTopikDanTP = async function() {
-                        const container = document.getElementById('containerPohonStruktur');
-                        const selectWadahTopik = document.getElementById('select_wadah_topik');
-                        const mapelId = document.getElementById('tp_select_mapel').value;
-                        
-                        if(!container || !selectWadahTopik) return;
-                        selectWadahTopik.innerHTML = '<option value="">-- Pilih Wadah Topik --</option>';
-                        if(!mapelId) { container.innerHTML = '<p>Pilih mapel.</p>'; return; }
-                        container.innerHTML = '<span>Membongkar pohon kompetensi...</span>';
-
+                        const container = document.getElementById('containerPohonStruktur'); const selectWadahTopik = document.getElementById('select_wadah_topik'); const mapelId = document.getElementById('tp_select_mapel').value;
+                        if(!container || !selectWadahTopik) return; selectWadahTopik.innerHTML = '<option value="">-- Pilih Wadah Topik --</option>';
+                        if(!mapelId) { container.innerHTML = '<p>Pilih mapel.</p>'; return; } container.innerHTML = '<span>Membongkar pohon kompetensi...</span>';
                         try {
-                            // Baca seluruh item penilaian bertipe settingan
-                            const snap = await getDocs(query(collection(db, "penilaian"), orderBy("createdAt", "asc")));
-                            const items = [];
-                            snap.forEach(d => {
-                                const data = d.data();
-                                if(data.rombel_id === window.currentActiveRombelObj.id && data.mapel_id === mapelId) {
-                                    items.push({ id: d.id, ...data });
-                                }
-                            });
-
-                            container.innerHTML = '';
-                            const listTopik = items.filter(i => i.tipe_komponen === 'topik');
-                            const listTP = items.filter(i => i.tipe_komponen === 'tp');
-
-                            if(listTopik.length === 0) {
-                                container.innerHTML = '<p style="color:#999; text-align:center; font-size:13px; padding:15px;">Belum ada nama Topik/Bab dibuat.</p>';
-                                return;
-                            }
-
+                            const snap = await getDocs(query(collection(db, "penilaian"), orderBy("createdAt", "asc"))); const items = []; snap.forEach(d => { const data = d.data(); if(data.rombel_id === window.currentActiveRombelObj.id && data.mapel_id === mapelId) { items.push({ id: d.id, ...data }); } });
+                            container.innerHTML = ''; const listTopik = items.filter(i => i.tipe_komponen === 'topik'); const listTP = items.filter(i => i.tipe_komponen === 'tp');
+                            if(listTopik.length === 0) { container.innerHTML = '<p style="color:#999; text-align:center; font-size:13px; padding:15px;">Belum ada nama Topik/Bab dibuat.</p>'; return; }
                             listTopik.forEach(topik => {
-                                // Masukkan topik ke dalam list dropdown wadah input TP
-                                const opt = document.createElement('option'); opt.value = topik.id; opt.innerText = topik.nama_topik;
-                                selectWadahTopik.appendChild(opt);
-
-                                // Bangun UI Elemen Box Topik Merakit Tree
-                                const divTopik = document.createElement('div'); divTopik.className = 'topik-group';
-                                divTopik.innerHTML = `
-                                    <div class="topik-header">
-                                        <span>📂 ${topik.nama_topik}</span>
-                                        <button class="btn-del-small" onclick="hapusKomponenPenilaian('${topik.id}')">&times;</button>
-                                    </div>
-                                `;
-
-                                const divSubList = document.createElement('div'); divSubList.className = 'tp-sub-list';
-                                const anakTP = listTP.filter(t => t.parent_topik_id === topik.id);
-                                
-                                anakTP.forEach((tp, idx) => {
-                                    const divTP = document.createElement('div'); divTP.className = 'tp-item-row';
-                                    divTP.innerHTML = `<span><strong>TP ${idx+1}:</strong> ${tp.teks_tujuan}</span><button class="btn-del-small" onclick="hapusKomponenPenilaian('${tp.id}')">&times;</button>`;
-                                    divSubList.appendChild(divTP);
-                                });
-
-                                divTopik.appendChild(divSubList);
-                                container.appendChild(divTopik);
+                                const opt = document.createElement('option'); opt.value = topik.id; opt.innerText = topik.nama_topik; selectWadahTopik.appendChild(opt);
+                                const divTopik = document.createElement('div'); divTopik.className = 'topik-group'; divTopik.innerHTML = `<div class="topik-header"><span>📂 ${topik.nama_topik}</span><button class="btn-del-small" onclick="hapusKomponenPenilaian('${topik.id}')">&times;</button></div>`;
+                                const divSubList = document.createElement('div'); divSubList.className = 'tp-sub-list'; const anakTP = listTP.filter(t => t.parent_topik_id === topik.id);
+                                anakTP.forEach((tp, idx) => { const divTP = document.createElement('div'); divTP.className = 'tp-item-row'; divTP.innerHTML = `<span><strong>TP ${idx+1}:</strong> ${tp.teks_tujuan}</span><button class="btn-del-small" onclick="hapusKomponenPenilaian('${tp.id}')">&times;</button>`; divSubList.appendChild(divTP); });
+                                divTopik.appendChild(divSubList); container.appendChild(divTopik);
                             });
-
-                        } catch(err) { console.error(err); }
+                        } catch {}
                     };
-
-                    // AKSI: SIMPAN TOPIK BARU
                     window.simpanTopikBaru = async function() {
-                        const namaTopik = document.getElementById('input_nama_topik').value.trim();
-                        const mapelId = document.getElementById('tp_select_mapel').value;
-                        if(!namaTopik || !mapelId) { alert("Ketik nama topik/bab dahulu."); return; }
-
+                        const namaTopik = document.getElementById('input_nama_topik').value.trim(); const mapelId = document.getElementById('tp_select_mapel').value; if(!namaTopik || !mapelId) { alert("Ketik nama topik/bab dahulu."); return; }
                         const idTopik = "TPK_" + Date.now().toString().slice(-6);
-                        try {
-                            await setDoc(doc(db, "penilaian", idTopik), {
-                                tipe_komponen: "topik", rombel_id: window.currentActiveRombelObj.id,
-                                mapel_id: mapelId, nama_topik: namaTopik, createdAt: serverTimestamp()
-                            });
-                            document.getElementById('input_nama_topik').value = ''; loadStrukturTopikDanTP();
-                        } catch { alert("Gagal."); }
+                        try { await setDoc(doc(db, "penilaian", idTopik), { tipe_komponen: "topik", rombel_id: window.currentActiveRombelObj.id, mapel_id: mapelId, nama_topik: namaTopik, createdAt: serverTimestamp() }); document.getElementById('input_nama_topik').value = ''; loadStrukturTopikDanTP(); } catch { alert("Gagal."); }
                     };
-
-                    // AKSI: SIMPAN TP BARU BERASOSIASI KE PARENT TOPIK
                     window.simpanTPTeksKeTopik = async function() {
-                        const parentTopikId = document.getElementById('select_wadah_topik').value;
-                        const teksTp = document.getElementById('input_teks_tp').value.trim();
-                        const mapelId = document.getElementById('tp_select_mapel').value;
-
-                        if(!parentTopikId || !teksTp || !mapelId) { alert("Pilih Wadah Topik & Isi Deskripsi TP."); return; }
+                        const parentTopikId = document.getElementById('select_wadah_topik').value; const teksTp = document.getElementById('input_teks_tp').value.trim(); const mapelId = document.getElementById('tp_select_mapel').value; if(!parentTopikId || !teksTp || !mapelId) { alert("Pilih Wadah Topik & Isi Deskripsi TP."); return; }
                         const idTP = "TPM_" + Date.now().toString().slice(-6);
-                        try {
-                            await setDoc(doc(db, "penilaian", idTP), {
-                                tipe_komponen: "tp", parent_topik_id: parentTopikId,
-                                rombel_id: window.currentActiveRombelObj.id, mapel_id: mapelId,
-                                teks_tujuan: teksTp, createdAt: serverTimestamp()
-                            });
-                            document.getElementById('input_teks_tp').value = ''; loadStrukturTopikDanTP();
-                        } catch { alert("Gagal."); }
+                        try { await setDoc(doc(db, "penilaian", idTP), { tipe_komponen: "tp", parent_topik_id: parentTopikId, rombel_id: window.currentActiveRombelObj.id, mapel_id: mapelId, teks_tujuan: teksTp, createdAt: serverTimestamp() }); document.getElementById('input_teks_tp').value = ''; loadStrukturTopikDanTP(); } catch { alert("Gagal."); }
                     };
-
-                    window.hapusKomponenPenilaian = async function(id) {
-                        if(confirm("Hapus komponen struktur ini?")) {
-                            try { await deleteDoc(doc(db, "penilaian", id)); loadStrukturTopikDanTP(); } catch {}
-                        }
-                    };
-
-                    // ==========================================
-                    // GENERATE TABEL INPUT NILAI DINAMIS BERBASIS TOTAL TP AKTIF
-                    // ==========================================
+                    window.hapusKomponenPenilaian = async function(id) { if(confirm("Hapus komponen struktur ini?")) { try { await deleteDoc(doc(db, "penilaian", id)); loadStrukturTopikDanTP(); } catch {} } };
+                    
                     window.bukaInputNilaiSiswa = async function(rombelId) {
                         document.getElementById('viewTabelRombelPenilaian').style.display = 'none'; document.getElementById('viewFormInputNilai').style.display = 'block';
                         try {
@@ -538,59 +478,27 @@
                             renderFormTabelNilaiDinamis();
                         } catch {}
                     };
-
                     window.renderFormTabelNilaiDinamis = async function() {
                         const mapelId = document.getElementById('nilai_select_mapel').value; const thead = document.getElementById('theadNilaiDinamis'); const tbody = document.getElementById('tbodyNilaiDinamis');
                         if(!thead || !tbody) return; if(!mapelId) return; thead.innerHTML = ''; tbody.innerHTML = '<tr><td>Memeriksa struktur TP...</td></tr>';
                         try {
-                            // Baca list TP aktif yang diikat ke mapel ini
-                            const snap = await getDocs(query(collection(db, "penilaian"), orderBy("createdAt", "asc")));
-                            const listTP = [];
-                            snap.forEach(d => {
-                                const data = d.data();
-                                if(data.rombel_id === window.currentActiveRombelObj.id && data.mapel_id === mapelId && data.tipe_komponen === 'tp') {
-                                    listTP.push({ id: d.id, teks: data.teks_tujuan });
-                                }
-                            });
-
-                            if(listTP.length === 0) { tbody.innerHTML = `<tr><td style="color:red; padding:15px; text-align:center;">Gagal! Tujuan Pembelajaran (TP) belum disetting untuk kelas ini. Selesaikan target 🎯 dahulu.</td></tr>`; return; }
-                            
-                            const trHead = document.createElement('tr'); trHead.innerHTML = `<th>NIS</th><th>Nama Lengkap Murid</th>`; 
-                            listTP.forEach((item, idx) => { trHead.innerHTML += `<th style="text-align:center;" title="${item.teks}">TP ${idx+1}</th>`; }); thead.appendChild(trHead);
-                            
+                            const snap = await getDocs(query(collection(db, "penilaian"), orderBy("createdAt", "asc"))); const listTP = []; snap.forEach(d => { const data = d.data(); if(data.rombel_id === window.currentActiveRombelObj.id && data.mapel_id === mapelId && data.tipe_komponen === 'tp') { listTP.push({ id: d.id, teks: data.teks_tujuan }); } });
+                            if(listTP.length === 0) { tbody.innerHTML = `<tr><td style="color:red;">Tujuan Pembelajaran (TP) belum disetting. Silakan kembali lalu isi tombol 🎯 dahulu.</td></tr>`; return; }
+                            const trHead = document.createElement('tr'); trHead.innerHTML = `<th>NIS</th><th>Nama Lengkap Murid</th>`; listTP.forEach((item, idx) => { trHead.innerHTML += `<th>TP ${idx+1}</th>`; }); thead.appendChild(trHead);
                             const nilaiSnap = await getDoc(doc(db, "penilaian", `SCORE_${window.currentActiveRombelObj.id}_${mapelId}`)); const skorSiswaMap = nilaiSnap.exists() ? (nilaiSnap.data().skor_map || {}) : {};
                             tbody.innerHTML = ''; const arraySiswaRombel = window.currentActiveRombelObj.siswa_ids || [];
-                            
                             arraySiswaRombel.forEach(nisId => {
                                 const sNama = window.masterMuridNamaMap[nisId] || "Siswa Terhapus"; const trS = document.createElement('tr'); let innerKolomNilai = `<td><code>${nisId}</code></td><td><strong>${sNama}</strong></td>`;
-                                listTP.forEach((item, idx) => { 
-                                    const nilaiLama = (skorSiswaMap[nisId] && skorSiswaMap[nisId][item.id] !== undefined) ? skorSiswaMap[nisId][item.id] : ''; 
-                                    innerKolomNilai += `<td style="text-align:center;"><input type="number" class="input-nilai-siswa input-skor-item" data-nis="${nisId}" data-tp-id="${item.id}" min="0" max="100" value="${nilaiLama}"></td>`; 
-                                });
+                                listTP.forEach((item, idx) => { const nilaiLama = (skorSiswaMap[nisId] && skorSiswaMap[nisId][item.id] !== undefined) ? skorSiswaMap[nisId][item.id] : ''; innerKolomNilai += `<td><input type="number" class="input-nilai-siswa input-skor-item" data-nis="${nisId}" data-tp-id="${item.id}" min="0" max="100" value="${nilaiLama}"></td>`; });
                                 trS.innerHTML = innerKolomNilai; tbody.appendChild(trS);
                             });
                         } catch { tbody.innerHTML = '<tr><td>Gagal.</td></tr>'; }
                     };
-
                     window.simpanKumpulanNilaiKeFirestore = async function() {
                         const mapelId = document.getElementById('nilai_select_mapel').value; if(!mapelId) return;
                         const inputs = document.querySelectorAll('.input-skor-item'); const skorSiswaMap = {};
-                        
-                        inputs.forEach(inp => { 
-                            const nis = inp.getAttribute('data-nis'); 
-                            const tpId = inp.getAttribute('data-tp-id'); 
-                            const nilaiValue = inp.value.trim() === '' ? '' : parseInt(inp.value); 
-                            if(!skorSiswaMap[nis]) skorSiswaMap[nis] = {}; 
-                            skorSiswaMap[nis][tpId] = nilaiValue; 
-                        });
-
-                        try { 
-                            await setDoc(doc(db, "penilaian", `SCORE_${window.currentActiveRombelObj.id}_${mapelId}`), { 
-                                tipe_dokumen: "skor_siswa", rombel_id: window.currentActiveRombelObj.id, 
-                                mapel_id: mapelId, skor_map: skorSiswaMap, updatedAt: serverTimestamp() 
-                            }, { merge: true }); 
-                            alert("Kumpulan nilai murid berhasil dikunci!"); kembaliKeTabelRombelPenilaian(); 
-                        } catch { alert("Gagal."); }
+                        inputs.forEach(inp => { const nis = inp.getAttribute('data-nis'); const tpId = inp.getAttribute('data-tp-id'); const nilaiValue = inp.value.trim() === '' ? '' : parseInt(inp.value); if(!skorSiswaMap[nis]) skorSiswaMap[nis] = {}; skorSiswaMap[nis][tpId] = nilaiValue; });
+                        try { await setDoc(doc(db, "penilaian", `SCORE_${window.currentActiveRombelObj.id}_${mapelId}`), { tipe_dokumen: "skor_siswa", rombel_id: window.currentActiveRombelObj.id, mapel_id: mapelId, skor_map: skorSiswaMap, updatedAt: serverTimestamp() }, { merge: true }); alert("Nilai disimpan!"); kembaliKeTabelRombelPenilaian(); } catch {}
                     };
                     break;
 
