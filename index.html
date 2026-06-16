@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eraport</title>
+    <!-- Favicon Logo Aplikasi Eraport -->
     <link rel="icon" type="image/png" href="https://izzulfahmy.github.io/Eraport/logoerapor.png">
     
+    <!-- Library jSpreadsheet CE v4 & jSuites Open Source -->
     <script src="https://bossanova.uk/jspreadsheet/v4/jexcel.js"></script>
     <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v4/jexcel.css" type="text/css" />
     <script src="https://jsuites.net/v4/jsuites.js"></script>
@@ -182,7 +184,7 @@
                             const snap = await getDocs(query(collection(db, "murid"), orderBy("createdAt", "desc"))); tbody.innerHTML = ''; let idx = 1;
                             if(snap.empty) { tbody.innerHTML = '<tr><td>Belum ada data murid terdaftar.</td></tr>'; return; }
                             snap.forEach(d => { const m = d.data(); const tr = document.createElement('tr'); tr.innerHTML = `<td>${idx++}</td><td><strong>${d.id}</strong> / ${m.nisn || '-'}</td><td><strong>${m.nama_lengkap}</strong></td><td>${m.id_kelas || '-'} / Absen: ${m.nomor_absen || '-'}</td><td><span style="padding:4px 8px; font-size:12px; border-radius:4px; font-weight:bold; background-color:${m.status_keaktifan === 'Aktif' ? '#d4edda; color:#155724;' : '#f8d7da; color:#721c24;'}">${m.status_keaktifan || 'Aktif'}</span></td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editMurid('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusMurid('${d.id}')">Hapus</button></div></td>`; tbody.appendChild(tr); });
-                        } catch { tbody.innerHTML = '<tr><td>Gagal memuat list murid.</td></tr>'; }
+                        } catch { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Gagal memuat list murid.</td></tr>'; }
                     }
                     window.simpanDataMurid = async function(e) {
                         e.preventDefault(); const btn = document.getElementById('btnSimpanMurid'); if(btn) { btn.disabled = true; btn.innerText = "Memproses..."; }
@@ -319,7 +321,7 @@
                     };
                     window.simpanGrupMP = async function(e) {
                         e.preventDefault(); const tpId = document.getElementById('filter_tp_mapel').value; const krId = document.getElementById('filter_kurikulum_mapel').value; const namaGrup = document.getElementById('grup_nama').value.trim(); const kodeGrup = document.getElementById('grup_kode').value.trim(); const isEditId = document.getElementById('grup_id_hidden').value;
-                        const payload = { nama: namaGrup, grup_kode: kodeGrup, tipe: 'grup', tp_id: tpId, kurikulum_id: krId, updatedAt: serverTimestamp() }; const targetId = isEditId ? isEditId : "GR_" + Date.now().toString().slice(-6);
+                        const payload = { nama: namaGrup, grup_kode: kodeGrup, tipe: 'grup', tp_id: tpId, kriculum_id: krId, updatedAt: serverTimestamp() }; const targetId = isEditId ? isEditId : "GR_" + Date.now().toString().slice(-6);
                         try { if(!isEditId) payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "matapelajaran", targetId), payload, { merge: true }); kembaliKeTabelMP(); } catch {}
                     };
                     window.simpanDataMapel = async function(e) {
@@ -369,7 +371,7 @@
                     window.addSiswaToRombelList = function() { const sId = document.getElementById('select_tambah_siswa').value; if(!sId) return; if(window.rombelSiswaList.includes(sId)) { alert("Siswa sudah masuk daftar."); return; } window.rombelSiswaList.push(sId); renderSiswaBadges(); };
                     window.removeSiswaFromRombelList = function(sId) { window.rombelSiswaList = window.rombelSiswaList.filter(id => id !== sId); renderSiswaBadges(); };
                     function renderSiswaBadges() { const container = document.getElementById('siswaRombelContainer'); if(!container) return; container.innerHTML = ''; window.rombelSiswaList.forEach(id => { const sObj = window.masterSiswaArray.find(item => item.id === id); if(sObj) { const span = document.createElement('span'); span.className = 'tag-item'; span.innerHTML = `${sObj.nama} <span class="remove-btn" onclick="removeSiswaFromRombelList('${id}')">&times;</span>`; container.appendChild(span); } }); window.refreshSiswaDropdownOptions(); }
-                    window.addMapelToRombelList = function() { const mId = document.getElementById('select_tambah_mapel').value; const gId = document.getElementById('select_tambah_guru_pengampu'); if(!mId || !gId) { alert("Pilih Mapel dan Guru."); return; } if(window.rombelMapelList.some(item => item.mapel_id === mId)) { alert("Mapel sudah ada."); return; } window.rombelMapelList.push({ mapel_id: mId, guru_id: gId }); renderRombelMapelTable(); };
+                    window.addMapelToRombelList = function() { const mId = document.getElementById('select_tambah_mapel').value; const gId = document.getElementById('select_tambah_guru_pengampu').value; if(!mId || !gId) { alert("Pilih Mapel dan Guru."); return; } if(window.rombelMapelList.some(item => item.mapel_id === mId)) { alert("Mapel sudah ada."); return; } window.rombelMapelList.push({ mapel_id: mId, guru_id: gId }); renderRombelMapelTable(); };
                     window.removeMapelFromRombelList = function(mId) { window.rombelMapelList = window.rombelMapelList.filter(item => item.mapel_id !== mId); renderRombelMapelTable(); };
                     function renderRombelMapelTable() {
                         const tbody = document.getElementById('tbodyRombelMapel'); if(!tbody) return; tbody.innerHTML = ''; const pengampuSelect = document.getElementById('select_tambah_guru_pengampu');
@@ -442,19 +444,15 @@
 
                     window.bukaManajemenTP = async function(rombelId) {
                         document.getElementById('viewTabelRombelPenilaian').style.display = 'none'; document.getElementById('viewFormTP').style.display = 'block';
-                        
-                        // REVISI FIX 1: Deteksi Null element pelindung crash form
-                        const nameInp = document.getElementById('input_nama_topik'); if(nameInp) nameInp.value = '';
-                        const textInp = document.getElementById('input_teks_tp'); if(textInp) textInp.value = '';
-                        
+                        document.getElementById('input_nama_topik').value = ''; document.getElementById('input_teks_tp').value = '';
                         try {
                             const rSnap = await getDoc(doc(db, "rombel", rombelId)); window.currentActiveRombelObj = { id: rombelId, ...rSnap.data() };
                             const mapelGlobalSnap = await getDocs(collection(db, "matapelajaran")); window.loadedMasterMapelLookup = {}; mapelGlobalSnap.forEach(d => { window.loadedMasterMapelLookup[d.id] = d.data().nama; });
                             
                             const paketMapel = window.currentActiveRombelObj.mapel_paket || [];
                             if(paketMapel.length === 0) { 
-                                const tabContainer = document.getElementById('tp_tab_mapel'); if(tabContainer) tabContainer.innerHTML = '<span>Mapel Paketan Kosong</span>'; 
-                                const treeContainer = document.getElementById('containerPohonStruktur'); if(treeContainer) treeContainer.innerHTML = ''; 
+                                document.getElementById('tp_tab_mapel').innerHTML = '<span>Mapel Paketan Kosong</span>'; 
+                                document.getElementById('containerPohonStruktur').innerHTML = ''; 
                                 return; 
                             }
                             
@@ -476,7 +474,6 @@
                             const snap = await getDocs(query(collection(db, "penilaian"), orderBy("createdAt", "asc"))); const items = []; snap.forEach(d => { const data = d.data(); if(data.rombel_id === window.currentActiveRombelObj.id && data.mapel_id === window.activeSelectedMapelId) { items.push({ id: d.id, ...data }); } });
                             container.innerHTML = ''; 
                             
-                            // REVISI FIX 2: Saringan tipe komponen murni tanpa typo
                             const listTopik = items.filter(i => i.tipe_komponen === 'topik'); 
                             const listTP = items.filter(i => i.tipe_komponen === 'tp');
                             
@@ -646,3 +643,24 @@
                     contentArea.innerHTML = `<h3>Dashboard</h3><p>Silakan pilih menu di atas.</p>`;
             }
         }
+
+        window.handleRegisterKeyPress = function(event) { if (event.key === 'Enter') handleRegister(); }
+        window.handleLoginKeyPress = function(event) { if (event.key === 'Enter') handleLogin(); }
+        window.handleRegister = async function() {
+            const userInp = document.getElementById('reg-username').value.trim(); const passInp = document.getElementById('reg-password').value;
+            if (userInp === "" || passInp.trim() === "") { alert("Data tidak boleh kosong"); return; }
+            try { await setDoc(doc(db, "users", userInp), { username: userInp, password: passInp, role: "administrator", createdAt: serverTimestamp() }); alert("Admin dibuat!"); showLogin(); } catch { alert("Gagal."); }
+        }
+        window.handleLogin = async function() {
+            const userInp = document.getElementById('username').value.trim(); const passInp = document.getElementById('password').value;
+            try { const userDocSnap = await getDoc(doc(db, "users", userInp)); if (userDocSnap.exists() && userDocSnap.data().password === passInp) { await updateDoc(doc(db, "users", userInp), { lastLogin: serverTimestamp() }); localStorage.setItem('isLoggedIn', 'true'); localStorage.setItem('username', userInp); showDashboard(); } else { alert('Username/Password salah'); } } catch { alert("Kesalahan database."); }
+        }
+        window.handleLogout = function() { localStorage.removeItem('isLoggedIn'); localStorage.removeItem('username'); document.getElementById('profileDropdown').classList.remove('show'); showLogin(); }
+        window.toggleDropdown = function() { document.getElementById('profileDropdown').classList.toggle('show'); }
+        function showRegister() { document.getElementById('register-page').style.display = 'flex'; document.getElementById('login-page').style.display = 'none'; document.getElementById('dashboard-page').style.display = 'none'; }
+        function showLogin() { document.getElementById('register-page').style.display = 'none'; document.getElementById('login-page').style.display = 'flex'; document.getElementById('dashboard-page').style.display = 'none'; }
+        function showDashboard() { document.getElementById('register-page').style.display = 'none'; document.getElementById('login-page').style.display = 'none'; document.getElementById('dashboard-page').style.display = 'block'; const b = document.querySelector('.nav-item'); if(b) switchMenu('beranda', b); }
+        window.onclick = function(e) { if (!e.target.matches('.profile-logo')) { const d = document.getElementsByClassName("dropdown-menu"); for (let i = 0; i < d.length; i++) { if (d[i].classList.contains('show')) d[i].classList.remove('show'); } } }
+    </script>
+</body>
+</html>
