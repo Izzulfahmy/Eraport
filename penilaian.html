@@ -124,7 +124,6 @@
         box-sizing: border-box;
     }
     
-    /* Tampilan Tree List Box */
     .tree-box {
         background: #f8f9fa;
         padding: 15px;
@@ -175,54 +174,27 @@
         font-weight: bold;
     }
 
-    /* STYLE DESAIN UTAMA SPREADSHEET MANUAL */
-    .excel-table {
-        border-collapse: collapse;
-        width: 100%;
+    /* KONTEN BOX KHUSUS CONTAINER SPREADSHEET JSPREADSHEET CE */
+    .grid-wrapper-box {
         background: white;
-    }
-    .excel-table th {
-        background: #f1f5f9;
-        color: #1e293b;
-        font-weight: 600;
         border: 1px solid #cbd5e1;
-        padding: 10px;
-        font-size: 13px;
+        border-radius: 6px;
+        padding: 15px;
+        margin-top: 15px;
+        overflow-x: auto;
     }
-    .excel-table td {
-        border: 1px solid #e2e8f0;
-        padding: 0; /* Nol agar area input memenuhi cell */
-        font-size: 14px;
-        color: #333;
-    }
-    .excel-table td.read-only-cell {
-        background: #f8fafc;
-        padding: 10px;
-        color: #475569;
-        font-weight: 500;
-    }
-    /* Kotak Input Pengganti DataGridXL */
-    .cell-input-excel {
+    #jspreadsheet_container_nilai {
         width: 100%;
-        height: 100%;
-        border: none;
-        padding: 10px;
-        font-size: 14px;
-        text-align: center;
-        font-weight: bold;
-        box-sizing: border-box;
-        background: transparent;
     }
-    .cell-input-excel:focus {
-        outline: 2px solid #28a745;
-        background: #f0fdf4;
-        z-index: 5;
+    /* override style kecil untuk mempercantik jspreadsheet */
+    .jexcel {
+        font-family: Arial, sans-serif !important;
     }
-    /* Sembunyikan panah spin up/down default input type number */
-    .cell-input-excel::-webkit-inner-spin-button,
-    .cell-input-excel::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
+    .jexcel > thead > tr > td {
+        background-color: #f1f5f9 !important;
+        color: #1e293b !important;
+        font-weight: 600 !important;
+        padding: 8px !important;
     }
 </style>
 
@@ -311,12 +283,12 @@
 
     <div id="viewFormInputNilai" style="display: none;">
         <div class="action-bar" style="margin-bottom: 15px;">
-            <h3 style="font-size: 17px; color: #333;">Input Nilai Spreadsheet Rapor</h3>
+            <h3 style="font-size: 17px; color: #333;">Input Nilai jSpreadsheet Murid</h3>
             <div style="display:flex; gap:8px;">
                 <button type="button" class="btn-icon btn-secondary" onclick="kembaliKeTabelRombelPenilaian()" title="Kembali">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19l-7-7 7-7"></path></svg>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><path d="M12 19l-7-7 7-7"></path></svg>
                 </button>
-                <button type="button" class="btn-icon btn-success" onclick="simpanKumpulanNilaiSpreadsheetManual()" title="Simpan Semua Nilai">
+                <button type="button" class="btn-icon btn-success" onclick="simpanKumpulanNilaiJSpreadsheetCE()" title="Simpan Semua Nilai">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
                 </button>
             </div>
@@ -326,17 +298,12 @@
             <div class="form-grid">
                 <div class="form-field">
                     <label>Pilih Mata Pelajaran</label>
-                    <select id="nilai_select_mapel" onchange="renderSpreadsheetManualDinamis()"></select>
+                    <select id="nilai_select_mapel" onchange="renderJSpreadsheetCEDinamis()"></select>
                 </div>
             </div>
 
-            <div class="table-responsive" style="margin-top:15px; border:1px solid #cbd5e1; border-radius: 4px;">
-                <table class="excel-table" id="tabelExcelManualPenilaian">
-                    <thead id="theadExcelManual">
-                        </thead>
-                    <tbody id="tbodyExcelManual">
-                        </tbody>
-                </table>
+            <div class="grid-wrapper-box">
+                <div id="jspreadsheet_container_nilai"></div>
             </div>
         </div>
     </div>
