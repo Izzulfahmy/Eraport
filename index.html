@@ -4,12 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eraport</title>
+    <!-- Favicon Logo Aplikasi Eraport -->
     <link rel="icon" type="image/png" href="https://izzulfahmy.github.io/Eraport/logoerapor.png">
     
+    <!-- Google Fonts untuk Pendukung Tipografi Neubrutalism -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
+    <!-- Library jSpreadsheet CE v4 & jSuites Open Source -->
     <script src="https://bossanova.uk/jspreadsheet/v4/jexcel.js"></script>
     <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v4/jexcel.css" type="text/css" />
     <script src="https://jsuites.net/v4/jsuites.js"></script>
@@ -19,7 +22,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body { background-color: #fffdf5; color: #000000; }
         
-        /* IMPLMENTASI DESAIN NEUBRUTALISM UNTUK HALAMAN AUTH */
+        /* IMPLEMENTASI DESAIN NEUBRUTALISM UNTUK HALAMAN AUTH */
         .auth-page { 
             display: none; 
             justify-content: center; 
@@ -99,8 +102,15 @@
             box-shadow: 2px 2px 0px #000000;
         }
 
-        /* DASHBOARD & NAVBAR WORKSPACE LAYOUT */
-        #dashboard-page { display: none; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
+        /* REVISI ANTI-FLICKER: Dashboard dikunci tersembunyi sejak awal di CSS */
+        #dashboard-page { 
+            display: none; 
+            height: 100vh; 
+            overflow-y: auto; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        
         .navbar { background-color: #ffffff; height: 60px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; position: sticky; top: 0; z-index: 1000; }
         .nav-header-top { display: flex; justify-content: space-between; align-items: center; width: auto; }
         .nav-left { display: flex; align-items: center; gap: 25px; flex: 1; }
@@ -137,6 +147,7 @@
 </head>
 <body>
 
+    <!-- HALAMAN REGISTER ADMINISTRATOR -->
     <div id="register-page" class="auth-page">
         <div class="auth-container">
             <h2>Register Admin</h2>
@@ -152,6 +163,7 @@
         </div>
     </div>
 
+    <!-- HALAMAN LOGIN ADMINISTRATOR -->
     <div id="login-page" class="auth-page">
         <div class="auth-container">
             <h2>Login</h2>
@@ -167,6 +179,7 @@
         </div>
     </div>
 
+    <!-- WORKSPACE DASHBOARD CORE UTAMA -->
     <div id="dashboard-page">
         <nav class="navbar">
             <div class="nav-header-top"><div class="logo-brand">Eraport Admin</div></div>
@@ -301,7 +314,7 @@
                     };
                     window.editMurid = async function(id) {
                         bukaFormMurid(); document.getElementById('formMuridTitle').innerText = "Edit Data Murid"; document.getElementById('murid_id_hidden').value = id;
-                        try { const snap = await getDoc(doc(db, "murid", id)); if(snap.exists()) { const d = snap.data(); Object.keys(d).forEach(k => { const el = document.getElementById(k); if(el) el.value = d[k]; }); document.getElementById('nis').disabled = true; } } catch { alert("Gagal manaat."); }
+                        try { const snap = await getDoc(doc(db, "murid", id)); if(snap.exists()) { const d = snap.data(); Object.keys(d).forEach(k => { const el = document.getElementById(k); if(el) el.value = d[k]; }); document.getElementById('nis').disabled = true; } } catch { alert("Gagal memuat."); }
                     };
                     window.hapusMurid = async function(id) { if(confirm("Hapus murid?")) { try { await deleteDoc(doc(db, "murid", id)); loadDaftarMurid(); } catch {} } }; break;
 
@@ -329,7 +342,7 @@
                         const payload = { tahun_mulai: parseInt(tMulai), tahun_berakhir: parseInt(tBerakhir), semester: sem, tanggal_mulai: document.getElementById('tanggal_mulai').value, tanggal_berakhir: document.getElementById('tanggal_berakhir').value, status_aktif: statusChecked ? 'Aktif' : 'Tidak Aktif', updatedAt: serverTimestamp() };
                         const isEdit = document.getElementById('tp_id_hidden').value; const targetId = isEdit ? isEdit : `${tMulai}${tBerakhir}${(sem === "Ganjil") ? "1" : "2"}`;
                         try {
-                            if (statusChecked) { const snap = await getDocs(collection(db, "tahunpelajaran")); for (const d of snap.docs) { if (d.id !== targetId && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Atif' }); } }
+                            if (statusChecked) { const snap = await getDocs(collection(db, "tahunpelajaran")); for (const d of snap.docs) { if (d.id !== targetId && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Aktif' }); } }
                             if(isEdit) { await setDoc(doc(db, "tahunpelajaran", isEdit), payload, { merge: true }); } else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "tahunpelajaran", targetId), payload); } kembaliKeTabelTP();
                         } catch { alert("Gagal."); } finally { if(btn) btn.disabled = false; }
                     };
@@ -438,7 +451,7 @@
                     break;
 
                 case 'kelas':
-                    contentArea.innerHTML = `<p>Memuat Modul Rombel...</p>`;
+                    contentArea.innerHTML = `<p>Memuat Rombel...</p>`;
                     try {
                         const res = await fetch('rombel.html'); contentArea.innerHTML = await res.text();
                         window.rombelSiswaList = []; window.rombelMapelList = []; window.masterSiswaArray = []; window.masterMapelArray = []; window.siswaSudahAdaRombel = new Set();
@@ -459,7 +472,7 @@
                             const krSnap = await getDoc(doc(db, "kurikulum", krId)); const jenjangSelect = document.getElementById('rombel_jenjang');
                             if(jenjangSelect && krSnap.exists()) { jenjangSelect.innerHTML = ''; const maxJenjang = krSnap.data().jumlah_jenjang || 1; for(let j=1; j<=maxJenjang; j++) { const opt = document.createElement('option'); opt.value = j; opt.innerText = `Jenjang Tingkat ${j}`; jenjangSelect.appendChild(opt); } }
                             const tSnap = await getDocs(query(collection(db, "teachers"), orderBy("nama_lengkap", "asc"))); const waliSelect = document.getElementById('rombel_wali_id'); const pengampuSelect = document.getElementById('select_tambah_guru_pengampu'); if(waliSelect) waliSelect.innerHTML = '<option value="">-- Pilih Wali Kelas --</option>'; if(pengampuSelect) pengampuSelect.innerHTML = '<option value="">-- Pilih Guru Pengampu --</option>';
-                            tSnap.forEach(tDoc => { const t = tDoc.data(); const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`; const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) waliSelect.appendChild(optW); const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect)  pengampuSelect.appendChild(optP); });
+                            tSnap.forEach(tDoc => { const t = tDoc.data(); const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`; const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) waliSelect.appendChild(optW); const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect) pengampuSelect.appendChild(optP); });
                             const sSnap = await getDocs(query(collection(db, "murid"), orderBy("nama_lengkap", "asc"))); window.masterSiswaArray = []; sSnap.forEach(sDoc => { const s = sDoc.data(); window.masterSiswaArray.push({ id: sDoc.id, nama: s.nama_lengkap, nisn: s.nisn }); }); window.refreshSiswaDropdownOptions();
                             const mSnap = await getDocs(query(collection(db, "matapelajaran"), orderBy("createdAt", "asc"))); window.masterMapelArray = []; const mSelect = document.getElementById('select_tambah_mapel'); if(mSelect) mSelect.innerHTML = '<option value="">-- Pilih Mapel --</option>';
                             mSnap.forEach(mDoc => { const m = mDoc.data(); if(m.tipe === 'mapel' && m.tp_id === tpId && m.kurikulum_id === krId) { window.masterMapelArray.push({ id: mDoc.id, nama: m.nama, kode: m.kode_pendek, parent_id: m.parent_id }); const optM = document.createElement('option'); optM.value = mDoc.id; optM.innerText = `${m.nama} [${m.kode_pendek}]`; if(mSelect) mSelect.appendChild(optM); } });
@@ -502,7 +515,7 @@
                         const res = await fetch('penilaian.html'); contentArea.innerHTML = await res.text();
                         window.currentActiveRombelObj = null; window.loadedMasterMapelLookup = {};
                         window.activeJSpreadsheetInstance = null;
-                        window.activeSelectedMapelId = null; 
+                        window.activeSelectedMapelId = null;
 
                         const selectTpPn = document.getElementById('filter_tp_penilaian');
                         if (selectTpPn) { selectTpPn.innerHTML = ''; const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc"))); let activeTpId = ""; tpSnap.forEach(doc => { const d = doc.data(); const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = `${d.tahun_mulai}/${d.tahun_berakhir} (${d.semester})`; if(d.status_aktif === "Aktif") { opt.selected = true; activeTpId = doc.id; } selectTpPn.appendChild(opt); }); if(activeTpId) { selectTpPn.value = activeTpId; await handleFilterTpChangePenilaian(activeTpId); } }
@@ -516,7 +529,7 @@
                     window.kembaliKeTabelRombelPenilaian = function() { 
                         if(window.activeJSpreadsheetInstance) { window.activeJSpreadsheetInstance.destroy(); window.activeJSpreadsheetInstance = null; }
                         document.getElementById('viewFormInputNilai').style.display = 'none'; 
-                        document.getElementById('wrapperLayoutSplitPenilaian').style.display = 'grid'; // Kembalikan split card berdampingan
+                        document.getElementById('wrapperLayoutSplitPenilaian').style.display = 'grid'; 
                         loadDaftarRombelPenilaian(); 
                     };
                     
@@ -712,6 +725,8 @@
                             const rSnap = await getDoc(doc(db, "rombel", rombelId)); window.currentActiveRombelObj = { id: rombelId, ...rSnap.data() };
                             document.getElementById('titleFormInputNilaiHeader').innerText = `📝 INPUT NILAI SPREADSHEET MURID - KELAS ${window.currentActiveRombelObj.nama_rombel}`;
                             
+                            const muridSnap = await getDocs(collection(db, "murid")); window.masterMuridNamaMap = {}; muridSnap.forEach(d => { window.masterMuridNamaMap[d.id] = d.data().nama_lengkap; });
+                            
                             const paketMapel = window.currentActiveRombelObj.mapel_paket || [];
                             if(paketMapel.length === 0) { document.getElementById('nilai_tab_mapel').innerHTML = '<span>Mapel Rombel Kosong</span>'; return; }
                             
@@ -721,7 +736,7 @@
                             });
                             
                             window.activeSelectedMapelId = paketMapel[0].mapel_id;
-                            window.renderJSpreadsheetCEDinamis();
+                            renderJSpreadsheetCEDinamis();
                         } catch(err) { console.error(err); }
                     };
 
@@ -849,6 +864,25 @@
             }
         };
 
+        // REVISI ANTI-FLICKER CORE: Fungsi lifecycle autentikasi yang murni mengubah display state setelah data siap
+        function showRegister() { 
+            document.getElementById('register-page').style.display = 'flex'; 
+            document.getElementById('login-page').style.display = 'none'; 
+            document.getElementById('dashboard-page').style.display = 'none'; 
+        }
+        function showLogin() { 
+            document.getElementById('register-page').style.display = 'none'; 
+            document.getElementById('login-page').style.display = 'flex'; 
+            document.getElementById('dashboard-page').style.display = 'none'; 
+        }
+        function showDashboard() { 
+            document.getElementById('register-page').style.display = 'none'; 
+            document.getElementById('login-page').style.display = 'none'; 
+            document.getElementById('dashboard-page').style.display = 'flex'; // Ganti ke flex untuk mengikuti basis navbar
+            const b = document.querySelector('.nav-item'); 
+            if(b) switchMenu('beranda', b); 
+        }
+
         window.handleRegisterKeyPress = function(event) { if (event.key === 'Enter') handleRegister(); }
         window.handleLoginKeyPress = function(event) { if (event.key === 'Enter') handleLogin(); }
         window.handleRegister = async function() {
@@ -862,9 +896,6 @@
         }
         window.handleLogout = function() { localStorage.removeItem('isLoggedIn'); localStorage.removeItem('username'); document.getElementById('profileDropdown').classList.remove('show'); showLogin(); }
         window.toggleDropdown = function() { document.getElementById('profileDropdown').classList.toggle('show'); }
-        function showRegister() { document.getElementById('register-page').style.display = 'flex'; document.getElementById('login-page').style.display = 'none'; document.getElementById('dashboard-page').style.display = 'none'; }
-        function showLogin() { document.getElementById('register-page').style.display = 'none'; document.getElementById('login-page').style.display = 'flex'; document.getElementById('dashboard-page').style.display = 'none'; }
-        function showDashboard() { document.getElementById('register-page').style.display = 'none'; document.getElementById('login-page').style.display = 'none'; document.getElementById('dashboard-page').style.display = 'block'; const b = document.querySelector('.nav-item'); if(b) switchMenu('beranda', b); }
         window.onclick = function(e) { if (!e.target.matches('.profile-logo')) { const d = document.getElementsByClassName("dropdown-menu"); for (let i = 0; i < d.length; i++) { if (d[i].classList.contains('show')) d[i].classList.remove('show'); } } }
     </script>
 </body>
