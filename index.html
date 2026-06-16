@@ -69,6 +69,7 @@
                     <div class="nav-item" onclick="switchMenu('kurikulum', this)">Kurikulum</div>
                     <div class="nav-item" onclick="switchMenu('mata-pelajaran', this)">Mata Pelajaran</div>
                     <div class="nav-item" onclick="switchMenu('kelas', this)">Rombel</div>
+                    <div class="nav-item" onclick="switchMenu('penilaian', this)">Penilaian</div>
                 </div>
             </div>
             <div class="nav-right">
@@ -165,71 +166,33 @@
                 case 'murid':
                     contentArea.innerHTML = `<p style="color: #999;">Memuat Modul Peserta Didik...</p>`;
                     try {
-                        const res = await fetch('murid.html'); contentArea.innerHTML = await res.text();
-                        loadDaftarMurid();
+                        const res = await fetch('murid.html'); contentArea.innerHTML = await res.text(); loadDaftarMurid();
                     } catch { contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul murid.</p>`; }
-
-                    window.bukaFormMurid = function() {
-                        document.getElementById('viewTabelMurid').style.display = 'none'; document.getElementById('viewFormMurid').style.display = 'block';
-                        document.getElementById('formMurid').reset(); document.getElementById('murid_id_hidden').value = '';
-                        document.getElementById('nis').disabled = false; // Izinkan isi NIS baru
-                        document.getElementById('formMuridTitle').innerText = "Tambah Data Murid Baru";
-                    };
-                    window.kembaliKeTabelMurid = function() {
-                        document.getElementById('viewFormMurid').style.display = 'none'; document.getElementById('viewTabelMurid').style.display = 'block'; loadDaftarMurid();
-                    };
+                    window.bukaFormMurid = function() { document.getElementById('viewTabelMurid').style.display = 'none'; document.getElementById('viewFormMurid').style.display = 'block'; document.getElementById('formMurid').reset(); document.getElementById('murid_id_hidden').value = ''; document.getElementById('nis').disabled = false; };
+                    window.kembaliKeTabelMurid = function() { document.getElementById('viewFormMurid').style.display = 'none'; document.getElementById('viewTabelMurid').style.display = 'block'; loadDaftarMurid(); };
                     async function loadDaftarMurid() {
-                        const tbody = document.getElementById('tbodyMurid'); if(!tbody) return;
-                        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#999;">Mengambil data murid...</td></tr>';
+                        const tbody = document.getElementById('tbodyMurid'); if(!tbody) return; tbody.innerHTML = '<tr><td>Memuat data...</td></tr>';
                         try {
-                            // Target tabel/koleksi berubah menjadi: murid
                             const snap = await getDocs(query(collection(db, "murid"), orderBy("createdAt", "desc"))); tbody.innerHTML = ''; let idx = 1;
-                            if(snap.empty) { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Belum ada data murid terdaftar.</td></tr>'; return; }
-                            snap.forEach(d => {
-                                const m = d.data(); const tr = document.createElement('tr');
-                                tr.innerHTML = `<td>${idx++}</td><td><strong>${d.id}</strong> / ${m.nisn || '-'}</td><td><strong>${m.nama_lengkap}</strong></td><td>${m.id_kelas || '-'} / Absen: ${m.nomor_absen || '-'}</td><td><span style="padding:4px 8px; font-size:12px; border-radius:4px; font-weight:bold; background-color:${m.status_keaktifan === 'Aktif' ? '#d4edda; color:#155724;' : '#f8d7da; color:#721c24;'}">${m.status_keaktifan || 'Aktif'}</span></td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editMurid('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusMurid('${d.id}')">Hapus</button></div></td>`;
-                                tbody.appendChild(tr);
-                            });
-                        } catch { tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">Gagal memuat list murid.</td></tr>'; }
+                            if(snap.empty) { tbody.innerHTML = '<tr><td>Belum ada data murid terdaftar.</td></tr>'; return; }
+                            snap.forEach(d => { const m = d.data(); const tr = document.createElement('tr'); tr.innerHTML = `<td>${idx++}</td><td><strong>${d.id}</strong> / ${m.nisn || '-'}</td><td><strong>${m.nama_lengkap}</strong></td><td>${m.id_kelas || '-'} / Absen: ${m.nomor_absen || '-'}</td><td><span style="padding:4px 8px; font-size:12px; border-radius:4px; font-weight:bold; background-color:${m.status_keaktifan === 'Aktif' ? '#d4edda; color:#155724;' : '#f8d7da; color:#721c24;'}">${m.status_keaktifan || 'Aktif'}</span></td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editMurid('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusMurid('${d.id}')">Hapus</button></div></td>`; tbody.appendChild(tr); });
+                        } catch { tbody.innerHTML = '<tr><td>Gagal memuat list murid.</td></tr>'; }
                     }
                     window.simpanDataMurid = async function(e) {
                         e.preventDefault(); const btn = document.getElementById('btnSimpanMurid'); if(btn) { btn.disabled = true; btn.innerText = "Memproses..."; }
                         const fields = ['nama_lengkap', 'nama_panggilan', 'nisn', 'nis', 'nik', 'no_akta', 'jenis_kelamin', 'tempat_lahir', 'tanggal_lahir', 'agama', 'kewarganegaraan', 'anak_ke', 'jumlah_saudara', 'gol_darah', 'alamat_tinggal', 'kode_pos', 'tempat_tinggal_bersama', 'transportasi', 'no_hp_siswa', 'email_siswa', 'nama_ayah', 'nik_ayah', 'tahun_lahir_ayah', 'pendidikan_ayah', 'pekerjaan_ayah', 'penghasilan_ayah', 'nama_ibu', 'nik_ibu', 'tahun_lahir_ibu', 'pendidikan_ibu', 'pekerjaan_ibu', 'penghasilan_ibu', 'no_hp_ortu', 'nama_wali', 'nik_wali', 'hubungan_wali', 'pekerjaan_wali', 'no_hp_wali', 'status_murid', 'asal_sekolah', 'no_ijazah', 'no_skhun', 'tanggal_masuk', 'foto_profil', 'id_kelas', 'nomor_absen', 'status_keaktifan', 'username_murid', 'password_murid'];
-                        const payload = { updatedAt: serverTimestamp() }; fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; });
-                        
-                        const isEditId = document.getElementById('murid_id_hidden').value;
-                        // Kunci ID menggunakan NIS murni
-                        const targetNisId = document.getElementById('nis').value.trim();
-
+                        const payload = { updatedAt: serverTimestamp() }; fields.forEach(f => { const el = document.getElementById(f); if (el) payload[f] = el.value; }); const isEditId = document.getElementById('murid_id_hidden').value; const targetNisId = document.getElementById('nis').value.trim();
                         try {
-                            if(isEditId) {
-                                // Mode Update: Pakai ID tracker dokumen lama
-                                await setDoc(doc(db, "murid", isEditId), payload, { merge: true });
-                                alert("Data Murid berhasil diupdate!");
-                            } else {
-                                // Mode Baru: Validasi cek apakah NIS sudah dipakai siswa lain
-                                const cekExist = await getDoc(doc(db, "murid", targetNisId));
-                                if(cekExist.exists()) { alert(`Gagal! NIS: ${targetNisId} sudah terdaftar atas nama siswa ${cekExist.data().nama_lengkap}.`); if(btn) btn.disabled = false; return; }
-                                
-                                payload['createdAt'] = serverTimestamp();
-                                await setDoc(doc(db, "murid", targetNisId), payload);
-                                alert("Murid baru berhasil disimpan!");
-                            }
+                            if(isEditId) { await setDoc(doc(db, "murid", isEditId), payload, { merge: true }); alert("Data Murid diupdate!"); } 
+                            else { const cekExist = await getDoc(doc(db, "murid", targetNisId)); if(cekExist.exists()) { alert(`Gagal! NIS sudah terdaftar.`); if(btn) btn.disabled = false; return; } payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "murid", targetNisId), payload); alert("Murid baru disimpan!"); }
                             kembaliKeTabelMurid();
                         } catch { alert("Gagal memproses data."); } finally { if(btn) btn.disabled = false; }
                     };
                     window.editMurid = async function(id) {
                         bukaFormMurid(); document.getElementById('formMuridTitle').innerText = "Edit Data Murid"; document.getElementById('murid_id_hidden').value = id;
-                        try {
-                            const snap = await getDoc(doc(db, "murid", id));
-                            if(snap.exists()) {
-                                const d = snap.data(); Object.keys(d).forEach(k => { const el = document.getElementById(k); if(el) el.value = d[k]; });
-                                document.getElementById('nis').disabled = true; // Kunci NIS agar tidak bisa diedit sembarangan
-                            }
-                        } catch { alert("Gagal memuat rincian data."); }
+                        try { const snap = await getDoc(doc(db, "murid", id)); if(snap.exists()) { const d = snap.data(); Object.keys(d).forEach(k => { const el = document.getElementById(k); if(el) el.value = d[k]; }); document.getElementById('nis').disabled = true; } } catch { alert("Gagal memuat."); }
                     };
-                    window.hapusMurid = async function(id) { if(confirm("Hapus data murid ini secara permanen?")) { try { await deleteDoc(doc(db, "murid", id)); alert("Data murid dihapus."); loadDaftarMurid(); } catch { alert("Gagal."); } } };
-                    break;
+                    window.hapusMurid = async function(id) { if(confirm("Hapus murid?")) { try { await deleteDoc(doc(db, "murid", id)); loadDaftarMurid(); } catch {} } }; break;
 
                 case 'tahun-pelajaran':
                     contentArea.innerHTML = `<p>Memuat...</p>`;
@@ -257,7 +220,7 @@
                         try {
                             if (statusChecked) { const snap = await getDocs(collection(db, "tahunpelajaran")); for (const d of snap.docs) { if (d.id !== targetId && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "tahunpelajaran", d.id), { status_aktif: 'Tidak Aktif' }); } }
                             if(isEdit) { await setDoc(doc(db, "tahunpelajaran", isEdit), payload, { merge: true }); } else { payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "tahunpelajaran", targetId), payload); } kembaliKeTabelTP();
-                        } catch { alert("Gagal."); } finally { if(btn) { btn.disabled = false; } }
+                        } catch { alert("Gagal."); } finally { if(btn) btn.disabled = false; }
                     };
                     window.editTP = async function(id) {
                         bukaFormTP(); document.getElementById('tp_id_hidden').value = id;
@@ -304,7 +267,7 @@
                         bukaFormKurikulum(); document.getElementById('kurikulum_id_hidden').value = id;
                         try { const snap = await getDoc(doc(db, "kurikulum", id)); if(snap.exists()) { const d = snap.data(); document.getElementById('nama_kurikulum').value = d.nama_kurikulum || ''; document.getElementById('jumlah_jenjang').value = d.jumlah_jenjang || ''; document.getElementById('relasi_tahun_pelajaran').value = d.relasi_tahun_pelajaran || ''; document.getElementById('kurikulum_aktif_checkbox').checked = d.status_aktif === 'Aktif'; } } catch { alert("Gagal."); }
                     };
-                    window.hapusKurikulum = async function(id) { if(confirm("Hapus data kurikulum ini?")) { try { await deleteDoc(doc(db, "kurikulum", id)); alert("Data kurikulum dihapus."); loadDaftarKurikulum(); } catch { alert("Gagal."); } } };
+                    window.hapusKurikulum = async function(id) { if(confirm("Hapus data?")) { try { await deleteDoc(doc(db, "kurikulum", id)); loadDaftarKurikulum(); } catch { alert("Gagal."); } } };
                     break;
 
                 case 'mata-pelajaran':
@@ -318,19 +281,17 @@
                             if(activeTpId) { selectTp.value = activeTpId; await handleFilterTpChange(activeTpId); }
                         }
                     } catch { contentArea.innerHTML = `<p style="color: red;">Gagal.</p>`; }
-
                     window.handleFilterTpChange = async function(forcedId) {
                         const tpSelectValue = forcedId ? forcedId : document.getElementById('filter_tp_mapel').value; const kurikulumSelect = document.getElementById('filter_kurikulum_mapel'); if(!kurikulumSelect) return;
                         kurikulumSelect.innerHTML = '<option value="">-- Pilih Kurikulum --</option>'; document.getElementById('btnTambahMapelTop').disabled = true;
                         try {
                             const snap = await getDocs(query(collection(db, "kurikulum"), orderBy("createdAt", "desc"))); let activeKrId = "";
                             snap.forEach(doc => { const d = doc.data(); if(d.relasi_tahun_pelajaran === tpSelectValue) { const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = d.nama_kurikulum; if(d.status_aktif === "Aktif") { opt.selected = true; activeKrId = doc.id; } kurikulumSelect.appendChild(opt); } });
-                            if(activeKrId) kurikulumSelect.value = activeKrId;
-                            loadDaftarMapel();
+                            if(activeKrId) kurikulumSelect.value = activeKrId; loadDaftarMapel();
                         } catch {}
                     };
-                    window.bukaFormGrup = function() { document.getElementById('viewTabelMP').style.display = 'none'; document.getElementById('viewFormGrup').style.display = 'block'; document.getElementById('formGrupMP').reset(); document.getElementById('grup_id_hidden').value = ''; document.getElementById('formGrupTitle').innerText = "Buat Kelompok Baru"; };
-                    window.bukaFormMapel = function(forcedParentId) { document.getElementById('viewTabelMP').style.display = 'none'; document.getElementById('viewFormMapel').style.display = 'block'; document.getElementById('formMapel').reset(); document.getElementById('mapel_id_hidden').value = ''; document.getElementById('formMapelTitle').innerText = "Tambah Mata Pelajaran Baru"; if(forcedParentId) document.getElementById('mapel_parent_id').value = forcedParentId; };
+                    window.bukaFormGrup = function() { document.getElementById('viewTabelMP').style.display = 'none'; document.getElementById('viewFormGrup').style.display = 'block'; document.getElementById('formGrupMP').reset(); document.getElementById('grup_id_hidden').value = ''; };
+                    window.bukaFormMapel = function(forcedParentId) { document.getElementById('viewTabelMP').style.display = 'none'; document.getElementById('viewFormMapel').style.display = 'block'; document.getElementById('formMapel').reset(); document.getElementById('mapel_id_hidden').value = ''; if(forcedParentId) document.getElementById('mapel_parent_id').value = forcedParentId; };
                     window.kembaliKeTabelMP = function() { document.getElementById('viewFormGrup').style.display = 'none'; document.getElementById('viewFormMapel').style.display = 'none'; document.getElementById('viewTabelMP').style.display = 'block'; loadDaftarMapel(); };
                     window.loadDaftarMapel = async function() {
                         const tpId = document.getElementById('filter_tp_mapel').value; const krId = document.getElementById('filter_kurikulum_mapel').value; const tbody = document.getElementById('tbodyMP'); const btnAddMapel = document.getElementById('btnTambahMapelTop');
@@ -352,12 +313,12 @@
                     window.simpanGrupMP = async function(e) {
                         e.preventDefault(); const tpId = document.getElementById('filter_tp_mapel').value; const krId = document.getElementById('filter_kurikulum_mapel').value; const namaGrup = document.getElementById('grup_nama').value.trim(); const kodeGrup = document.getElementById('grup_kode').value.trim(); const isEditId = document.getElementById('grup_id_hidden').value;
                         const payload = { nama: namaGrup, grup_kode: kodeGrup, tipe: 'grup', tp_id: tpId, kurikulum_id: krId, updatedAt: serverTimestamp() }; const targetId = isEditId ? isEditId : "GR_" + Date.now().toString().slice(-6);
-                        try { if(!isEditId) payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "matapelajaran", targetId), payload, { merge: true }); kembaliKeTabelMP(); } catch { alert("Gagal."); }
+                        try { if(!isEditId) payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "matapelajaran", targetId), payload, { merge: true }); kembaliKeTabelMP(); } catch {}
                     };
                     window.simpanDataMapel = async function(e) {
                         e.preventDefault(); const tpId = document.getElementById('filter_tp_mapel').value; const krId = document.getElementById('filter_kurikulum_mapel').value; const parentId = document.getElementById('mapel_parent_id').value; const namaMapel = document.getElementById('mapel_nama').value.trim(); const kodePendek = document.getElementById('mapel_kode_pendek').value.trim().toUpperCase(); const isEditId = document.getElementById('mapel_id_hidden').value;
                         const payload = { nama: namaMapel, kode_pendek: kodePendek, parent_id: parentId, tipe: 'mapel', tp_id: tpId, kurikulum_id: krId, updatedAt: serverTimestamp() }; const targetId = isEditId ? isEditId : "MP_" + Date.now().toString().slice(-6);
-                        try { if(!isEditId) payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "matapelajaran", targetId), payload, { merge: true }); kembaliKeTabelMP(); } catch { alert("Gagal."); }
+                        try { if(!isEditId) payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "matapelajaran", targetId), payload, { merge: true }); kembaliKeTabelMP(); } catch {}
                     };
                     window.editGrup = function(id, nama, kode) { bukaFormGrup(); document.getElementById('grup_id_hidden').value = id; document.getElementById('grup_nama').value = nama; document.getElementById('grup_kode').value = (kode === 'null' || kode === '-') ? '' : kode; };
                     window.editMapel = function(id, nama, kode, parentId) { bukaFormMapel(); document.getElementById('mapel_id_hidden').value = id; document.getElementById('mapel_nama').value = nama; document.getElementById('mapel_kode_pendek').value = kode; document.getElementById('mapel_parent_id').value = parentId; };
@@ -368,202 +329,428 @@
                     contentArea.innerHTML = `<p>Memuat Modul Rombel...</p>`;
                     try {
                         const res = await fetch('rombel.html'); contentArea.innerHTML = await res.text();
-                        
-                        window.rombelSiswaList = []; window.rombelMapelList = [];
-                        window.masterSiswaArray = []; window.masterMapelArray = [];
-                        window.siswaSudahAdaRombel = new Set();
-
+                        window.rombelSiswaList = []; window.rombelMapelList = []; window.masterSiswaArray = []; window.masterMapelArray = []; window.siswaSudahAdaRombel = new Set();
                         const selectTp = document.getElementById('filter_tp_rombel');
-                        if (selectTp) {
-                            selectTp.innerHTML = ''; const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc")));
-                            let activeTpId = ""; tpSnap.forEach(doc => { const d = doc.data(); const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = `${d.tahun_mulai}/${d.tahun_berakhir} (${d.semester})`; if(d.status_aktif === "Aktif") { opt.selected = true; activeTpId = doc.id; } selectTp.appendChild(opt); });
-                            if(activeTpId) { selectTp.value = activeTpId; await handleFilterTpChangeRombel(activeTpId); }
-                        }
-                    } catch (err) { console.error(err); contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul Rombel.</p>`; }
+                        if (selectTp) { selectTp.innerHTML = ''; const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc"))); let activeTpId = ""; tpSnap.forEach(doc => { const d = doc.data(); const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = `${d.tahun_mulai}/${d.tahun_berakhir} (${d.semester})`; if(d.status_aktif === "Aktif") { opt.selected = true; activeTpId = doc.id; } selectTp.appendChild(opt); }); if(activeTpId) { selectTp.value = activeTpId; await handleFilterTpChangeRombel(activeTpId); } }
+                    } catch {}
 
                     window.handleFilterTpChangeRombel = async function(forcedId) {
-                        const tpVal = forcedId ? forcedId : document.getElementById('filter_tp_rombel').value;
-                        const krSelect = document.getElementById('filter_kurikulum_rombel'); if(!krSelect) return;
+                        const tpVal = forcedId ? forcedId : document.getElementById('filter_tp_rombel').value; const krSelect = document.getElementById('filter_kurikulum_rombel'); if(!krSelect) return; krSelect.innerHTML = '<option value="">-- Pilih Kurikulum --</option>';
+                        try { const snap = await getDocs(query(collection(db, "kurikulum"), orderBy("createdAt", "desc"))); let activeKrId = ""; snap.forEach(doc => { const d = doc.data(); if(d.relasi_tahun_pelajaran === tpVal) { const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = d.nama_kurikulum; if(d.status_aktif === "Aktif") { opt.selected = true; activeKrId = doc.id; } krSelect.appendChild(opt); } }); if(activeKrId) krSelect.value = activeKrId; loadDaftarRombel(); } catch {}
+                    };
+                    window.bukaFormRombel = async function() {
+                        document.getElementById('viewTabelRombel').style.display = 'none'; document.getElementById('viewFormRombel').style.display = 'block'; document.getElementById('formRombelMaster').reset(); document.getElementById('rombel_id_hidden').value = '';
+                        window.rombelSiswaList = []; window.rombelMapelList = []; document.getElementById('siswaRombelContainer').innerHTML = ''; document.getElementById('tbodyRombelMapel').innerHTML = '';
+                        const tpId = document.getElementById('filter_tp_rombel').value; const krId = document.getElementById('filter_kurikulum_rombel').value;
+                        try {
+                            window.siswaSudahAdaRombel.clear(); const rAllSnap = await getDocs(collection(db, "rombel")); rAllSnap.forEach(rDoc => { const rData = rDoc.data(); if(rData.tp_id === tpId && rData.kurikulum_id === krId) { (rData.siswa_ids || []).forEach(sId => window.siswaSudahAdaRombel.add(sId)); } });
+                            const krSnap = await getDoc(doc(db, "kurikulum", krId)); const jenjangSelect = document.getElementById('rombel_jenjang');
+                            if(jenjangSelect && krSnap.exists()) { jenjangSelect.innerHTML = ''; const maxJenjang = krSnap.data().jumlah_jenjang || 1; for(let j=1; j<=maxJenjang; j++) { const opt = document.createElement('option'); opt.value = j; opt.innerText = `Jenjang Tingkat ${j}`; jenjangSelect.appendChild(opt); } }
+                            const tSnap = await getDocs(query(collection(db, "teachers"), orderBy("nama_lengkap", "asc"))); const waliSelect = document.getElementById('rombel_wali_id'); const pengampuSelect = document.getElementById('select_tambah_guru_pengampu'); if(waliSelect) waliSelect.innerHTML = '<option value="">-- Pilih Wali Kelas --</option>'; if(pengampuSelect) pengampuSelect.innerHTML = '<option value="">-- Pilih Guru Pengampu --</option>';
+                            tSnap.forEach(tDoc => { const t = tDoc.data(); const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`; const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) waliSelect.appendChild(optW); const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect) pengampuSelect.appendChild(optP); });
+                            const sSnap = await getDocs(query(collection(db, "murid"), orderBy("nama_lengkap", "asc"))); window.masterSiswaArray = []; sSnap.forEach(sDoc => { const s = sDoc.data(); window.masterSiswaArray.push({ id: sDoc.id, nama: s.nama_lengkap, nisn: s.nisn }); }); refreshSiswaDropdownOptions();
+                            const mSnap = await getDocs(query(collection(db, "matapelajaran"), orderBy("createdAt", "asc"))); window.masterMapelArray = []; const mSelect = document.getElementById('select_tambah_mapel'); if(mSelect) mSelect.innerHTML = '<option value="">-- Pilih Mapel --</option>';
+                            mSnap.forEach(mDoc => { const m = mDoc.data(); if(m.tipe === 'mapel' && m.tp_id === tpId && m.kurikulum_id === krId) { window.masterMapelArray.push({ id: mDoc.id, nama: m.nama, kode: m.kode_pendek, parent_id: m.parent_id }); const optM = document.createElement('option'); optM.value = mDoc.id; optM.innerText = `${m.nama} [${m.kode_pendek}]`; if(mSelect) mSelect.appendChild(optM); } });
+                        } catch {}
+                    };
+                    window.kembaliKeTabelRombel = function() { document.getElementById('viewFormRombel').style.display = 'none'; document.getElementById('viewTabelRombel').style.display = 'block'; loadDaftarRombel(); };
+                    function refreshSiswaDropdownOptions() {
+                        const siswaSelect = document.getElementById('select_tambah_siswa'); if(!siswaSelect) return; siswaSelect.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+                        window.masterSiswaArray.forEach(sObj => { const sudahAdaDiRombelLain = window.siswaSudahAdaRombel.has(sObj.id); const bagianDariRombelIni = window.rombelSiswaList.includes(sObj.id); if (!sudahAdaDiRombelLain || bagianDariRombelIni) { const optS = document.createElement('option'); optS.value = sObj.id; optS.innerText = `${sObj.nama} (NIS: ${sObj.id})`; siswaSelect.appendChild(optS); } });
+                    }
+                    window.addSiswaToRombelList = function() { const sId = document.getElementById('select_tambah_siswa').value; if(!sId) return; if(window.rombelSiswaList.includes(sId)) { alert("Siswa sudah masuk daftar."); return; } window.rombelSiswaList.push(sId); renderSiswaBadges(); };
+                    window.removeSiswaFromRombelList = function(sId) { window.rombelSiswaList = window.rombelSiswaList.filter(id => id !== sId); renderSiswaBadges(); };
+                    function renderSiswaBadges() { const container = document.getElementById('siswaRombelContainer'); if(!container) return; container.innerHTML = ''; window.rombelSiswaList.forEach(id => { const sObj = window.masterSiswaArray.find(item => item.id === id); if(sObj) { const span = document.createElement('span'); span.className = 'tag-item'; span.innerHTML = `${sObj.nama} <span class="remove-btn" onclick="removeSiswaFromRombelList('${id}')">&times;</span>`; container.appendChild(span); } }); refreshSiswaDropdownOptions(); }
+                    window.addMapelToRombelList = function() { const mId = document.getElementById('select_tambah_mapel').value; const gId = document.getElementById('select_tambah_guru_pengampu').value; if(!mId || !gId) { alert("Pilih Mapel dan Guru."); return; } if(window.rombelMapelList.some(item => item.mapel_id === mId)) { alert("Mapel sudah ada."); return; } window.rombelMapelList.push({ mapel_id: mId, guru_id: gId }); renderRombelMapelTable(); };
+                    window.removeMapelFromRombelList = function(mId) { window.rombelMapelList = window.rombelMapelList.filter(item => item.mapel_id !== mId); renderRombelMapelTable(); };
+                    function renderRombelMapelTable() {
+                        const tbody = document.getElementById('tbodyRombelMapel'); if(!tbody) return; tbody.innerHTML = ''; const pengampuSelect = document.getElementById('select_tambah_guru_pengampu');
+                        window.rombelMapelList.forEach(item => { const mObj = window.masterMapelArray.find(m => m.id === item.mapel_id); let gName = "Guru Tidak Dikenal"; if(pengampuSelect) { const opt = Array.from(pengampuSelect.options).find(o => o.value === item.guru_id); if(opt) gName = opt.innerText; } if(mObj) { const tr = document.createElement('tr'); tr.innerHTML = `<td><code>${mObj.kode}</code></td><td><strong>${mObj.nama}</strong></td><td>${gName}</td><td><button type="button" class="btn-delete-mp" onclick="removeMapelFromRombelList('${item.mapel_id}')">&times;</button></td>`; tbody.appendChild(tr); } });
+                    }
+                    async function loadDaftarRombel() {
+                        const tpId = document.getElementById('filter_tp_rombel').value; const krId = document.getElementById('filter_kurikulum_rombel').value; const tbody = document.getElementById('tbodyRombel'); if(!tbody) return; if(!tpId || !krId) { tbody.innerHTML = '<tr><td>Silakan filter.</td></tr>'; return; } tbody.innerHTML = '<tr><td>Memuat...</td></tr>';
+                        try {
+                            const snap = await getDocs(collection(db, "rombel")); tbody.innerHTML = ''; let idx = 1; let empty = true; const tSnap = await getDocs(collection(db, "teachers")); const teachersMap = {}; tSnap.forEach(doc => { teachersMap[doc.id] = doc.data().nama_lengkap; });
+                            snap.forEach(d => { const r = d.data(); if(r.tp_id === tpId && r.kurikulum_id === krId) { empty = false; const tr = document.createElement('tr'); const wName = teachersMap[r.wali_kelas_id] || r.wali_kelas_id; tr.innerHTML = `<td>${idx++}</td><td><code>${d.id}</code></td><td>Tingkat ${r.jenjang}</td><td><strong>${r.nama_rombel}</strong></td><td><strong>${wName}</strong></td><td>${(r.siswa_ids || []).length} Siswa</td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editRombel('${d.id}')">✏️</button><button class="btn-delete" onclick="hapusRombel('${d.id}')">🗑️</button></div></td>`; tbody.appendChild(tr); } }); if(empty) tbody.innerHTML = '<tr><td>Kosong.</td></tr>';
+                        } catch { tbody.innerHTML = '<tr><td>Gagal.</td></tr>'; }
+                    }
+                    window.simpanStrukturRombel = async function(e) {
+                        e.preventDefault(); const name = document.getElementById('rombel_nama').value.trim(); const jg = document.getElementById('rombel_jenjang').value; const wali = document.getElementById('rombel_wali_id').value; const isEdit = document.getElementById('rombel_id_hidden').value; if(!name || !jg || !wali) { alert("Lengkapi data."); return; }
+                        const payload = { nama_rombel: name, jenjang: parseInt(jg), wali_kelas_id: wali, tp_id: document.getElementById('filter_tp_rombel').value, kurikulum_id: document.getElementById('filter_kurikulum_rombel').value, siswa_ids: window.rombelSiswaList, mapel_paket: window.rombelMapelList, updatedAt: serverTimestamp() }; const targetId = isEdit ? isEdit : "RB_" + Date.now().toString().slice(-6);
+                        try { if(!isEdit) payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "rombel", targetId), payload, { merge: true }); alert("Disimpan!"); kembaliKeTabelRombel(); } catch {}
+                    };
+                    window.editRombel = async function(id) { await window.bukaFormRombel(); document.getElementById('formRombelTitle').innerText = "Edit Data Rombel"; document.getElementById('rombel_id_hidden').value = id; try { const snap = await getDoc(doc(db, "rombel", id)); if(snap.exists()) { const d = snap.data(); document.getElementById('rombel_nama').value = d.nama_rombel || ''; document.getElementById('rombel_jenjang').value = d.jenjang || 1; document.getElementById('rombel_wali_id').value = d.wali_kelas_id || ''; window.rombelSiswaList = d.siswa_ids || []; window.rombelMapelList = d.mapel_paket || []; renderSiswaBadges(); renderRombelMapelTable(); } } catch { alert("Gagal."); } };
+                    window.hapusRombel = async function(id) { if(confirm("Hapus?")) { try { await deleteDoc(doc(db, "rombel", id)); loadDaftarRombel(); } catch {} } };
+                    break;
+
+                case 'penilaian':
+                    contentArea.innerHTML = `<p style="color: #999;">Memuat Modul Penilaian Terintegrasi...</p>`;
+                    try {
+                        const res = await fetch('penilaian.html'); contentArea.innerHTML = await res.text();
+                        
+                        // VARIABEL STATE LOKAL PENILAIAN
+                        window.currentActiveRombelObj = null;
+                        window.loadedMasterMapelLookup = {};
+
+                        // Sinkronisasi Dropdown Filter TP Aktif
+                        const selectTpPn = document.getElementById('filter_tp_penilaian');
+                        if (selectTpPn) {
+                            selectTpPn.innerHTML = ''; const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc")));
+                            let activeTpId = ""; tpSnap.forEach(doc => { const d = doc.data(); const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = `${d.tahun_mulai}/${d.tahun_berakhir} (${d.semester})`; if(d.status_aktif === "Aktif") { opt.selected = true; activeTpId = doc.id; } selectTpPn.appendChild(opt); });
+                            if(activeTpId) { selectTpPn.value = activeTpId; await handleFilterTpChangePenilaian(activeTpId); }
+                        }
+                    } catch { contentArea.innerHTML = `<p style="color: red;">Gagal memuat modul penilaian.</p>`; }
+
+                    window.handleFilterTpChangePenilaian = async function(forcedId) {
+                        const tpVal = forcedId ? forcedId : document.getElementById('filter_tp_penilaian').value;
+                        const krSelect = document.getElementById('filter_kurikulum_penilaian'); if(!krSelect) return;
                         krSelect.innerHTML = '<option value="">-- Pilih Kurikulum --</option>';
                         try {
                             const snap = await getDocs(query(collection(db, "kurikulum"), orderBy("createdAt", "desc")));
                             let activeKrId = "";
                             snap.forEach(doc => { const d = doc.data(); if(d.relasi_tahun_pelajaran === tpVal) { const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = d.nama_kurikulum; if(d.status_aktif === "Aktif") { opt.selected = true; activeKrId = doc.id; } krSelect.appendChild(opt); } });
                             if(activeKrId) krSelect.value = activeKrId;
-                            loadDaftarRombel();
+                            loadDaftarRombelPenilaian();
                         } catch {}
                     };
 
-                    window.bukaFormRombel = async function() {
-                        document.getElementById('viewTabelRombel').style.display = 'none';
-                        document.getElementById('viewFormRombel').style.display = 'block';
-                        document.getElementById('formRombelMaster').reset();
-                        document.getElementById('rombel_id_hidden').value = '';
-                        document.getElementById('formRombelTitle').innerText = "Tambah Struktur Rombel Baru";
-                        
-                        window.rombelSiswaList = []; window.rombelMapelList = [];
-                        document.getElementById('siswaRombelContainer').innerHTML = '';
-                        document.getElementById('tbodyRombelMapel').innerHTML = '';
+                    window.kembaliKeTabelRombelPenilaian = function() {
+                        document.getElementById('viewFormTP').style.display = 'none';
+                        document.getElementById('viewFormInputNilai').style.display = 'none';
+                        document.getElementById('viewTabelRombelPenilaian').style.display = 'block';
+                        loadDaftarRombelPenilaian();
+                    };
 
-                        const tpId = document.getElementById('filter_tp_rombel').value;
-                        const krId = document.getElementById('filter_kurikulum_rombel').value;
+                    // RENDER UTAMA LIST ROMBEL DI MENU PENILAIAN
+                    async function loadDaftarRombelPenilaian() {
+                        const tpId = document.getElementById('filter_tp_penilaian').value;
+                        const krId = document.getElementById('filter_kurikulum_penilaian').value;
+                        const tbody = document.getElementById('tbodyRombelPenilaian'); if(!tbody) return;
+                        
+                        if(!tpId || !krId) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Silakan filter data.</td></tr>'; return; }
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Mengurai rombel...</td></tr>';
                         
                         try {
-                            window.siswaSudahAdaRombel.clear();
-                            const rAllSnap = await getDocs(collection(db, "rombel"));
-                            rAllSnap.forEach(rDoc => {
-                                const rData = rDoc.data();
-                                if(rData.tp_id === tpId && rData.kurikulum_id === krId) {
-                                    (rData.siswa_ids || []).forEach(sId => window.siswaSudahAdaRombel.add(sId));
-                                }
-                            });
+                            const rSnap = await getDocs(collection(db, "rombel"));
+                            const tSnap = await getDocs(collection(db, "teachers"));
+                            const teachersMap = {}; tSnap.forEach(d => { teachersMap[d.id] = d.data().nama_lengkap; });
 
-                            const krSnap = await getDoc(doc(db, "kurikulum", krId));
-                            const jenjangSelect = document.getElementById('rombel_jenjang');
-                            if(jenjangSelect && krSnap.exists()) {
-                                jenjangSelect.innerHTML = '';
-                                const maxJenjang = krSnap.data().jumlah_jenjang || 1;
-                                for(let j=1; j<=maxJenjang; j++) {
-                                    const opt = document.createElement('option'); opt.value = j; opt.innerText = `Jenjang Tingkat ${j}`;
-                                    jenjangSelect.appendChild(opt);
-                                }
-                            }
-
-                            const tSnap = await getDocs(query(collection(db, "teachers"), orderBy("nama_lengkap", "asc")));
-                            const waliSelect = document.getElementById('rombel_wali_id');
-                            const pengampuSelect = document.getElementById('select_tambah_guru_pengampu');
-                            if(waliSelect) waliSelect.innerHTML = '<option value="">-- Pilih Wali Kelas --</option>';
-                            if(pengampuSelect) pengampuSelect.innerHTML = '<option value="">-- Pilih Guru Pengampu --</option>';
-                            
-                            tSnap.forEach(tDoc => {
-                                const t = tDoc.data();
-                                const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`;
-                                const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) waliSelect.appendChild(optW);
-                                const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect) pengampuSelect.appendChild(optP);
-                            });
-
-                            // TARIK SISWA DARI KOLEKSI BARU: murid
-                            const sSnap = await getDocs(query(collection(db, "murid"), orderBy("nama_lengkap", "asc")));
-                            window.masterSiswaArray = [];
-                            sSnap.forEach(sDoc => {
-                                const s = sDoc.data();
-                                window.masterSiswaArray.push({ id: sDoc.id, nama: s.nama_lengkap, nisn: s.nisn });
-                            });
-                            refreshSiswaDropdownOptions();
-
-                            const mSnap = await getDocs(query(collection(db, "matapelajaran"), orderBy("createdAt", "asc")));
-                            window.masterMapelArray = [];
-                            const mSelect = document.getElementById('select_tambah_mapel');
-                            if(mSelect) mSelect.innerHTML = '<option value="">-- Pilih Mapel --</option>';
-                            
-                            mSnap.forEach(mDoc => {
-                                const m = mDoc.data();
-                                if(m.tipe === 'mapel' && m.tp_id === tpId && m.kurikulum_id === krId) {
-                                    window.masterMapelArray.push({ id: mDoc.id, nama: m.nama, kode: m.kode_pendek, parent_id: m.parent_id });
-                                    const optM = document.createElement('option'); optM.value = mDoc.id; optM.innerText = `${m.nama} [${m.kode_pendek}]`;
-                                    if(mSelect) mSelect.appendChild(optM);
-                                }
-                            });
-
-                        } catch (err) { console.error(err); }
-                    };
-
-                    window.kembaliKeTabelRombel = function() { document.getElementById('viewFormRombel').style.display = 'none'; document.getElementById('viewTabelRombel').style.display = 'block'; loadDaftarRombel(); };
-
-                    function refreshSiswaDropdownOptions() {
-                        const siswaSelect = document.getElementById('select_tambah_siswa'); if(!siswaSelect) return;
-                        siswaSelect.innerHTML = '<option value="">-- Pilih Siswa --</option>';
-                        window.masterSiswaArray.forEach(sObj => {
-                            const sudahAdaDiRombelLain = window.siswaSudahAdaRombel.has(sObj.id);
-                            const bagianDariRombelIni = window.rombelSiswaList.includes(sObj.id);
-                            if (!sudahAdaDiRombelLain || bagianDariRombelIni) {
-                                const optS = document.createElement('option'); optS.value = sObj.id; optS.innerText = `${sObj.nama} (NIS: ${sObj.id})`;
-                                siswaSelect.appendChild(optS);
-                            }
-                        });
-                    }
-
-                    window.addSiswaToRombelList = function() {
-                        const sId = document.getElementById('select_tambah_siswa').value; if(!sId) return;
-                        if(window.rombelSiswaList.includes(sId)) { alert("Siswa sudah masuk daftar."); return; }
-                        window.rombelSiswaList.push(sId); renderSiswaBadges();
-                    };
-                    window.removeSiswaFromRombelList = function(sId) { window.rombelSiswaList = window.rombelSiswaList.filter(id => id !== sId); renderSiswaBadges(); };
-                    function renderSiswaBadges() {
-                        const container = document.getElementById('siswaRombelContainer'); if(!container) return; container.innerHTML = '';
-                        window.rombelSiswaList.forEach(id => {
-                            const sObj = window.masterSiswaArray.find(item => item.id === id);
-                            if(sObj) {
-                                const span = document.createElement('span'); span.className = 'tag-item';
-                                span.innerHTML = `${sObj.nama} <span class="remove-btn" onclick="removeSiswaFromRombelList('${id}')">&times;</span>`;
-                                container.appendChild(span);
-                            }
-                        });
-                        refreshSiswaDropdownOptions();
-                    }
-
-                    window.addMapelToRombelList = function() {
-                        const mId = document.getElementById('select_tambah_mapel').value; const gId = document.getElementById('select_tambah_guru_pengampu').value;
-                        if(!mId || !gId) { alert("Pilih Mapel dan Guru."); return; }
-                        if(window.rombelMapelList.some(item => item.mapel_id === mId)) { alert("Mapel sudah ada."); return; }
-                        window.rombelMapelList.push({ mapel_id: mId, guru_id: gId }); renderRombelMapelTable();
-                    };
-                    window.removeMapelFromRombelList = function(mId) { window.rombelMapelList = window.rombelMapelList.filter(item => item.mapel_id !== mId); renderRombelMapelTable(); };
-                    function renderRombelMapelTable() {
-                        const tbody = document.getElementById('tbodyRombelMapel'); if(!tbody) return; tbody.innerHTML = '';
-                        const pengampuSelect = document.getElementById('select_tambah_guru_pengampu');
-                        window.rombelMapelList.forEach(item => {
-                            const mObj = window.masterMapelArray.find(m => m.id === item.mapel_id); let gName = "Guru Tidak Dikenal";
-                            if(pengampuSelect) { const opt = Array.from(pengampuSelect.options).find(o => o.value === item.guru_id); if(opt) gName = opt.innerText; }
-                            if(mObj) {
-                                const tr = document.createElement('tr');
-                                tr.innerHTML = `<td><code>${mObj.kode}</code></td><td><strong>${mObj.nama}</strong></td><td>${gName}</td><td><button type="button" class="btn-delete-mp" onclick="removeMapelFromRombelList('${item.mapel_id}')">&times;</button></td>`;
-                                tbody.appendChild(tr);
-                            }
-                        });
-                    }
-
-                    async function loadDaftarRombel() {
-                        const tpId = document.getElementById('filter_tp_rombel').value; const krId = document.getElementById('filter_kurikulum_rombel').value;
-                        const tbody = document.getElementById('tbodyRombel'); if(!tbody) return;
-                        if(!tpId || !krId) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Silakan pilih filter data di atas.</td></tr>'; return; }
-                        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Mengambil struktur rombel...</td></tr>';
-                        try {
-                            const snap = await getDocs(collection(db, "rombel")); tbody.innerHTML = ''; let idx = 1; let empty = true;
-                            const tSnap = await getDocs(collection(db, "teachers")); const teachersMap = {}; tSnap.forEach(doc => { teachersMap[doc.id] = doc.data().nama_lengkap; });
-                            snap.forEach(d => {
-                                const r = d.data();
+                            tbody.innerHTML = ''; let idx = 1; let empty = true;
+                            rSnap.forEach(doc => {
+                                const r = doc.data();
                                 if(r.tp_id === tpId && r.kurikulum_id === krId) {
-                                    empty = false; const tr = document.createElement('tr'); const wName = teachersMap[r.wali_kelas_id] || r.wali_kelas_id;
-                                    tr.innerHTML = `<td>${idx++}</td><td><code>${d.id}</code></td><td>Tingkat ${r.jenjang}</td><td><strong>${r.nama_rombel}</strong></td><td><strong>${wName}</strong></td><td>${(r.siswa_ids || []).length} Siswa</td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editRombel('${d.id}')">✏️</button><button class="btn-delete" onclick="hapusRombel('${d.id}')">🗑️</button></div></td>`;
+                                    empty = false; const tr = document.createElement('tr');
+                                    const wName = teachersMap[r.wali_kelas_id] || r.wali_kelas_id;
+                                    // REKAYASA AKSI MURNI SIMBOL: 🎯 (Setting TP) dan 📝 (Input Nilai)
+                                    tr.innerHTML = `
+                                        <td>${idx++}</td>
+                                        <td><strong>${r.nama_rombel}</strong></td>
+                                        <td>Tingkat ${r.jenjang}</td>
+                                        <td>${wName}</td>
+                                        <td>
+                                            <div style="display:flex; gap:8px;">
+                                                <button class="btn-icon btn-warning" onclick="bukaManajemenTP('${doc.id}')" title="Setting Deskripsi TP">🎯</button>
+                                                <button class="btn-icon btn-success" onclick="bukaInputNilaiSiswa('${doc.id}')" title="Input Nilai Siswa">📝</button>
+                                            </div>
+                                        </td>
+                                    `;
                                     tbody.appendChild(tr);
                                 }
                             });
-                            if(empty) tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#999;">Belum ada Rombel di filter ini.</td></tr>';
-                        } catch { tbody.innerHTML = '<tr><td colspan="7">Gagal memuat.</td></tr>'; }
+                            if(empty) tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Belum ada rombel.</td></tr>';
+                        } catch { tbody.innerHTML = '<tr><td colspan="5">Gagal.</td></tr>'; }
                     }
 
-                    window.simpanStrukturRombel = async function(e) {
-                        e.preventDefault(); const name = document.getElementById('rombel_nama').value.trim(); const jg = document.getElementById('rombel_jenjang').value; const wali = document.getElementById('rombel_wali_id').value; const isEdit = document.getElementById('rombel_id_hidden').value;
-                        if(!name || !jg || !wali) { alert("Lengkapi data dasar Rombel."); return; }
-                        const payload = { nama_rombel: name, jenjang: parseInt(jg), wali_kelas_id: wali, tp_id: document.getElementById('filter_tp_rombel').value, kurikulum_id: document.getElementById('filter_kurikulum_rombel').value, siswa_ids: window.rombelSiswaList, mapel_paket: window.rombelMapelList, updatedAt: serverTimestamp() };
-                        const targetId = isEdit ? isEdit : "RB_" + Date.now().toString().slice(-6);
-                        try { if(!isEdit) payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "rombel", targetId), payload, { merge: true }); alert("Struktur data rombel disimpan!"); kembaliKeTabelRombel(); } catch { alert("Gagal."); }
-                    };
-
-                    window.editRombel = async function(id) {
-                        await window.bukaFormRombel(); document.getElementById('formRombelTitle').innerText = "Edit Data Rombel"; document.getElementById('rombel_id_hidden').value = id;
+                    // ==========================================
+                    // SUB-MODUL A: MANAJEMEN TUJUAN PEMBELAJARAN (TP)
+                    // ==========================================
+                    window.bukaManajemenTP = async function(rombelId) {
+                        document.getElementById('viewTabelRombelPenilaian').style.display = 'none';
+                        document.getElementById('viewFormTP').style.display = 'block';
+                        document.getElementById('input_deskripsi_tp').value = '';
+                        
                         try {
-                            const snap = await getDoc(doc(db, "rombel", id));
-                            if(snap.exists()) {
-                                const d = snap.data(); document.getElementById('rombel_nama').value = d.nama_rombel || ''; document.getElementById('rombel_jenjang').value = d.jenjang || 1; document.getElementById('rombel_wali_id').value = d.wali_kelas_id || '';
-                                window.rombelSiswaList = d.siswa_ids || []; window.rombelMapelList = d.mapel_paket || [];
-                                renderSiswaBadges(); renderRombelMapelTable();
+                            const rSnap = await getDoc(doc(db, "rombel", rombelId));
+                            window.currentActiveRombelObj = { id: rombelId, ...rSnap.data() };
+                            
+                            // Ambil list mapel dari paket kelas rombel ini
+                            const mSelect = document.getElementById('tp_select_mapel'); if(!mSelect) return;
+                            mSelect.innerHTML = '';
+                            
+                            // Tarik master mapel global untuk konversi ID ke Nama asli
+                            const mapelGlobalSnap = await getDocs(collection(db, "matapelajaran"));
+                            window.loadedMasterMapelLookup = {};
+                            mapelGlobalSnap.forEach(d => { window.loadedMasterMapelLookup[d.id] = d.data().nama; });
+
+                            const paketMapel = window.currentActiveRombelObj.mapel_paket || [];
+                            if(paketMapel.length === 0) {
+                                mSelect.innerHTML = '<option value="">-- Rombel Belum Memiliki Mapel Paketan --</option>';
+                                document.getElementById('containerListTPTeks').innerHTML = '';
+                                return;
                             }
-                        } catch { alert("Gagal memuat rincian data."); }
+
+                            paketMapel.forEach(item => {
+                                const opt = document.createElement('option');
+                                opt.value = item.mapel_id;
+                                opt.innerText = window.loadedMasterMapelLookup[item.mapel_id] || item.mapel_id;
+                                mSelect.appendChild(opt);
+                            });
+
+                            loadDaftarTPTeks();
+                        } catch { alert("Gagal memuat TP."); }
                     };
 
-                    window.hapusRombel = async function(id) { if(confirm("Hapus Rombel ini secara permanen?")) { try { await deleteDoc(doc(db, "rombel", id)); loadDaftarRombel(); } catch {} } };
+                    window.loadDaftarTPTeks = async function() {
+                        const container = document.getElementById('containerListTPTeks'); if(!container) return;
+                        const mapelId = document.getElementById('tp_select_mapel').value;
+                        if(!mapelId) { container.innerHTML = '<p style="color:#999; text-align:center;">Pilih mapel.</p>'; return; }
+                        container.innerHTML = '<span>Memuat list...</span>';
+
+                        try {
+                            // Cari dokumen TP di koleksi 'penilaian' dengan format Key khusus: TP_[RombelID]_[MapelID]
+                            const tpDocId = `TP_${window.currentActiveRombelObj.id}_${mapelId}`;
+                            const tpSnap = await getDoc(doc(db, "penilaian", tpDocId));
+                            container.innerHTML = '';
+
+                            if(!tpSnap.exists() || (tpSnap.data().list_tp || []).length === 0) {
+                                container.innerHTML = '<p style="color:#999; text-align:center; font-size:13px; padding:10px;">Belum ada deskripsi Tujuan Pembelajaran (TP) dimasukkan.</p>';
+                                return;
+                            }
+
+                            const arrTP = tpSnap.data().list_tp || [];
+                            arrTP.forEach((teks, index) => {
+                                const div = document.createElement('div'); div.className = 'tp-item';
+                                div.innerHTML = `<span><strong>TP ${index+1}:</strong> ${teks}</span><button type="button" class="btn-delete-mp" style="padding:2px 6px; font-size:11px;" onclick="hapusSatuTeksTP(${index})">&times;</button>`;
+                                container.appendChild(div);
+                            });
+                        } catch { container.innerHTML = '<span>Gagal load TP.</span>'; }
+                    };
+
+                    window.tambahTeksTPKeFirestore = async function() {
+                        const teks = document.getElementById('input_deskripsi_tp').value.trim();
+                        const mapelId = document.getElementById('tp_select_mapel').value;
+                        if(!teks || !mapelId) { alert("Isi deskripsi TP terlebih dahulu."); return; }
+
+                        const tpDocId = `TP_${window.currentActiveRombelObj.id}_${mapelId}`;
+                        try {
+                            const docRef = doc(db, "penilaian", tpDocId);
+                            const snap = await getDoc(docRef);
+                            let currentList = [];
+                            if(snap.exists()) currentList = snap.data().list_tp || [];
+                            
+                            currentList.push(teks); // Tambah deskripsi ke array
+                            
+                            await setDoc(docRef, {
+                                tipe_dokumen: "setting_tp", rombel_id: window.currentActiveRombelObj.id,
+                                mapel_id: mapelId, list_tp: currentList, updatedAt: serverTimestamp()
+                            }, { merge: true });
+
+                            document.getElementById('input_deskripsi_tp').value = ''; loadDaftarTPTeks();
+                        } catch { alert("Gagal menyimpan TP."); }
+                    };
+
+                    window.hapusSatuTeksTP = async function(indexTarget) {
+                        if(confirm("Hapus deskripsi TP ini?")) {
+                            const mapelId = document.getElementById('tp_select_mapel').value;
+                            const tpDocId = `TP_${window.currentActiveRombelObj.id}_${mapelId}`;
+                            try {
+                                const docRef = doc(db, "penilaian", tpDocId); const snap = await getDoc(docRef);
+                                if(snap.exists()) {
+                                    let currentList = snap.data().list_tp || [];
+                                    currentList.splice(indexTarget, 1); // Hapus indeks target
+                                    await updateDoc(docRef, { list_tp: currentList, updatedAt: serverTimestamp() });
+                                    loadDaftarTPTeks();
+                                }
+                            } catch { alert("Gagal menghapus."); }
+                        }
+                    };
+
+                    // ==========================================
+                    // SUB-MODUL B: INPUT NILAI SISWA PER MAPEL & TP
+                    // ==========================================
+                    window.bukaInputNilaiSiswa = async function(rombelId) {
+                        document.getElementById('viewTabelRombelPenilaian').style.display = 'none';
+                        document.getElementById('viewFormInputNilai').style.display = 'block';
+                        
+                        try {
+                            const rSnap = await getDoc(doc(db, "rombel", rombelId));
+                            window.currentActiveRombelObj = { id: rombelId, ...rSnap.data() };
+                            
+                            const nSelect = document.getElementById('nilai_select_mapel'); if(!nSelect) return;
+                            nSelect.innerHTML = '';
+
+                            const mapelGlobalSnap = await getDocs(collection(db, "matapelajaran"));
+                            window.loadedMasterMapelLookup = {};
+                            mapelGlobalSnap.forEach(d => { window.loadedMasterMapelLookup[d.id] = d.data().nama; });
+
+                            // Ambil nama lengkap siswa ( NIS ) dari master murid
+                            const muridSnap = await getDocs(collection(db, "murid"));
+                            window.masterMuridNamaMap = {};
+                            muridSnap.forEach(d => { window.masterMuridNamaMap[d.id] = d.data().nama_lengkap; });
+
+                            const paketMapel = window.currentActiveRombelObj.mapel_paket || [];
+                            if(paketMapel.length === 0) {
+                                nSelect.innerHTML = '<option value="">-- Rombel Belum Memiliki Mapel --</option>';
+                                document.getElementById('theadNilaiDinamis').innerHTML = '';
+                                document.getElementById('tbodyNilaiDinamis').innerHTML = '<tr><td>Kosong</td></tr>';
+                                return;
+                            }
+
+                            paketMapel.forEach(item => {
+                                const opt = document.createElement('option'); opt.value = item.mapel_id;
+                                opt.innerText = window.loadedMasterMapelLookup[item.mapel_id] || item.mapel_id;
+                                nSelect.appendChild(opt);
+                            });
+
+                            renderFormTabelNilaiDinamis();
+                        } catch { alert("Gagal membuka form nilai."); }
+                    };
+
+                    window.renderFormTabelNilaiDinamis = async function() {
+                        const mapelId = document.getElementById('nilai_select_mapel').value;
+                        const thead = document.getElementById('theadNilaiDinamis');
+                        const tbody = document.getElementById('tbodyNilaiDinamis');
+                        
+                        if(!thead || !tbody) return;
+                        if(!mapelId) { thead.innerHTML = ''; tbody.innerHTML = '<tr><td>Pilih mapel</td></tr>'; return; }
+
+                        thead.innerHTML = ''; tbody.innerHTML = '<tr><td colspan="10">Menguji paket TP...</td></tr>';
+
+                        try {
+                            // 1. Ambil settingan deskripsi TP untuk menentukan jumlah kolom nilai dinamis
+                            const tpDocId = `TP_${window.currentActiveRombelObj.id}_${mapelId}`;
+                            const tpSnap = await getDoc(doc(db, "penilaian", tpDocId));
+                            
+                            const listTP = (tpSnap.exists()) ? (tpSnap.data().list_tp || []) : [];
+                            if(listTP.length === 0) {
+                                tbody.innerHTML = `<tr><td colspan="10" style="color:red; text-align:center; padding:15px;">Gagal! Tujuan Pembelajaran (TP) untuk mapel ini belum disetting. Silakan kembali lalu klik tombol 🎯 terlebih dahulu.</td></tr>`;
+                                return;
+                            }
+
+                            // 2. Render Header Tabel Dinamis
+                            const trHead = document.createElement('tr');
+                            trHead.innerHTML = `<th>NIS</th><th>Nama Lengkap Murid</th>`;
+                            listTP.forEach((teks, idx) => {
+                                trHead.innerHTML += `<th style="text-align:center;" title="${teks}">Nilai TP ${idx+1}</th>`;
+                            });
+                            thead.appendChild(trHead);
+
+                            // 3. Tarik data nilai tersimpan sebelumnya jika ada ( format DocID: NILAI_[RombelID]_[MapelID] )
+                            const nilaiDocId = `NILAI_${window.currentActiveRombelObj.id}_${mapelId}`;
+                            const nilaiSnap = await getDoc(doc(db, "penilaian", nilaiDocId));
+                            const skorSiswaMap = nilaiSnap.exists() ? (nilaiSnap.data().skor_map || {}) : {};
+
+                            // 4. Render baris input nilai per-siswa rombel
+                            tbody.innerHTML = '';
+                            const arraySiswaRombel = window.currentActiveRombelObj.siswa_ids || [];
+                            
+                            if(arraySiswaRombel.length === 0) {
+                                tbody.innerHTML = '<tr><td colspan="10" style="text-align:center; color:#999;">Belum ada anggota siswa dimasukkan ke rombel ini.</td></tr>';
+                                return;
+                            }
+
+                            arraySiswaRombel.forEach(nisId => {
+                                const sNama = window.masterMuridNamaMap[nisId] || "Siswa Terhapus";
+                                const trS = document.createElement('tr');
+                                
+                                let innerKolomNilai = `<td><code>${nisId}</code></td><td><strong>${sNama}</strong></td>`;
+                                
+                                // Generate box input angka nilai sebanyak total deskripsi TP
+                                listTP.forEach((teks, idx) => {
+                                    // Ambil nilai lama jika ada, jika tidak ada kosongkan
+                                    const nilaiLama = (skorSiswaMap[nisId] && skorSiswaMap[nisId][idx] !== undefined) ? skorSiswaMap[nisId][idx] : '';
+                                    innerKolomNilai += `<td style="text-align:center;"><input type="number" class="input-nilai-siswa input-skor-item" data-nis="${nisId}" data-tp-idx="${idx}" min="0" max="100" value="${nilaiLama}"></td>`;
+                                });
+
+                                trS.innerHTML = innerKolomNilai;
+                                tbody.appendChild(trS);
+                            });
+
+                        } catch(err) { console.error(err); tbody.innerHTML = '<tr><td>Gagal merender form tabel.</td></tr>'; }
+                    };
+
+                    window.simpanKumpulanNilaiKeFirestore = async function() {
+                        const mapelId = document.getElementById('nilai_select_mapel').value; if(!mapelId) return;
+                        const inputs = document.querySelectorAll('.input-skor-item');
+                        
+                        const skorSiswaMap = {};
+                        inputs.forEach(inp => {
+                            const nis = inp.getAttribute('data-nis');
+                            const tpIdx = parseInt(inp.getAttribute('data-tp-idx'));
+                            const nilaiValue = inp.value.trim() === '' ? '' : parseInt(inp.value);
+
+                            if(!skorSiswaMap[nis]) skorSiswaMap[nis] = {};
+                            skorSiswaMap[nis][tpIdx] = nilaiValue;
+                        });
+
+                        const nilaiDocId = `NILAI_${window.currentActiveRombelObj.id}_${mapelId}`;
+                        try {
+                            await setDoc(doc(db, "penilaian", nilaiDocId), {
+                                tipe_dokumen: "skor_siswa", rombel_id: window.currentActiveRombelObj.id,
+                                mapel_id: mapelId, skor_map: skorSiswaMap, updatedAt: serverTimestamp()
+                            }, { merge: true });
+                            
+                            alert("Seluruh kumpulan nilai murid berhasil disimpan ke Firestore!");
+                            kembaliKeTabelRombelPenilaian();
+                        } catch { alert("Gagal menyimpan paket data nilai."); }
+                    };
+                    break;
+
+                case 'kelas':
+                    contentArea.innerHTML = `<p>Memuat Modul Rombel...</p>`;
+                    try {
+                        const res = await fetch('rombel.html'); contentArea.innerHTML = await res.text();
+                        window.rombelSiswaList = []; window.rombelMapelList = []; window.masterSiswaArray = []; window.masterMapelArray = []; window.siswaSudahAdaRombel = new Set();
+                        const selectTp = document.getElementById('filter_tp_rombel');
+                        if (selectTp) { selectTp.innerHTML = ''; const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc"))); let activeTpId = ""; tpSnap.forEach(doc => { const d = doc.data(); const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = `${d.tahun_mulai}/${d.tahun_berakhir} (${d.semester})`; if(d.status_aktif === "Aktif") { opt.selected = true; activeTpId = doc.id; } selectTp.appendChild(opt); }); if(activeTpId) { selectTp.value = activeTpId; await handleFilterTpChangeRombel(activeTpId); } }
+                    } catch {}
+                    window.handleFilterTpChangeRombel = async function(forcedId) {
+                        const tpVal = forcedId ? forcedId : document.getElementById('filter_tp_rombel').value; const krSelect = document.getElementById('filter_kurikulum_rombel'); if(!krSelect) return; krSelect.innerHTML = '<option value="">-- Pilih Kurikulum --</option>';
+                        try { const snap = await getDocs(query(collection(db, "kurikulum"), orderBy("createdAt", "desc"))); let activeKrId = ""; snap.forEach(doc => { const d = doc.data(); if(d.relasi_tahun_pelajaran === tpVal) { const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = d.nama_kurikulum; if(d.status_aktif === "Aktif") { opt.selected = true; activeKrId = doc.id; } krSelect.appendChild(opt); } }); if(activeKrId) krSelect.value = activeKrId; loadDaftarRombel(); } catch {}
+                    };
+                    window.bukaFormRombel = async function() {
+                        document.getElementById('viewTabelRombel').style.display = 'none'; document.getElementById('viewFormRombel').style.display = 'block'; document.getElementById('formRombelMaster').reset(); document.getElementById('rombel_id_hidden').value = '';
+                        window.rombelSiswaList = []; window.rombelMapelList = []; document.getElementById('siswaRombelContainer').innerHTML = ''; document.getElementById('tbodyRombelMapel').innerHTML = '';
+                        const tpId = document.getElementById('filter_tp_rombel').value; const krId = document.getElementById('filter_kurikulum_rombel').value;
+                        try {
+                            window.siswaSudahAdaRombel.clear(); const rAllSnap = await getDocs(collection(db, "rombel")); rAllSnap.forEach(rDoc => { const rData = rDoc.data(); if(rData.tp_id === tpId && rData.kurikulum_id === krId) { (rData.siswa_ids || []).forEach(sId => window.siswaSudahAdaRombel.add(sId)); } });
+                            const krSnap = await getDoc(doc(db, "kurikulum", krId)); const jenjangSelect = document.getElementById('rombel_jenjang');
+                            if(jenjangSelect && krSnap.exists()) { jenjangSelect.innerHTML = ''; const maxJenjang = krSnap.data().jumlah_jenjang || 1; for(let j=1; j<=maxJenjang; j++) { const opt = document.createElement('option'); opt.value = j; opt.innerText = `Jenjang Tingkat ${j}`; jenjangSelect.appendChild(opt); } }
+                            const tSnap = await getDocs(query(collection(db, "teachers"), orderBy("nama_lengkap", "asc"))); const waliSelect = document.getElementById('rombel_wali_id'); const pengampuSelect = document.getElementById('select_tambah_guru_pengampu'); if(waliSelect) waliSelect.innerHTML = '<option value="">-- Pilih Wali Kelas --</option>'; if(pengampuSelect) pengampuSelect.innerHTML = '<option value="">-- Pilih Guru Pengampu --</option>';
+                            tSnap.forEach(tDoc => { const t = tDoc.data(); const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`; const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) waliSelect.appendChild(optW); const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect) pengampuSelect.appendChild(optP); });
+                            const sSnap = await getDocs(query(collection(db, "murid"), orderBy("nama_lengkap", "asc"))); window.masterSiswaArray = []; sSnap.forEach(sDoc => { const s = sDoc.data(); window.masterSiswaArray.push({ id: sDoc.id, nama: s.nama_lengkap, nisn: s.nisn }); }); refreshSiswaDropdownOptions();
+                            const mSnap = await getDocs(query(collection(db, "matapelajaran"), orderBy("createdAt", "asc"))); window.masterMapelArray = []; const mSelect = document.getElementById('select_tambah_mapel'); if(mSelect) mSelect.innerHTML = '<option value="">-- Pilih Mapel --</option>';
+                            mSnap.forEach(mDoc => { const m = mDoc.data(); if(m.tipe === 'mapel' && m.tp_id === tpId && m.kurikulum_id === krId) { window.masterMapelArray.push({ id: mDoc.id, nama: m.nama, kode: m.kode_pendek, parent_id: m.parent_id }); const optM = document.createElement('option'); optM.value = mDoc.id; optM.innerText = `${m.nama} [${m.kode_pendek}]`; if(mSelect) mSelect.appendChild(optM); } });
+                        } catch {}
+                    };
+                    window.kembaliKeTabelRombel = function() { document.getElementById('viewFormRombel').style.display = 'none'; document.getElementById('viewTabelRombel').style.display = 'block'; loadDaftarRombel(); };
+                    function refreshSiswaDropdownOptions() {
+                        const siswaSelect = document.getElementById('select_tambah_siswa'); if(!siswaSelect) return; siswaSelect.innerHTML = '<option value="">-- Pilih Siswa --</option>';
+                        window.masterSiswaArray.forEach(sObj => { const sudahAdaDiRombelLain = window.siswaSudahAdaRombel.has(sObj.id); const bagianDariRombelIni = window.rombelSiswaList.includes(sObj.id); if (!sudahAdaDiRombelLain || bagianDariRombelIni) { const optS = document.createElement('option'); optS.value = sObj.id; optS.innerText = `${sObj.nama} (NIS: ${sObj.id})`; siswaSelect.appendChild(optS); } });
+                    }
+                    window.addSiswaToRombelList = function() { const sId = document.getElementById('select_tambah_siswa').value; if(!sId) return; if(window.rombelSiswaList.includes(sId)) { alert("Siswa sudah masuk daftar."); return; } window.rombelSiswaList.push(sId); renderSiswaBadges(); };
+                    window.removeSiswaFromRombelList = function(sId) { window.rombelSiswaList = window.rombelSiswaList.filter(id => id !== sId); renderSiswaBadges(); };
+                    function renderSiswaBadges() { const container = document.getElementById('siswaRombelContainer'); if(!container) return; container.innerHTML = ''; window.rombelSiswaList.forEach(id => { const sObj = window.masterSiswaArray.find(item => item.id === id); if(sObj) { const span = document.createElement('span'); span.className = 'tag-item'; span.innerHTML = `${sObj.nama} <span class="remove-btn" onclick="removeSiswaFromRombelList('${id}')">&times;</span>`; container.appendChild(span); } }); refreshSiswaDropdownOptions(); }
+                    window.addMapelToRombelList = function() { const mId = document.getElementById('select_tambah_mapel').value; const gId = document.getElementById('select_tambah_guru_pengampu').value; if(!mId || !gId) { alert("Pilih Mapel dan Guru."); return; } if(window.rombelMapelList.some(item => item.mapel_id === mId)) { alert("Mapel sudah ada."); return; } window.rombelMapelList.push({ mapel_id: mId, guru_id: gId }); renderRombelMapelTable(); };
+                    window.removeMapelFromRombelList = function(mId) { window.rombelMapelList = window.rombelMapelList.filter(item => item.mapel_id !== mId); renderRombelMapelTable(); };
+                    function renderRombelMapelTable() {
+                        const tbody = document.getElementById('tbodyRombelMapel'); if(!tbody) return; tbody.innerHTML = ''; const pengampuSelect = document.getElementById('select_tambah_guru_pengampu');
+                        window.rombelMapelList.forEach(item => { const mObj = window.masterMapelArray.find(m => m.id === item.mapel_id); let gName = "Guru Tidak Dikenal"; if(pengampuSelect) { const opt = Array.from(pengampuSelect.options).find(o => o.value === item.guru_id); if(opt) gName = opt.innerText; } if(mObj) { const tr = document.createElement('tr'); tr.innerHTML = `<td><code>${mObj.kode}</code></td><td><strong>${mObj.nama}</strong></td><td>${gName}</td><td><button type="button" class="btn-delete-mp" onclick="removeMapelFromRombelList('${item.mapel_id}')">&times;</button></td>`; tbody.appendChild(tr); } });
+                    }
+                    async function loadDaftarRombel() {
+                        const tpId = document.getElementById('filter_tp_rombel').value; const krId = document.getElementById('filter_kurikulum_rombel').value; const tbody = document.getElementById('tbodyRombel'); if(!tbody) return; if(!tpId || !krId) { tbody.innerHTML = '<tr><td>Silakan filter.</td></tr>'; return; } tbody.innerHTML = '<tr><td>Memuat...</td></tr>';
+                        try {
+                            const snap = await getDocs(collection(db, "rombel")); tbody.innerHTML = ''; let idx = 1; let empty = true; const tSnap = await getDocs(collection(db, "teachers")); const teachersMap = {}; tSnap.forEach(doc => { teachersMap[doc.id] = doc.data().nama_lengkap; });
+                            snap.forEach(d => { const r = d.data(); if(r.tp_id === tpId && r.kurikulum_id === krId) { empty = false; const tr = document.createElement('tr'); const wName = teachersMap[r.wali_kelas_id] || r.wali_kelas_id; tr.innerHTML = `<td>${idx++}</td><td><code>${d.id}</code></td><td>Tingkat ${r.jenjang}</td><td><strong>${r.nama_rombel}</strong></td><td><strong>${wName}</strong></td><td>${(r.siswa_ids || []).length} Siswa</td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editRombel('${d.id}')">✏️</button><button class="btn-delete" onclick="hapusRombel('${d.id}')">🗑️</button></div></td>`; tbody.appendChild(tr); } }); if(empty) tbody.innerHTML = '<tr><td>Kosong.</td></tr>';
+                        } catch { tbody.innerHTML = '<tr><td>Gagal memuat.</td></tr>'; }
+                    }
+                    window.simpanStrukturRombel = async function(e) {
+                        e.preventDefault(); const name = document.getElementById('rombel_nama').value.trim(); const jg = document.getElementById('rombel_jenjang').value; const wali = document.getElementById('rombel_wali_id').value; const isEdit = document.getElementById('rombel_id_hidden').value; if(!name || !jg || !wali) { alert("Lengkapi data."); return; }
+                        const payload = { nama_rombel: name, jenjang: parseInt(jg), wali_kelas_id: wali, tp_id: document.getElementById('filter_tp_rombel').value, kurikulum_id: document.getElementById('filter_kurikulum_rombel').value, siswa_ids: window.rombelSiswaList, mapel_paket: window.rombelMapelList, updatedAt: serverTimestamp() }; const targetId = isEdit ? isEdit : "RB_" + Date.now().toString().slice(-6);
+                        try { if(!isEdit) payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "rombel", targetId), payload, { merge: true }); alert("Disimpan!"); kembaliKeTabelRombel(); } catch {}
+                    };
+                    window.editRombel = async function(id) { await window.bukaFormRombel(); document.getElementById('formRombelTitle').innerText = "Edit Data Rombel"; document.getElementById('rombel_id_hidden').value = id; try { const snap = await getDoc(doc(db, "rombel", id)); if(snap.exists()) { const d = snap.data(); document.getElementById('rombel_nama').value = d.nama_rombel || ''; document.getElementById('rombel_jenjang').value = d.jenjang || 1; document.getElementById('rombel_wali_id').value = d.wali_kelas_id || ''; window.rombelSiswaList = d.siswa_ids || []; window.rombelMapelList = d.mapel_paket || []; renderSiswaBadges(); renderRombelMapelTable(); } } catch { alert("Gagal."); } };
+                    window.hapusRombel = async function(id) { if(confirm("Hapus?")) { try { await deleteDoc(doc(db, "rombel", id)); loadDaftarRombel(); } catch {} } };
                     break;
 
                 default:
