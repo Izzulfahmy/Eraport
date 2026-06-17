@@ -8,7 +8,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;600;700&family=Syne:wght@800&display=swap" rel="stylesheet">
 
     <script src="https://bossanova.uk/jspreadsheet/v4/jexcel.js"></script>
     <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v4/jexcel.css" type="text/css" />
@@ -19,21 +19,21 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body { background-color: #fffdf5; color: #000000; }
         
-        /* IMPLMENTASI DESAIN NEUBRUTALISM UNTUK HALAMAN AUTH */
+        /* IMPLEMENTASI STYLE NEUBRUTALISM */
         .auth-page { 
             display: none; 
             justify-content: center; 
             align-items: center; 
             height: 100vh; 
             padding: 20px; 
-            background-color: #ffd23f; /* Dominan Hero Background Yellow */
+            background-color: #ffd23f; /* Secondary Brand Accent */
         }
         .auth-container { 
             background: #fffdf5; /* Neutral Surface */
             padding: 40px 30px; 
             border: 4px solid #000000; /* Heavy Black Outline */
             border-radius: 0px; /* Angular & Square Corners */
-            box-shadow: 8px 8px 0px #000000; /* Hard Shadow Offset (No Blur) */
+            box-shadow: 8px 8px 0px #000000; /* Hard Shadow Offset */
             width: 100%; 
             max-width: 420px; 
         }
@@ -63,7 +63,7 @@
             width: 100%; 
             padding: 12px 16px; 
             border: 3px solid #000000; 
-            border-radius: 0px; /* Square Corners */
+            border-radius: 0px; 
             font-size: 16px; 
             color: #000000;
             background-color: #ffffff;
@@ -71,13 +71,13 @@
         }
         .form-group input:focus {
             outline: none;
-            background-color: #7fdde0; /* Cyan Accent Interrupt on Focus */
+            background-color: #7fdde0; /* Cyan Accent Focus Interrupt */
             box-shadow: 4px 4px 0px #000000;
         }
         .btn-submit { 
             width: 100%; 
             padding: 12px; 
-            background-color: #ff6b6b; /* Coral Accent/Tertiary Button */
+            background-color: #ff6b6b; /* Coral Accent Button */
             color: #000000; 
             border: 3px solid #000000; 
             border-radius: 0px; 
@@ -90,7 +90,7 @@
             transition: all 0.1s ease;
         }
         .btn-submit:hover { 
-            background-color: #7fdde0; /* Cyan Hover Interrupt */
+            background-color: #7fdde0; 
             transform: translate(-2px, -2px);
             box-shadow: 6px 6px 0px #000000;
         }
@@ -99,38 +99,116 @@
             box-shadow: 2px 2px 0px #000000;
         }
 
-        /* DASHBOARD & NAVBAR WORKSPACE LAYOUT */
+        /* WORKSPACE DASHBOARD LAYOUT */
         #dashboard-page { display: none; height: 100vh; overflow-y: auto; display: flex; flex-direction: column; }
-        .navbar { background-color: #ffffff; height: 60px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e0e0e0; position: sticky; top: 0; z-index: 1000; }
+        .navbar { 
+            background-color: #ffffff; 
+            padding: 10px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 4px solid #000000; 
+            position: sticky; 
+            top: 0; 
+            z-index: 1000; 
+        }
         .nav-header-top { display: flex; justify-content: space-between; align-items: center; width: auto; }
         .nav-left { display: flex; align-items: center; gap: 25px; flex: 1; }
-        .logo-brand { font-size: 18px; font-weight: bold; color: #007bff; white-space: nowrap; }
-        .nav-menu { display: flex; list-style: none; gap: 5px; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .logo-brand { 
+            font-family: 'Space Grotesk', sans-serif; 
+            font-size: 22px; 
+            font-weight: bold; 
+            color: #000000; 
+            text-transform: uppercase;
+            white-space: nowrap; 
+        }
+        .nav-menu { display: flex; list-style: none; gap: 8px; overflow-x: auto; scrollbar-width: none; }
         .nav-menu::-webkit-scrollbar { display: none; }
-        .nav-item { padding: 8px 14px; color: #555; text-decoration: none; font-size: 14px; font-weight: 500; border-radius: 4px; white-space: nowrap; cursor: pointer; }
-        .nav-item:hover { background-color: #f1f5f9; color: #007bff; }
-        .nav-item.active { background-color: #e0f2fe; color: #0369a1; font-weight: bold; }
+        
+        .nav-item { 
+            padding: 8px 14px; 
+            color: #000000; 
+            text-decoration: none; 
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px; 
+            font-weight: 700; 
+            border: 2px solid #000000;
+            border-radius: 0px;
+            background-color: #ffffff;
+            white-space: nowrap; 
+            cursor: pointer; 
+            transition: all 0.1s;
+        }
+        .nav-item:hover { background-color: #ffd23f; transform: translate(-1px, -1px); box-shadow: 2px 2px 0px #000000; }
+        .nav-item.active { background-color: #ff6b6b; color: #000000; box-shadow: 3px 3px 0px #000000; }
+        
         .nav-right { display: flex; align-items: center; position: relative; }
-        .profile-logo { width: 32px; height: 32px; background-color: #6c757d; border-radius: 50%; cursor: pointer; display: flex; justify-content: center; align-items: center; color: white; font-weight: bold; font-size: 14px; }
-        .dropdown-menu { display: none; position: absolute; top: 42px; right: 0; background-color: white; border: 1px solid #ccc; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 1001; min-width: 120px; }
-        .dropdown-menu button { background: none; border: none; padding: 10px 20px; width: 100%; text-align: left; cursor: pointer; font-size: 14px; }
-        .dropdown-menu button:hover { background-color: #f8f9fa; }
+        .profile-logo { 
+            width: 36px; 
+            height: 36px; 
+            background-color: #7fdde0; 
+            border: 2px solid #000000;
+            border-radius: 0px; 
+            cursor: pointer; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            color: #000000; 
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: bold; 
+            font-size: 16px; 
+            box-shadow: 2px 2px 0px #000000;
+        }
+        .dropdown-menu { 
+            display: none; 
+            position: absolute; 
+            top: 46px; 
+            right: 0; 
+            background-color: #fffdf5; 
+            border: 3px solid #000000; 
+            border-radius: 0px; 
+            box-shadow: 4px 4px 0px #000000; 
+            z-index: 1001; 
+            min-width: 140px; 
+        }
+        .dropdown-menu button { 
+            background: none; 
+            border: none; 
+            padding: 12px 20px; 
+            width: 100%; 
+            text-align: left; 
+            cursor: pointer; 
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 14px; 
+            color: #000000;
+        }
+        .dropdown-menu button:hover { background-color: #ff4d4d; }
         .show { display: block !important; }
-        .dashboard-content { padding: 20px; width: 100%; max-width: 1200px; margin: 0 auto; flex: 1; }
-        .content-card { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); min-height: 250px; }
-        .section-title { font-size: 16px; color: #007bff; border-bottom: 2px solid #e0e0e0; padding-bottom: 8px; margin-bottom: 15px; font-weight: bold; }
-        .read-field { display: flex; flex-direction: column; gap: 4px; border-bottom: 1px solid #f4f4f4; padding-bottom: 8px; }
-        .read-field .label { font-size: 12px; font-weight: 600; color: #777; }
-        .read-field .value { font-size: 14px; color: #333; font-weight: 500; word-break: break-word; padding: 4px 0; }
+        
+        .dashboard-content { padding: 30px 20px; width: 100%; max-width: 1200px; margin: 0 auto; flex: 1; }
+        
+        /* Neubrutalist Card Base */
+        .content-card { 
+            background: #ffffff; 
+            padding: 30px; 
+            border: 4px solid #000000; 
+            border-radius: 4px; 
+            box-shadow: 6px 6px 0px #000000;
+            min-height: 250px; 
+        }
+        .content-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
         @media (max-width: 768px) {
-            .navbar { padding: 10px 15px; height: auto; flex-direction: column; align-items: stretch; gap: 8px; }
-            .nav-header-top { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-            .nav-left { width: 100%; flex-direction: column; align-items: flex-start; gap: 8px; }
-            .logo-brand { font-size: 16px; }
-            .profile-logo { width: 28px; height: 28px; font-size: 12px; }
-            .dropdown-menu { top: 35px; }
+            .navbar { padding: 10px; flex-direction: column; align-items: stretch; gap: 10px; }
+            .nav-header-top { width: 100%; display: flex; justify-content: space-between; }
+            .nav-left { width: 100%; flex-direction: column; align-items: flex-start; gap: 10px; }
             .nav-menu { width: 100%; padding-bottom: 4px; }
-            .nav-item { padding: 6px 12px; font-size: 13px; }
             .dashboard-content { padding: 15px; }
         }
     </style>
@@ -226,7 +304,7 @@
             
             switch(menuName) {
                 case 'beranda':
-                    contentArea.innerHTML = `<h3>Beranda</h3><p>Ini adalah halaman utama dashboard Panel Administrator Eraport.</p>`; break;
+                    contentArea.innerHTML = `<h3>Beranda</h3><p style="font-size: 16px; margin-top: 10px;">Ini adalah halaman utama dashboard Panel Administrator Eraport.</p>`; break;
                 case 'profil-sekolah':
                     contentArea.innerHTML = `<p>Memuat data...</p>`;
                     try {
@@ -286,7 +364,7 @@
                         try {
                             const snap = await getDocs(query(collection(db, "murid"), orderBy("createdAt", "desc"))); tbody.innerHTML = ''; let idx = 1;
                             if(snap.empty) { tbody.innerHTML = '<tr><td>Belum ada data murid terdaftar.</td></tr>'; return; }
-                            snap.forEach(d => { const m = d.data(); const tr = document.createElement('tr'); tr.innerHTML = `<td>${idx++}</td><td><strong>${d.id}</strong> / ${m.nisn || '-'}</td><td><strong>${m.nama_lengkap}</strong></td><td>${m.id_kelas || '-'} / Absen: ${m.nomor_absen || '-'}</td><td><span style="padding:4px 8px; font-size:12px; border-radius:4px; font-weight:bold; background-color:${m.status_keaktifan === 'Aktif' ? '#d4edda; color:#155724;' : '#f8d7da; color:#721c24;'}">${m.status_keaktifan || 'Aktif'}</span></td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editMurid('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusMurid('${d.id}')">Hapus</button></div></td>`; tbody.appendChild(tr); });
+                            snap.forEach(d => { const m = d.data(); const tr = document.createElement('tr'); tr.innerHTML = `<td>${idx++}</td><td><strong>${d.id}</strong> / ${m.nisn || '-'}</td><td><strong>${m.nama_lengkap}</strong></td><td>${m.id_kelas || '-'} / Absen: ${m.nomor_absen || '-'}</td><td><span style="padding:4px 8px; font-size:12px; border-radius:0px; border:2px solid #000; font-weight:bold; background-color:${m.status_keaktifan === 'Aktif' ? '#7fdde0' : '#ff4d4d'}">${m.status_keaktifan || 'Aktif'}</span></td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editMurid('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusMurid('${d.id}')">Hapus</button></div></td>`; tbody.appendChild(tr); });
                         } catch { tbody.innerHTML = '<tr><td>Gagal memuat list murid.</td></tr>'; }
                     }
                     window.simpanDataMurid = async function(e) {
@@ -298,6 +376,10 @@
                             else { const cekExist = await getDoc(doc(db, "murid", targetNisId)); if(cekExist.exists()) { alert(`Gagal! NIS sudah terdaftar.`); if(btn) btn.disabled = false; return; } payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "murid", targetNisId), payload); alert("Murid baru disimpan!"); }
                             kembaliKeTabelMurid();
                         } catch { alert("Gagal memproses data."); } finally { if(btn) btn.disabled = false; }
+                    };
+                    window.editMurid = async function(id) {
+                        bukaFormMurid(); document.getElementById('formMuridTitle').innerText = "Edit Data Murid"; document.getElementById('murid_id_hidden').value = id;
+                        try { const snap = await getDoc(doc(db, "murid", id)); if(snap.exists()) { const d = snap.data(); Object.keys(d).forEach(k => { const el = document.getElementById(k); if(el) el.value = d[k]; }); document.getElementById('nis').disabled = true; } } catch { alert("Gagal manaat."); }
                     };
                     window.editMurid = async function(id) {
                         bukaFormMurid(); document.getElementById('formMuridTitle').innerText = "Edit Data Murid"; document.getElementById('murid_id_hidden').value = id;
@@ -484,13 +566,13 @@
                         const tpId = document.getElementById('filter_tp_rombel').value; const krId = document.getElementById('filter_kurikulum_rombel').value; const tbody = document.getElementById('tbodyRombel'); if(!tbody) return; if(!tpId || !krId) { tbody.innerHTML = '<tr><td>Silakan filter.</td></tr>'; return; } tbody.innerHTML = '<tr><td>Memuat...</td></tr>';
                         try {
                             const snap = await getDocs(collection(db, "rombel")); tbody.innerHTML = ''; let idx = 1; let empty = true; const tSnap = await getDocs(collection(db, "teachers")); const teachersMap = {}; tSnap.forEach(doc => { teachersMap[doc.id] = doc.data().nama_lengkap; });
-                            snap.forEach(d => { const r = d.data(); if(r.tp_id === tpId && r.kurikulum_id === krId) { empty = false; const tr = document.createElement('tr'); const wName = teachersMap[r.wali_kelas_id] || r.wali_kelas_id; tr.innerHTML = `<td>${idx++}</td><td><code>${d.id}</code></td><td>Tingkat ${r.jenjang}</td><td><strong>${r.nama_rombel}</strong></td><td><strong>${wName}</strong></td><td>${(r.siswa_ids || []).length} Siswa</td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editRombel('${d.id}')">✏️</button><button class="btn-delete" onclick="hapusRombel('${d.id}')">🗑️</button></div></td>`; tbody.appendChild(tr); } }); if(empty) tbody.innerHTML = '<tr><td>Kosong.</td></tr>';
+                            snap.forEach(d => { const r = d.data(); if(r.tp_id === tpId && r.kurikulum_id === krId) { empty = false; const tr = document.createElement('tr'); const wName = teachersMap[r.wali_kelas_id] || r.wali_kelas_id; tr.innerHTML = `<td>${idx++}</td><td><code>${d.id}</code></td><td>Tingkat ${r.jenjang}</td><td><strong>${r.nama_rombel}</strong></td><td><strong>${wName}</strong></td><td>${(r.siswa_ids || []).length} Siswa</td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editRombel('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusRombel('${d.id}')">Hapus</button></div></td>`; tbody.appendChild(tr); } }); if(empty) tbody.innerHTML = '<tr><td>Kosong.</td></tr>';
                         } catch { tbody.innerHTML = '<tr><td>Gagal memuat.</td></tr>'; }
                     }
                     window.simpanStrukturRombel = async function(e) {
                         e.preventDefault(); const name = document.getElementById('rombel_nama').value.trim(); const jg = document.getElementById('rombel_jenjang').value; const wali = document.getElementById('rombel_wali_id').value; const isEdit = document.getElementById('rombel_id_hidden').value; if(!name || !jg || !wali) { alert("Lengkapi data."); return; }
                         const payload = { nama_rombel: name, jenjang: parseInt(jg), wali_kelas_id: wali, tp_id: document.getElementById('filter_tp_rombel').value, kurikulum_id: document.getElementById('filter_kurikulum_rombel').value, siswa_ids: window.rombelSiswaList, mapel_paket: window.rombelMapelList, updatedAt: serverTimestamp() }; const targetId = isEdit ? isEdit : "RB_" + Date.now().toString().slice(-6);
-                        try { if(!isEdit) payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "rombel", targetId), payload, { merge: true }); alert("Disimpan!"); kembaliKeTabelRombel(); } catch {}
+                        try { if(!isEdit) payload['createdAt'] = serverTimestamp(); await setDoc(doc(doc, "rombel", targetId), payload, { merge: true }); alert("Disimpan!"); kembaliKeTabelRombel(); } catch {}
                     };
                     window.editRombel = async function(id) { await window.bukaFormRombel(); document.getElementById('formRombelTitle').innerText = "Edit Data Rombel"; document.getElementById('rombel_id_hidden').value = id; try { const snap = await getDoc(doc(db, "rombel", id)); if(snap.exists()) { const d = snap.data(); document.getElementById('rombel_nama').value = d.nama_rombel || ''; document.getElementById('rombel_jenjang').value = d.jenjang || 1; document.getElementById('rombel_wali_id').value = d.wali_kelas_id || ''; window.rombelSiswaList = d.siswa_ids || []; window.rombelMapelList = d.mapel_paket || []; renderSiswaBadges(); renderRombelMapelTable(); } } catch { alert("Gagal."); } };
                     window.hapusRombel = async function(id) { if(confirm("Hapus?")) { try { await deleteDoc(doc(db, "rombel", id)); loadDaftarRombel(); } catch {} } };
@@ -516,7 +598,7 @@
                     window.kembaliKeTabelRombelPenilaian = function() { 
                         if(window.activeJSpreadsheetInstance) { window.activeJSpreadsheetInstance.destroy(); window.activeJSpreadsheetInstance = null; }
                         document.getElementById('viewFormInputNilai').style.display = 'none'; 
-                        document.getElementById('wrapperLayoutSplitPenilaian').style.display = 'grid'; // Kembalikan split card berdampingan
+                        document.getElementById('wrapperLayoutSplitPenilaian').style.display = 'grid'; 
                         loadDaftarRombelPenilaian(); 
                     };
                     
@@ -618,7 +700,7 @@
                             const listTopik = items.filter(i => i.tipe_komponen === 'topik'); 
                             const listTP = items.filter(i => i.tipe_komponen === 'tp');
                             
-                            if(listTopik.length === 0) { container.innerHTML = '<p style="color:#999; text-align:center; font-size:12px; padding:15px;">Belum ada nama Topik/Bab dibuat.</p>'; return; }
+                            if(listTopik.length === 0) { container.innerHTML = '<p style="color:#000; text-align:center; font-size:12px; padding:15px;">Belum ada nama Topik/Bab dibuat.</p>'; return; }
                             listTopik.forEach(topik => {
                                 const opt = document.createElement('option'); opt.value = topik.id; opt.innerText = topik.nama_topik; selectWadahTopik.appendChild(opt);
                                 

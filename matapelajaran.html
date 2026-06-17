@@ -1,161 +1,36 @@
 <style>
-    .mp-container {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-    .filter-bar {
-        background: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-    }
-    .filter-field {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        min-width: 200px;
-        flex: 1;
-    }
-    .filter-field label {
-        font-size: 12px;
-        font-weight: 600;
-        color: #666;
-    }
-    .filter-field select {
-        padding: 8px 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 14px;
-        background-color: #fff;
-    }
+    .mp-container { display: flex; flex-direction: column; gap: 20px; }
+    .filter-bar { background: #ffffff; padding: 15px 20px; border: 3px solid #000000; box-shadow: 4px 4px 0px #000000; display: flex; gap: 20px; flex-wrap: wrap; }
+    .filter-field { display: flex; flex-direction: column; gap: 5px; min-width: 200px; flex: 1; }
+    .filter-field label { font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+    .filter-field select { padding: 8px 10px; border: 2px solid #000000; font-size: 14px; background-color: #fff; }
     
-    .action-bar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-    .btn-group-top {
-        display: flex;
-        gap: 10px;
-    }
-    .btn-primary {
-        padding: 10px 16px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 13px;
-    }
-    .btn-primary:hover { background-color: #0056b3; }
+    .action-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .btn-group-top { display: flex; gap: 10px; }
     
-    .btn-success {
-        padding: 10px 16px;
-        background-color: #28a745;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 13px;
-    }
-    .btn-success:hover { background-color: #218838; }
+    .btn-primary { padding: 10px 16px; background-color: #ffd23f; color: black; border: 2px solid #000; font-family: 'Space Grotesk', sans-serif; font-weight: 700; cursor: pointer; }
+    .btn-success { padding: 10px 16px; background-color: #7fdde0; color: black; border: 2px solid #000; font-family: 'Space Grotesk', sans-serif; font-weight: 700; cursor: pointer; }
+    .btn-secondary { padding: 10px 20px; background-color: #ffffff; color: black; border: 2px solid #000; font-family: 'Space Grotesk', sans-serif; font-weight: 700; cursor: pointer; }
 
-    .btn-secondary {
-        padding: 10px 20px;
-        background-color: #6c757d;
-        color: white;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: bold;
-        font-size: 14px;
-    }
-    .btn-secondary:hover { background-color: #5a6268; }
-
-    /* Desain Tabel Bersub/Kelompok */
-    .table-responsive {
-        width: 100%;
-        overflow-x: auto;
-        background: white;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    .table-mp {
-        width: 100%;
-        border-collapse: collapse;
-        text-align: left;
-        font-size: 14px;
-    }
-    .table-mp th, .table-mp td {
-        padding: 12px 15px;
-        border-bottom: 1px solid #e0e0e0;
-    }
-    .table-mp th {
-        background-color: #f8f9fa;
-        color: #333;
-        font-weight: bold;
-    }
-    .tr-grup {
-        background-color: #f1f5f9;
-        font-weight: bold;
-    }
-    .tr-grup td {
-        color: #0369a1;
-        border-bottom: 2px solid #cbd5e1;
-    }
-    .td-sub-mapel {
-        padding-left: 40px !important; /* Dorong ke kanan untuk menandakan sub-mapel */
-    }
-
-    /* Form Card */
-    .form-card {
-        background: white;
-        padding: 25px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    .form-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-        gap: 15px 20px;
-    }
-    .form-field {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
-    .form-field label {
-        font-size: 13px;
-        font-weight: 600;
-        color: #555;
-    }
-    .form-field input, .form-field select {
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 14px;
-    }
+    .table-responsive { width: 100%; overflow-x: auto; background: white; border: 3px solid #000000; box-shadow: 4px 4px 0px #000000; }
+    .table-mp { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+    .table-mp th, .table-mp td { padding: 12px 15px; border: 2px solid #000000; }
+    .table-mp th { background-color: #ff6b6b; color: black; font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
     
-    .btn-actions-mapel {
-        display: flex;
-        gap: 5px;
-    }
-    .btn-edit-mp {
-        background-color: #ffc107; color: #333; border: none;
-        padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;
-    }
-    .btn-delete-mp {
-        background-color: #dc3545; color: white; border: none;
-        padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold;
-    }
+    .tr-grup { background-color: #fffdf5; font-weight: bold; }
+    .tr-grup td { color: #000000; border-bottom: 3px solid #000000; }
+    .td-sub-mapel { padding-left: 40px !important; }
+
+    .form-card { background: white; padding: 25px; border: 3px solid #000000; box-shadow: 4px 4px 0px #000000; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 15px 20px; }
+    .form-field { display: flex; flex-direction: column; gap: 5px; }
+    .form-field label { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; }
+    .form-field input, .form-field select { padding: 10px; border: 2px solid #000000; }
+    .form-field input:focus, .form-field select:focus { background-color: #7fdde0; outline: none; }
+    
+    .btn-actions-mapel { display: flex; gap: 5px; }
+    .btn-edit-mp { background-color: #ffd23f; border: 2px solid #000; padding: 4px 8px; font-weight: bold; cursor: pointer; }
+    .btn-delete-mp { background-color: #ff4d4d; color: white; border: 2px solid #000; padding: 4px 8px; font-weight: bold; cursor: pointer; }
 
     @media (max-width: 768px) {
         .filter-bar { flex-direction: column; gap: 10px; }
@@ -166,24 +41,22 @@
 </style>
 
 <div class="mp-container">
-    
     <div class="filter-bar">
         <div class="filter-field">
             <label>Tahun Pelajaran</label>
-            <select id="filter_tp_mapel" onchange="handleFilterTpChange()">
-                </select>
+            <select id="filter_tp_mapel" onchange="handleFilterTpChange()"></select>
         </div>
         <div class="filter-field">
             <label>Kurikulum Terrelasi</label>
             <select id="filter_kurikulum_mapel" onchange="loadDaftarMapel()">
                 <option value="">-- Pilih Kurikulum --</option>
-                </select>
+            </select>
         </div>
     </div>
 
     <div id="viewTabelMP">
         <div class="action-bar" style="margin-bottom: 15px;">
-            <h3 style="font-size: 18px; color: #333;">Daftar Struktur Muatan Mata Pelajaran</h3>
+            <h3 style="font-family: 'Space Grotesk'; font-size: 18px;">Daftar Struktur Muatan Mata Pelajaran</h3>
             <div class="btn-group-top">
                 <button class="btn-primary" onclick="bukaFormGrup()">+ Buat Grup Baru</button>
                 <button class="btn-success" id="btnTambahMapelTop" onclick="bukaFormMapel()" disabled>+ Tambah Mata Pelajaran</button>
@@ -201,7 +74,7 @@
                     </tr>
                 </thead>
                 <tbody id="tbodyMP">
-                    <tr><td colspan="4" style="text-align:center; color:#999;">Silakan pilih Tahun Pelajaran dan Kurikulum terlebih dahulu.</td></tr>
+                    <tr><td colspan="4" style="text-align:center; color:#000;">Silakan pilih Tahun Pelajaran dan Kurikulum terlebih dahulu.</td></tr>
                 </tbody>
             </table>
         </div>
@@ -209,7 +82,7 @@
 
     <div id="viewFormGrup" style="display: none;">
         <div class="action-bar" style="margin-bottom: 15px;">
-            <h3 id="formGrupTitle" style="font-size: 18px; color: #333;">Buat Kelompok / Grup Mapel Baru</h3>
+            <h3 id="formGrupTitle" style="font-family: 'Space Grotesk'; font-size: 18px;">Buat Kelompok / Grup Mapel Baru</h3>
             <button class="btn-secondary" onclick="kembaliKeTabelMP()">Kembali</button>
         </div>
         <div class="form-card">
@@ -218,7 +91,7 @@
                 <div class="form-grid">
                     <div class="form-field">
                         <label>Nama Grup / Kelompok Mata Pelajaran</label>
-                        <input type="text" id="grup_nama" placeholder="Contoh: Kelompok A (Muatan Nasional)" required>
+                        <input type="text" id="grup_nama" placeholder="Contoh: Kelompok A" required>
                     </div>
                     <div class="form-field">
                         <label>Kode Urut Kelompok (Opsional)</label>
@@ -235,7 +108,7 @@
 
     <div id="viewFormMapel" style="display: none;">
         <div class="action-bar" style="margin-bottom: 15px;">
-            <h3 id="formMapelTitle" style="font-size: 18px; color: #333;">Tambah Mata Pelajaran Baru</h3>
+            <h3 id="formMapelTitle" style="font-family: 'Space Grotesk'; font-size: 18px;">Tambah Mata Pelajaran Baru</h3>
             <button class="btn-secondary" onclick="kembaliKeTabelMP()">Kembali</button>
         </div>
         <div class="form-card">
@@ -250,11 +123,11 @@
                     </div>
                     <div class="form-field">
                         <label>Nama Mata Pelajaran</label>
-                        <input type="text" id="mapel_nama" placeholder="Contoh: Pendidikan Pancasila" required>
+                        <input type="text" id="mapel_nama" required>
                     </div>
                     <div class="form-field">
                         <label>Kode Pendek Mata Pelajaran</label>
-                        <input type="text" id="mapel_kode_pendek" placeholder="Contoh: PPKN / BIN / MAT" required>
+                        <input type="text" id="mapel_kode_pendek" required>
                     </div>
                 </div>
                 <div style="margin-top: 25px; display: flex; justify-content: flex-end; gap: 10px;">
@@ -264,5 +137,4 @@
             </form>
         </div>
     </div>
-
 </div>

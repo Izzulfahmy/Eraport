@@ -1,62 +1,41 @@
 <style>
-    /* KONTEN UTAMA & HEADER AKSI */
-    .profile-container {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-    .profile-header-action {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        padding-bottom: 15px;
-        border-bottom: 1px solid #e9ecef;
-        margin-bottom: 10px;
-    }
-    .action-header {
-        display: flex;
-        justify-content: flex-end;
-        gap: 12px;
-    }
+    .profile-container { display: flex; flex-direction: column; gap: 20px; }
+    .profile-header-action { display: flex; justify-content: flex-end; align-items: center; padding-bottom: 15px; border-bottom: 3px solid #000000; margin-bottom: 10px; }
+    .action-header { display: flex; justify-content: flex-end; gap: 12px; }
     
-    /* Desain Tombol Ikon Bundar Minimalis & Proposional */
+    /* Tombol Ikon Neubrutalism kaku */
     .btn-icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        border: none;
+        width: 44px;
+        height: 44px;
+        border: 3px solid #000000;
+        border-radius: 0px;
         cursor: pointer;
         display: flex;
         justify-content: center;
         align-items: center;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.12);
-        transition: all 0.2s ease;
+        transition: all 0.1s;
     }
-    .btn-icon:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.18);
-    }
-    .btn-icon:active { 
-        transform: translateY(0) scale(0.95); 
-    }
+    .btn-edit-mode { background-color: #ffd23f; box-shadow: 3px 3px 0px #000000; color: #000; }
+    .btn-edit-mode:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0px #000000; }
     
-    .btn-edit-mode { background-color: #ffc107; color: #212529; }
-    .btn-edit-mode:hover { background-color: #e0a800; }
+    .btn-save-mode { background-color: #7fdde0; box-shadow: 3px 3px 0px #000000; color: #000; }
+    .btn-save-mode:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0px #000000; }
     
-    .btn-save-mode { background-color: #28a745; color: white; }
-    .btn-save-mode:hover { background-color: #218838; }
-    
-    .btn-cancel-mode { background-color: #dc3545; color: white; }
-    .btn-cancel-mode:hover { background-color: #c82333; }
+    .btn-cancel-mode { background-color: #ff4d4d; box-shadow: 3px 3px 0px #000000; color: #000; }
+    .btn-cancel-mode:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0px #000000; }
 
-    /* LAYOUT FORM & DATA */
+    .btn-icon:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0px #000000; }
+
     .section-title {
-        font-size: 16px;
-        color: #007bff;
-        border-bottom: 2px solid #e0e0e0;
-        padding-bottom: 8px;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 18px;
+        color: #000000;
+        border-bottom: 3px solid #000000;
+        padding-bottom: 6px;
         margin-bottom: 15px;
-        font-weight: bold;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
     
     .info-grid {
@@ -65,34 +44,35 @@
         gap: 15px 20px;
     }
     
-    /* TAMPILAN MODE BACA (IDENTITAS STATIS) */
+    /* Mode Baca */
     .read-field {
         display: flex;
         flex-direction: column;
         gap: 4px;
-        border-bottom: 1px solid #f4f4f4;
-        padding-bottom: 8px;
+        background: #ffffff;
+        border: 2px solid #000000;
+        padding: 12px;
+        box-shadow: 3px 3px 0px #000000;
     }
     .read-field .label {
+        font-family: 'Space Grotesk', sans-serif;
         font-size: 12px;
-        font-weight: 600;
-        color: #777;
+        font-weight: 700;
+        color: #000000;
+        text-transform: uppercase;
     }
     .read-field .value {
         font-size: 14px;
-        color: #333;
+        color: #000000;
         font-weight: 500;
-        word-break: break-word;
-        padding: 4px 0;
     }
     
-    /* TAMPILAN MODE EDIT (KOTAK BOX FORM CARD) */
+    /* Mode Edit */
     .form-box-mode {
-        background-color: #ffffff;
+        background-color: #fffdf5;
         padding: 25px;
-        border-radius: 8px;
-        border: 1px solid #e0e0e0;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        border: 3px solid #000000;
+        box-shadow: 4px 4px 0px #000000;
     }
     .form-field {
         display: flex;
@@ -100,24 +80,25 @@
         gap: 6px;
     }
     .form-field label {
+        font-family: 'Space Grotesk', sans-serif;
         font-size: 13px;
-        font-weight: 600;
-        color: #444;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #000000;
     }
     .form-field input, .form-field select {
         padding: 10px 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
+        border: 2px solid #000000;
+        border-radius: 0px;
         font-size: 14px;
         color: #333;
         background-color: #fff;
         width: 100%;
-        box-sizing: border-box;
     }
     .form-field input:focus, .form-field select:focus {
-        border-color: #007bff;
+        border-color: #000000;
         outline: none;
-        box-shadow: 0 0 0 3px rgba(0,123,255,0.15);
+        background-color: #7fdde0;
     }
     
     @media (max-width: 768px) {
@@ -129,13 +110,13 @@
     <div class="profile-header-action">
         <div class="action-header">
             <button type="button" id="btnKeModeEdit" class="btn-icon btn-edit-mode" onclick="aktifkanModeEdit()" title="Edit Profil">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
             </button>
             <button type="button" id="btnBatalEdit" class="btn-icon btn-cancel-mode" style="display: none;" onclick="batalkanModeEdit()" title="Batal">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </button>
             <button type="submit" form="formProfilSekolah" id="btnSimpanProfil" class="btn-icon btn-save-mode" style="display: none;" title="Simpan Perubahan">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
             </button>
         </div>
     </div>
@@ -152,7 +133,6 @@
     </div>
 
     <form id="formProfilSekolah" onsubmit="simpanProfilSekolah(event)" style="display: none;">
-        
         <div class="form-box-mode">
             <div class="section-title">1. Data Administrasi dan Legalitas</div>
             <div class="info-grid">
@@ -197,6 +177,5 @@
                 <div class="form-field"><label>Media Sosial</label><input type="text" id="medsos"></div>
             </div>
         </div>
-        
     </form>
 </div>
