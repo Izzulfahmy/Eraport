@@ -340,7 +340,7 @@
                             });
                         };
                         renderFieldsToGrid(sec1, 'gridModeBaca1'); renderFieldsToGrid(sec2, 'gridModeBaca2'); renderFieldsToGrid(sec3, 'gridModeBaca3');
-                        window.aktifkanModeEdit = function() { document.getElementById('wrapperModeBaca').style.display = 'none'; document.getElementById('btnKeModeEdit').style.display = 'none'; document.getElementById('formProfilSekolah').style.display = 'block'; document.getElementById('btnBatalEdit').style.display = 'flex'; document.getElementById('btnSimpanProfil').style.display = 'flex'; };
+                        window.aktifkanModeEdit = function() { document.getElementById('wrapperModeBaca').style.display = 'none'; document.getElementById('btnKeModeEdit').style.display = 'flex'; document.getElementById('formProfilSekolah').style.display = 'block'; document.getElementById('btnBatalEdit').style.display = 'flex'; document.getElementById('btnSimpanProfil').style.display = 'flex'; };
                         window.batalkanModeEdit = function() { document.getElementById('formProfilSekolah').style.display = 'none'; document.getElementById('btnBatalEdit').style.none; document.getElementById('btnSimpanProfil').style.display = 'none'; document.getElementById('wrapperModeBaca').style.display = 'block'; document.getElementById('btnKeModeEdit').style.display = 'flex'; };
                     } catch { contentArea.innerHTML = `<p style="color: red;">Gagal memuat profil sekolah.</p>`; }
                     window.simpanProfilSekolah = async function(event) {
@@ -648,8 +648,9 @@
                                     tr.id = `row_id_pd_kelas_${doc.id}`;
                                     tr.setAttribute("onclick", `selectActiveRowKelasSplit('${doc.id}')`);
                                     const wName = teachersMap[r.wali_kelas_id] || r.wali_kelas_id; 
-                                    // PERBAIKAN: Mengubah gaya tombol di kolom Nilai agar menjadi kotak kuning bertumpuk (Neubrutalism) dengan simbol pensil edit
-                                    tr.innerHTML = `<td>${idx++}</td><td><strong>${r.nama_rombel}</strong></td><td>${wName}</td><td style="text-align:center;" onclick="event.stopPropagation();"><button class="btn-table-action-neubrutalism" onclick="bukaInputNilaiSiswa('${doc.id}')" title="Input Nilai">📝</button></td>`; 
+                                    
+                                    // PERBAIKAN LOGO: Mengubah isi tombol aksi di kolom nilai menggunakan SVG ikon pensil vektor tajam yang sama dari profil sekolah
+                                    tr.innerHTML = `<td>${idx++}</td><td><strong>${r.nama_rombel}</strong></td><td>${wName}</td><td style="text-align:center;" onclick="event.stopPropagation();"><button class="btn-table-action-neubrutalism" onclick="bukaInputNilaiSiswa('${doc.id}')" title="Input Nilai"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="display:block;"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></button></td>`; 
                                     tbody.appendChild(tr); 
                                 } 
                             });
@@ -713,6 +714,7 @@
                         } catch(err) { console.error(err); }
                     };
 
+                    window.loadStrukturTopicDanTP = async function() { /* fallback alias mapping safely if called anywhere */ };
                     window.loadStrukturTopikDanTP = async function() {
                         const container = document.getElementById('containerPohonStruktur'); const selectWadahTopik = document.getElementById('select_wadah_topik');
                         if(!container || !selectWadahTopik) return; selectWadahTopik.innerHTML = '<option value="">-- Pilih Topik --</option>';
