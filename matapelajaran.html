@@ -87,7 +87,7 @@
             <select id="filter_tp_mapel" onchange="handleFilterTpChange()"></select>
         </div>
         <div class="filter-field">
-            <label>Kurikulum Terrelasi</label>
+            <label>Kurikulum</label>
             <select id="filter_kurikulum_mapel" onchange="loadDaftarMapel()">
                 <option value="">-- Pilih Kurikulum --</option>
             </select>
@@ -130,11 +130,11 @@
                 <input type="hidden" id="grup_id_hidden">
                 <div class="form-grid">
                     <div class="form-field">
-                        <label>Nama Grup / Kelompok Mata Pelajaran</label>
+                        <label>Nama Kelompok Mata Pelajaran</label>
                         <input type="text" id="grup_nama" placeholder="Contoh: Kelompok A" required>
                     </div>
                     <div class="form-field">
-                        <label>Kode Urut Kelompok (Opsional)</label>
+                        <label>Kode Kelompok Pelajaran</label>
                         <input type="text" id="grup_kode" placeholder="Contoh: KEL_A">
                     </div>
                 </div>
@@ -156,7 +156,7 @@
                 <input type="hidden" id="mapel_id_hidden">
                 <div class="form-grid">
                     <div class="form-field">
-                        <label>Pilih Grup / Kelompok Wadah</label>
+                        <label>Pilih Kelompok Pelajaran</label>
                         <select id="mapel_parent_id" required>
                             <option value="">-- Pilih Kelompok --</option>
                         </select>
