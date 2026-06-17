@@ -209,7 +209,7 @@
         .jexcel tbody tr td.readonly {
             color: #000000 !important;
             opacity: 1 !important;
-            background-color: #fafdff !important; /* Warna background tipis pembeda tetapi teks tetap jelas */
+            background-color: #fafdff !important;
         }
 
         @media (max-width: 768px) {
@@ -570,7 +570,7 @@
                         const tpId = document.getElementById('filter_tp_rombel').value; const krId = document.getElementById('filter_kurikulum_rombel').value; const tbody = document.getElementById('tbodyRombel'); if(!tbody) return; if(!tpId || !krId) { tbody.innerHTML = '<tr><td>Silakan filter.</td></tr>'; return; } tbody.innerHTML = '<tr><td>Memuat...</td></tr>';
                         try {
                             const snap = await getDocs(collection(db, "rombel")); tbody.innerHTML = ''; let idx = 1; let empty = true; const tSnap = await getDocs(collection(db, "teachers")); const teachersMap = {}; tSnap.forEach(doc => { teachersMap[doc.id] = doc.data().nama_lengkap; });
-                            snap.forEach(d => { const r = d.data(); if(r.tp_id === tpId && r.kurikulum_id === krId) { empty = false; const tr = document.createElement('tr'); const wName = teachersMap[r.wali_kelas_id] || r.wali_kelas_id; tr.innerHTML = `<td>${idx++}</td><td><code>${d.id}</code></td><td>Tingkat ${r.jenjang}</td><td><strong>${r.nama_rombel}</strong></td><td><strong>${wName}</strong></td><td>${(r.siswa_ids || []).length} Siswa</td><td><div class="btn-group-actions"><button class="btn-edit" onclick="editRombel('${d.id}')">Edit</button><button class="btn-delete" onclick="hapusRombel('${d.id}')">Hapus</button></div></td>`; tbody.appendChild(tr); } }); if(empty) tbody.innerHTML = '<tr><td>Kosong.</td></tr>';
+                            snap.forEach(d => { const r = d.data(); if(r.tp_id === tpId && r.kurikulum_id === krId) { empty = false; const tr = document.createElement('tr'); const wName = teachersMap[r.wali_kelas_id] || r.wali_kelas_id; tr.innerHTML = `<td>${idx++}</td><td><code>${d.id}</code></td><td>Tingkat ${r.jenjang}</td><td><strong>${r.nama_rombel}</strong></td><td><strong>${wName}</strong></td><td>${(r.siswa_ids || []).length} Siswa</td><td><div class="btn-group-actions"><button class="btn-edit-mp" onclick="editRombel('${d.id}')">Edit</button><button class="btn-delete-mp" onclick="hapusRombel('${d.id}')">Hapus</button></div></td>`; tbody.appendChild(tr); } }); if(empty) tbody.innerHTML = '<tr><td>Kosong.</td></tr>';
                         } catch { tbody.innerHTML = '<tr><td>Gagal memuat.</td></tr>'; }
                     }
                     window.simpanStrukturRombel = async function(e) {
@@ -904,7 +904,6 @@
                                 allowDeleteColumn: false,
                                 search: false,
                                 pagination: false,
-                                // PERBAIKAN SPREADSHEET SCROLL OVERFLOW HORIZONTAL & VERTIKAL
                                 tableOverflow: true,
                                 tableWidth: "100%",
                                 tableHeight: "400px"
