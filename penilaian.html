@@ -29,7 +29,7 @@
     .clickable-row-kelas:hover { background-color: #fffdf5 !important; }
     .clickable-row-kelas.selected-active-kelas { background-color: #7fdde0 !important; font-weight: bold; }
 
-    .form-box-mode { background-color: #ffffff; padding: 15px; border: 3px solid #000; box-shadow: 4px 4px 0px #000; }
+    .form-box-mode { background-color: #ffffff; padding: 15px; border: 3px solid #000; box-shadow: 4px 4px 0px #000; max-width: 100%; }
     .compact-input-group { display: flex; gap: 8px; align-items: center; margin-top: 8px; background: #fffdf5; padding: 8px; border: 2px dashed #000; }
     .compact-input-group label { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; min-width: 90px; }
     .compact-input-group input, .compact-input-group select { padding: 6px; border: 2px solid #000; font-size: 12px; }
@@ -42,7 +42,16 @@
 
     .editable-text-field { cursor: text; padding: 2px; }
     .editable-text-field:hover { background: #7fdde0; }
-    .grid-wrapper-box { background: white; border: 2px solid #000; padding: 4px; }
+    
+    /* PERBAIKAN RESPONSIVE SCROLL SCROLLBAR INTERNAL JSPREADSHEET */
+    .grid-wrapper-box { 
+        background: white; 
+        border: 2px solid #000; 
+        padding: 4px; 
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto; /* Mengaktifkan scroll tepat di bawah container jspreadsheet */
+    }
 
     @media (max-width: 1024px) { .pn-split-layout { grid-template-columns: 1fr; } }
 </style>
@@ -68,7 +77,9 @@
             </div>
         </div>
         <div id="nilai_tab_mapel" class="tab-container"></div>
-        <div class="grid-wrapper-box"><div id="jspreadsheet_container_nilai"></div></div>
+        <div class="grid-wrapper-box">
+            <div id="jspreadsheet_container_nilai"></div>
+        </div>
     </div>
 
     <div class="pn-split-layout" id="wrapperLayoutSplitPenilaian">
