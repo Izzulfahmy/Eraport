@@ -297,7 +297,6 @@
                 return; 
             }
             try {
-                // Perbaikan Kueri Validasi: deteksi koleksi users secara langsung
                 const snap = await getDocs(collection(db, "users"));
                 if (!snap.empty) {
                     showLogin(); 
@@ -342,7 +341,7 @@
                         };
                         renderFieldsToGrid(sec1, 'gridModeBaca1'); renderFieldsToGrid(sec2, 'gridModeBaca2'); renderFieldsToGrid(sec3, 'gridModeBaca3');
                         window.aktifkanModeEdit = function() { document.getElementById('wrapperModeBaca').style.display = 'none'; document.getElementById('btnKeModeEdit').style.display = 'none'; document.getElementById('formProfilSekolah').style.display = 'block'; document.getElementById('btnBatalEdit').style.display = 'flex'; document.getElementById('btnSimpanProfil').style.display = 'flex'; };
-                        window.batalkanModeEdit = function() { document.getElementById('formProfilSekolah').style.display = 'none'; document.getElementById('btnBatalEdit').style.display = 'none'; document.getElementById('btnSimpanProfil').style.display = 'none'; document.getElementById('wrapperModeBaca').style.display = 'block'; document.getElementById('btnKeModeEdit').style.display = 'flex'; };
+                        window.batalkanModeEdit = function() { document.getElementById('formProfilSekolah').style.display = 'none'; document.getElementById('btnBatalEdit').style.none; document.getElementById('btnSimpanProfil').style.display = 'none'; document.getElementById('wrapperModeBaca').style.display = 'block'; document.getElementById('btnKeModeEdit').style.display = 'flex'; };
                     } catch { contentArea.innerHTML = `<p style="color: red;">Gagal memuat profil sekolah.</p>`; }
                     window.simpanProfilSekolah = async function(event) {
                         event.preventDefault(); const btn = document.getElementById('btnSimpanProfil'); if(btn) btn.disabled = true;
@@ -649,7 +648,8 @@
                                     tr.id = `row_id_pd_kelas_${doc.id}`;
                                     tr.setAttribute("onclick", `selectActiveRowKelasSplit('${doc.id}')`);
                                     const wName = teachersMap[r.wali_kelas_id] || r.wali_kelas_id; 
-                                    tr.innerHTML = `<td>${idx++}</td><td><strong>${r.nama_rombel}</strong></td><td>${wName}</td><td style="text-align:center;" onclick="event.stopPropagation();"><button class="btn-icon btn-success" onclick="bukaInputNilaiSiswa('${doc.id}')" title="Input Nilai">📝</button></td>`; 
+                                    // PERBAIKAN: Mengubah gaya tombol di kolom Nilai agar menjadi kotak kuning bertumpuk (Neubrutalism) dengan simbol pensil edit
+                                    tr.innerHTML = `<td>${idx++}</td><td><strong>${r.nama_rombel}</strong></td><td>${wName}</td><td style="text-align:center;" onclick="event.stopPropagation();"><button class="btn-table-action-neubrutalism" onclick="bukaInputNilaiSiswa('${doc.id}')" title="Input Nilai">📝</button></td>`; 
                                     tbody.appendChild(tr); 
                                 } 
                             });
