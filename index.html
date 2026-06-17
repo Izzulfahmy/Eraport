@@ -28,14 +28,14 @@
             align-items: center; 
             height: 100vh; 
             padding: 20px; 
-            background-color: #ffd23f; /* Secondary Brand Accent */
+            background-color: #ffd23f; 
         }
         .auth-container { 
-            background: #fffdf5; /* Neutral Surface */
+            background: #fffdf5; 
             padding: 40px 30px; 
-            border: 4px solid #000000; /* Heavy Black Outline */
-            border-radius: 0px; /* Angular & Square Corners */
-            box-shadow: 8px 8px 0px #000000; /* Hard Shadow Offset */
+            border: 4px solid #000000; 
+            border-radius: 0px; 
+            box-shadow: 8px 8px 0px #000000; 
             width: 100%; 
             max-width: 420px; 
         }
@@ -73,13 +73,13 @@
         }
         .form-group input:focus {
             outline: none;
-            background-color: #7fdde0; /* Cyan Accent Focus Interrupt */
+            background-color: #7fdde0; 
             box-shadow: 4px 4px 0px #000000;
         }
         .btn-submit { 
             width: 100%; 
             padding: 12px; 
-            background-color: #ff6b6b; /* Coral Accent Button */
+            background-color: #ff6b6b; 
             color: #000000; 
             border: 3px solid #000000; 
             border-radius: 0px; 
@@ -190,7 +190,6 @@
         
         .dashboard-content { padding: 30px 20px; width: 100%; max-width: 1200px; margin: 0 auto; flex: 1; }
         
-        /* Neubrutalist Card Base */
         .content-card { 
             background: #ffffff; 
             padding: 30px; 
@@ -207,11 +206,80 @@
             margin-bottom: 15px;
         }
 
-        /* OVERRIDE STYLE JSPREADSHEET UNTUK KOLOM READONLY AGAR HITAM PEKAT */
         .jexcel tbody tr td.readonly {
             color: #000000 !important;
             opacity: 1 !important;
             background-color: #fafdff !important;
+        }
+
+        /* POPUP MODAL NEUBRUTALISM INTEGRASI */
+        .neubrutalism-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+        .neubrutalism-modal-container {
+            background-color: #fffdf5;
+            border: 4px solid #000000;
+            border-radius: 0px;
+            box-shadow: 10px 10px 0px #000000;
+            width: 100%;
+            max-width: 800px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+        }
+        .neubrutalism-modal-header {
+            border-bottom: 4px solid #000000;
+            padding-bottom: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .neubrutalism-modal-header h4 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 22px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .neubrutalism-modal-body {
+            overflow-y: auto;
+            flex: 1;
+            margin-bottom: 20px;
+        }
+        .neubrutalism-modal-footer {
+            border-top: 3px solid #000000;
+            padding-top: 15px;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        .btn-modal-confirm {
+            padding: 10px 18px;
+            background-color: #7fdde0;
+            color: #000;
+            border: 2px solid #000;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px #000;
+        }
+        .btn-modal-cancel {
+            padding: 10px 18px;
+            background-color: #ff6b6b;
+            color: #000;
+            border: 2px solid #000;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px #000;
         }
 
         @media (max-width: 768px) {
@@ -279,6 +347,37 @@
         <div class="dashboard-content"><div class="content-card" id="mainContentArea"></div></div>
     </div>
 
+    <div class="neubrutalism-modal-overlay" id="excelPreviewModal">
+        <div class="neubrutalism-modal-container">
+            <div class="neubrutalism-modal-header">
+                <h4>📋 Preview Data Impor Siswa</h4>
+                <button style="background:none; border:none; font-size:24px; cursor:pointer; font-weight:bold;" onclick="tutupModalExcelPreview()">&times;</button>
+            </div>
+            <p style="font-size:13px; margin-bottom:12px; font-weight:600; color:#333;">Berikut daftar nama siswa yang terdeteksi di file Excel Anda. Klik Konfirmasi untuk menyimpannya.</p>
+            <div class="neubrutalism-modal-body">
+                <div style="width:100%; overflow-x:auto; background:white; border:3px solid #000;">
+                    <table style="width:100%; border-collapse:collapse; text-align:left; font-size:13px;" id="tableExcelPreviewContent">
+                        <thead>
+                            <tr style="background-color:#ffd23f; border-bottom:3px solid #000;">
+                                <th style="padding:10px; border:1px solid #000;">No</th>
+                                <th style="padding:10px; border:1px solid #000;">NIS</th>
+                                <th style="padding:10px; border:1px solid #000;">NISN</th>
+                                <th style="padding:10px; border:1px solid #000;">Nama Lengkap Murid</th>
+                                <th style="padding:10px; border:1px solid #000;">Kelas</th>
+                                <th style="padding:10px; border:1px solid #000;">Absen</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbodyExcelPreview"></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="neubrutalism-modal-footer">
+                <button class="btn-modal-cancel" onclick="tutupModalExcelPreview()">Batal</button>
+                <button class="btn-modal-confirm" id="btnProsesSimpanMassalExcel" onclick="eksekusiSimpanMassalExcel()">Konfirmasi Simpan</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, getDocs, deleteDoc, limit, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -290,7 +389,9 @@
         };
         const app = initializeApp(firebaseConfig); const db = getFirestore(app);
 
-        // LOGIKA GLOBAL: unduhTemplateExcelMurid dideklarasikan di scope window utama agar selalu terbaca dari sub-page manapun
+        // State global untuk menampung baris data siswa hasil parse excel sebelum ditulis ke Firestore
+        window.temporaryExcelImportSiswaList = [];
+
         window.unduhTemplateExcelMurid = function() {
             if (typeof XLSX === 'undefined') {
                 alert("Pustaka generator SheetJS sedang memuat, silakan coba beberapa saat lagi.");
@@ -325,10 +426,140 @@
             XLSX.writeFile(workbook, "template_import_murid.xlsx");
         };
 
+        // PERBAIKAN LOGIKA: Membaca file biner excel secara native, parse baris, dan tampilkan popup preview tabel
         window.handleExcelImport = function(event) {
             const file = event.target.files[0];
             if(!file) return;
-            alert("File excel '" + file.name + "' berhasil diunggah. Siap diproses!");
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[sheetName];
+                    
+                    // Parse menjadi objek JSON berbasis key-value baris header
+                    const rawJsonData = XLSX.utils.sheet_to_json(worksheet);
+                    if(rawJsonData.length === 0) {
+                        alert("Gagal! File excel kosong atau baris data tidak terdeteksi.");
+                        return;
+                    }
+
+                    window.temporaryExcelImportSiswaList = rawJsonData;
+                    
+                    // Render isi baris ke tabel modal preview
+                    const tbody = document.getElementById('tbodyExcelPreview');
+                    tbody.innerHTML = '';
+                    
+                    window.temporaryExcelImportSiswaList.forEach((siswa, index) => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td style="padding:10px; border:1px solid #000; text-align:center;">${index + 1}</td>
+                            <td style="padding:10px; border:1px solid #000;"><code>${siswa.nis || '-'}</code></td>
+                            <td style="padding:10px; border:1px solid #000;">${siswa.nisn || '-'}</td>
+                            <td style="padding:10px; border:1px solid #000;"><strong>${siswa.nama_lengkap || 'Tanpa Nama'}</strong></td>
+                            <td style="padding:10px; border:1px solid #000; text-align:center;">${siswa.id_kelas || '-'}</td>
+                            <td style="padding:10px; border:1px solid #000; text-align:center;">${siswa.nomor_absen || '-'}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+
+                    // Munculkan jendela modal overlay neubrutalism
+                    document.getElementById('excelPreviewModal').style.display = 'flex';
+                } catch(err) {
+                    alert("Error saat membaca file Excel. Pastikan format file sesuai.");
+                    console.error(err);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        };
+
+        window.tutupModalExcelPreview = function() {
+            document.getElementById('excelPreviewModal').style.display = 'none';
+            const fileInput = document.getElementById('excel_file_input');
+            if(fileInput) fileInput.value = ''; // Reset wadah file selector
+        };
+
+        // Fungsi mengeksekusi simpan massal data baris array temporary excel ke Firestore murid
+        window.eksekusiSimpanMassalExcel = async function() {
+            const btn = document.getElementById('btnProsesSimpanMassalExcel');
+            if(btn) { btn.disabled = true; btn.innerText = "Menyimpan Massal..."; }
+
+            let suksesCount = 0;
+            try {
+                for(const siswa of window.temporaryExcelImportSiswaList) {
+                    const targetNisId = String(siswa.nis || '').trim();
+                    if(!targetNisId) continue; // Lewati jika NIS kosong
+
+                    // Susun payload terintegrasi dengan field lengkap
+                    const payload = {
+                        nama_lengkap: siswa.nama_lengkap || '',
+                        nama_panggilan: siswa.nama_panggilan || '',
+                        nis: targetNisId,
+                        nisn: siswa.nisn ? String(siswa.nisn) : '',
+                        nik: siswa.nik ? String(siswa.nik) : '',
+                        no_akta: siswa.no_akta || '',
+                        jenis_kelamin: siswa.jenis_kelamin || 'Laki-laki',
+                        tempat_lahir: siswa.tempat_lahir || '',
+                        tanggal_lahir: siswa.tanggal_lahir || '',
+                        agama: siswa.agama || 'Islam',
+                        kewarganegaraan: siswa.kewarganegaraan || 'WNI',
+                        anak_ke: siswa.anak_ke ? parseInt(siswa.anak_ke) : 1,
+                        jumlah_saudara: siswa.jumlah_saudara ? parseInt(siswa.jumlah_saudara) : 0,
+                        gol_darah: siswa.gol_darah || '-',
+                        alamat_tinggal: siswa.alamat_tinggal || '',
+                        kode_pos: siswa.kode_pos ? String(siswa.kode_pos) : '',
+                        tempat_tinggal_bersama: siswa.tempat_tinggal_bersama || 'Orang Tua',
+                        transportasi: siswa.transportasi || 'Motor',
+                        no_hp_siswa: siswa.no_hp_siswa ? String(siswa.no_hp_siswa) : '',
+                        email_siswa: siswa.email_siswa || '',
+                        nama_ayah: siswa.nama_ayah || '',
+                        nik_ayah: siswa.nik_ayah ? String(siswa.nik_ayah) : '',
+                        tahun_lahir_ayah: siswa.tahun_lahir_ayah ? String(siswa.tahun_lahir_ayah) : '',
+                        pendidikan_ayah: siswa.pendidikan_ayah || '',
+                        pekerjaan_ayah: siswa.pekerjaan_ayah || '',
+                        penghasilan_ayah: siswa.penghasilan_ayah || 'Tidak Berpenghasilan',
+                        nama_ibu: siswa.nama_ibu || '',
+                        nik_ibu: siswa.nik_ibu ? String(siswa.nik_ibu) : '',
+                        tahun_lahir_ibu: siswa.tahun_lahir_ibu ? String(siswa.tahun_lahir_ibu) : '',
+                        pendidikan_ibu: siswa.pendidikan_ibu || '',
+                        pekerjaan_ibu: siswa.pekerjaan_ibu || '',
+                        penghasilan_ibu: siswa.penghasilan_ibu || 'Tidak Berpenghasilan',
+                        no_hp_ortu: siswa.no_hp_ortu ? String(siswa.no_hp_ortu) : '',
+                        nama_wali: siswa.nama_wali || '',
+                        nik_wali: siswa.nik_wali ? String(siswa.nik_wali) : '',
+                        hubungan_wali: siswa.hubungan_wali || '',
+                        pekerjaan_wali: siswa.pekerjaan_wali || '',
+                        no_hp_wali: siswa.no_hp_wali ? String(siswa.no_hp_wali) : '',
+                        status_murid: siswa.status_murid || 'Siswa Baru',
+                        asal_sekolah: siswa.asal_sekolah || '',
+                        no_ijazah: siswa.no_ijazah || '',
+                        no_skhun: siswa.no_skhun || '',
+                        tanggal_masuk: siswa.tanggal_masuk || '',
+                        foto_profil: siswa.foto_profil || '',
+                        id_kelas: siswa.id_kelas || '',
+                        nomor_absen: siswa.nomor_absen ? parseInt(siswa.nomor_absen) : 1,
+                        status_keaktifan: siswa.status_keaktifan || 'Aktif',
+                        username_murid: siswa.username_murid || targetNisId,
+                        password_murid: siswa.password_murid || 'password123',
+                        createdAt: serverTimestamp(),
+                        updatedAt: serverTimestamp()
+                    };
+
+                    await setDoc(doc(db, "murid", targetNisId), payload, { merge: true });
+                    suksesCount++;
+                }
+
+                alert(`Berhasil mengimpor massal ${suksesCount} data murid ke database!`);
+                tutupModalExcelPreview();
+                switchMenu('murid', document.querySelector('[onclick*="murid"]')); // Refresh area tabel murid
+            } catch(err) {
+                alert("Terjadi kesalahan penguncian DB saat simpan massal.");
+                console.error(err);
+            } finally {
+                if(btn) { btn.disabled = false; btn.innerText = "Konfirmasi Simpan"; }
+            }
         };
 
         window.addEventListener('resize', adjustMobileLayout);
@@ -341,13 +572,8 @@
             }
             try {
                 const snap = await getDocs(collection(db, "users"));
-                if (!snap.empty) {
-                    showLogin(); 
-                } else {
-                    showRegister();
-                }
+                if (!snap.empty) showLogin(); else showRegister();
             } catch (error) { 
-                console.error("Firebase auth check error:", error);
                 showLogin(); 
             }
         });
@@ -373,7 +599,7 @@
                         const res = await fetch('profilsekolah.html'); contentArea.innerHTML = await res.text();
                         const docSnap = await getDoc(doc(db, "pengaturan", "profil_sekolah")); const currentData = docSnap.exists() ? docSnap.data() : {};
                         const fields = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah', 'alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude', 'no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
-                        const labelMapping = { 'nama_sekolah': 'Nama Resmi Sekolah', 'npsn': 'NPSN', 'nss_nds': 'NSS / NDS', 'status_sekolah': 'Status Sekolah', 'jenjang': 'Bentuk Satuan Pendidikan', 'status_kepemilikan': 'Status Kepemilikan', 'nama_pemilik': 'Nama Pemilik / Yayasan', 'sk_pendirian': 'SK Pendirian Sekolah', 'sk_operasional': 'SK Izin Operasional', 'tgl_berdiri': 'Tanggal Berdiri / SK Operasional', 'status_akreditasi': 'Status Akreditasi', 'npwp_sekolah': 'Nomor Pokok Wajib Pajak (NPWP)', 'alamat_lengkap': 'Alamat Lengkap', 'dusun': 'Dusun / Kampung', 'desa': 'Desa / Kelurahan', 'kecamatan': 'Kecamatan', 'kabupaten': 'Kabupaten / Kota', 'provinsi': 'Provinsi', 'kode_pos': 'Kode Pos', 'latitude': 'Garis Lintang (Latitude)', 'longitude': 'Garis Bujur (Longitude)', 'no_telp': 'Nomor Telepon', 'fax': 'Nomor Faksimile (Fax)', 'no_wa': 'WhatsApp / Kontak Humas', 'email_sekolah': 'Alamat Email Resmi', 'website': 'Situs Web Resmi', 'medsos': 'Media Sosial' };
+                        const labelMapping = { 'nama_sekolah': 'Nama Resmi Sekolah', 'npsn': 'NPSN', 'nss_nds': 'NSS / NDS', 'status_sekolah': 'Swasta', 'jenjang': 'Bentuk Satuan Pendidikan', 'status_kepemilikan': 'Status Kepemilikan', 'nama_pemilik': 'Nama Pemilik / Yayasan', 'sk_pendirian': 'SK Pendirian Sekolah', 'sk_operasional': 'SK Izin Operasional', 'tgl_berdiri': 'Tanggal Berdiri / SK Operasional', 'status_akreditasi': 'Status Akreditasi', 'npwp_sekolah': 'Nomor Pokok Wajib Pajak (NPWP)', 'alamat_lengkap': 'Alamat Lengkap', 'dusun': 'Dusun / Kampung', 'desa': 'Desa / Kelurahan', 'kecamatan': 'Kecamatan', 'kabupaten': 'Kabupaten / Kota', 'provinsi': 'Provinsi', 'kode_pos': 'Kode Pos', 'latitude': 'Garis Lintang (Latitude)', 'longitude': 'Garis Bujur (Longitude)', 'no_telp': 'Nomor Telepon', 'fax': 'Nomor Faksimile (Fax)', 'no_wa': 'WhatsApp / Kontak Humas', 'email_sekolah': 'Alamat Email Resmi', 'website': 'Situs Web Resmi', 'medsos': 'Media Sosial' };
                         const sec1 = ['nama_sekolah', 'npsn', 'nss_nds', 'status_sekolah', 'jenjang', 'status_kepemilikan', 'nama_pemilik', 'sk_pendirian', 'sk_operasional', 'tgl_berdiri', 'status_akreditasi', 'npwp_sekolah']; const sec2 = ['alamat_lengkap', 'dusun', 'desa', 'kecamatan', 'kabupaten', 'provinsi', 'kode_pos', 'latitude', 'longitude']; const sec3 = ['no_telp', 'fax', 'no_wa', 'email_sekolah', 'website', 'medsos'];
                         const renderFieldsToGrid = (fieldList, gridId) => {
                             const gridEl = document.getElementById(gridId); if(!gridEl) return; gridEl.innerHTML = '';
@@ -500,7 +726,7 @@
                     }
                     window.toggleStatusKurikulumDirect = async function(id, isChecked) {
                         try {
-                            if (isChecked) { const snap = await getDocs(collection(db, "kurikulum")); for (const d of snap.docs) { if (d.id !== id && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "kurikulum", d.id), { status_aktif: 'Tidak Aktif' }); } }
+                            if (isChecked) { const snap = await getDocs(collection(db, "kurikulum")); for (const d of snap.docs) { if (d.id !== id && d.data().status_aktif === 'Aktif') await updateDoc(doc(db, "kurikulum", d.id), { status_aktif: 'Swasta' }); } }
                             await updateDoc(doc(db, "kurikulum", id), { status_aktif: isChecked ? 'Aktif' : 'Tidak Aktif', updatedAt: serverTimestamp() }); loadDaftarKurikulum();
                         } catch { alert("Gagal."); loadDaftarKurikulum(); }
                     };
