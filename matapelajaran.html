@@ -1,12 +1,49 @@
 <style>
-    .mp-container { display: flex; flex-direction: column; gap: 20px; }
-    .filter-bar { background: #ffffff; padding: 15px 20px; border: 3px solid #000000; box-shadow: 4px 4px 0px #000000; display: flex; gap: 20px; flex-wrap: wrap; }
-    .filter-field { display: flex; flex-direction: column; gap: 5px; min-width: 200px; flex: 1; }
-    .filter-field label { font-family: 'Space Grotesk', sans-serif; font-size: 12px; font-weight: 700; text-transform: uppercase; }
-    .filter-field select { padding: 8px 10px; border: 2px solid #000000; font-size: 14px; background-color: #fff; }
+    .mp-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    .filter-bar {
+        background: #ffffff;
+        padding: 15px 20px;
+        border: 3px solid #000000;
+        box-shadow: 4px 4px 0px #000000;
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+    .filter-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 200px;
+        flex: 1;
+    }
+    .filter-field label {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    .filter-field select {
+        padding: 8px 10px;
+        border: 2px solid #000000;
+        font-size: 14px;
+        background-color: #fff;
+    }
     
-    .action-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-    .btn-group-top { display: flex; gap: 10px; }
+    .action-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .btn-group-top {
+        display: flex;
+        gap: 10px;
+    }
     
     .btn-primary { padding: 10px 16px; background-color: #ffd23f; color: black; border: 2px solid #000; font-family: 'Space Grotesk', sans-serif; font-weight: 700; cursor: pointer; box-shadow: 2px 2px 0px #000; }
     .btn-success { padding: 10px 16px; background-color: #7fdde0; color: black; border: 2px solid #000; font-family: 'Space Grotesk', sans-serif; font-weight: 700; cursor: pointer; box-shadow: 2px 2px 0px #000; }
@@ -21,7 +58,7 @@
     .tr-grup td { color: #000000; border-bottom: 3px solid #000000; }
     .td-sub-mapel { padding-left: 40px !important; }
 
-    /* SINKRONISASI KELAS AKSI DUA BUTTON MATA PELAJARAN */
+    /* INTEGRASI KELAS BUTTON NEUBRUTALISM KHUSUS AKSES TABEL */
     .btn-actions-mapel { display: flex; gap: 5px; }
     .btn-edit-mp { background-color: #ffd23f; color: #000; border: 2px solid #000; padding: 6px 12px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12px; cursor: pointer; transition: all 0.1s; }
     .btn-edit-mp:hover { background-color: #7fdde0; }

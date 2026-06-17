@@ -330,7 +330,7 @@
                         };
                         renderFieldsToGrid(sec1, 'gridModeBaca1'); renderFieldsToGrid(sec2, 'gridModeBaca2'); renderFieldsToGrid(sec3, 'gridModeBaca3');
                         window.aktifkanModeEdit = function() { document.getElementById('wrapperModeBaca').style.display = 'none'; document.getElementById('btnKeModeEdit').style.display = 'none'; document.getElementById('formProfilSekolah').style.display = 'block'; document.getElementById('btnBatalEdit').style.display = 'flex'; document.getElementById('btnSimpanProfil').style.display = 'flex'; };
-                        window.batalkanModeEdit = function() { document.getElementById('formProfilSekolah').style.display = 'none'; document.getElementById('btnBatalEdit').style.display = 'none'; document.getElementById('btnSimpanProfil').style.display = 'none'; document.getElementById('wrapperModeBaca').style.display = 'block'; document.getElementById('btnKeModeEdit').style.display = 'flex'; };
+                        window.batalkanModeEdit = function() { document.getElementById('formProfilSekolah').style.display = 'none'; document.getElementById('btnBatalEdit').style.none; document.getElementById('btnSimpanProfil').style.display = 'none'; document.getElementById('wrapperModeBaca').style.display = 'block'; document.getElementById('btnKeModeEdit').style.display = 'flex'; };
                     } catch { contentArea.innerHTML = `<p style="color: red;">Gagal memuat profil sekolah.</p>`; }
                     window.simpanProfilSekolah = async function(event) {
                         event.preventDefault(); const btn = document.getElementById('btnSimpanProfil'); if(btn) btn.disabled = true;
@@ -504,7 +504,8 @@
                                 if(parentSelect) { const opt = document.createElement('option'); opt.value = grup.id; opt.innerText = grup.nama; parentSelect.appendChild(opt); }
                                 const trG = document.createElement('tr'); trG.className = 'tr-grup'; trG.innerHTML = `<td><code>${grup.grup_kode || '-'}</code></td><td>${grup.nama}</td><td>Kelompok Wadah</td><td><div class="btn-actions-mapel"><button class="btn-edit-mp" onclick="editGrup('${grup.id}', '${grup.nama}', '${grup.grup_kode || ''}')">Edit</button><button class="btn-delete-mp" onclick="hapusKomponenMP('${grup.id}')">Hapus</button></div></td>`; tbody.appendChild(trG);
                                 const anakMapel = subMapel.filter(m => m.parent_id === grup.id);
-                                anakMapel.forEach(mapel => { const trM = document.createElement('tr'); trM.innerHTML = `<td class="td-sub-mapel"><code>${mapel.kode_pendek}</code></td><td class="td-sub-mapel">${mapel.nama}</td><td>Mata Pelajaran</td><td><div class="btn-actions-mapel"><button class="btn-edit" onclick="editMapel('${mapel.id}', '${mapel.nama}', '${mapel.kode_pendek}', '${mapel.parent_id}')">Edit</button><button class="btn-delete" onclick="hapusKomponenMP('${mapel.id}')">Hapus</button></div></td>`; tbody.appendChild(trM); });
+                                // PERBAIKAN: Tombol aksi sub-mata pelajaran di bawah ini diselaraskan ke class neubrutalism
+                                anakMapel.forEach(mapel => { const trM = document.createElement('tr'); trM.innerHTML = `<td class="td-sub-mapel"><code>${mapel.kode_pendek}</code></td><td class="td-sub-mapel">${mapel.nama}</td><td>Mata Pelajaran</td><td><div class="btn-actions-mapel"><button class="btn-edit-mp" onclick="editMapel('${mapel.id}', '${mapel.nama}', '${mapel.kode_pendek}', '${mapel.parent_id}')">Edit</button><button class="btn-delete-mp" onclick="hapusKomponenMP('${mapel.id}')">Hapus</button></div></td>`; tbody.appendChild(trM); });
                             });
                         } catch { tbody.innerHTML = '<tr><td>Gagal.</td></tr>'; }
                     };
@@ -961,7 +962,7 @@
         window.toggleDropdown = function() { document.getElementById('profileDropdown').classList.toggle('show'); }
         function showRegister() { document.getElementById('register-page').style.display = 'flex'; document.getElementById('login-page').style.display = 'none'; document.getElementById('dashboard-page').style.display = 'none'; }
         function showLogin() { document.getElementById('register-page').style.display = 'none'; document.getElementById('login-page').style.display = 'flex'; document.getElementById('dashboard-page').style.display = 'none'; }
-        function showDashboard() { document.getElementById('register-page').style.display = 'none'; document.getElementById('login-page').style.display = 'none'; document.getElementById('dashboard-page').style.display = 'block'; const b = document.querySelector('.nav-item'); if(b) switchMenu('beranda', b); }
+        function showDashboard() { document.getElementById('register-page').style.display = 'flex'; document.getElementById('login-page').style.display = 'none'; document.getElementById('dashboard-page').style.display = 'block'; const b = document.querySelector('.nav-item'); if(b) switchMenu('beranda', b); }
         window.onclick = function(e) { if (!e.target.matches('.profile-logo')) { const d = document.getElementsByClassName("dropdown-menu"); for (let i = 0; i < d.length; i++) { if (d[i].classList.contains('show')) d[i].classList.remove('show'); } } }
     </script>
 </body>
