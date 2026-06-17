@@ -204,6 +204,14 @@
             text-transform: uppercase;
             margin-bottom: 15px;
         }
+
+        /* OVERRIDE STYLE JSPREADSHEET UNTUK KOLOM READONLY AGAR HITAM PEKAT */
+        .jexcel tbody tr td.readonly {
+            color: #000000 !important;
+            opacity: 1 !important;
+            background-color: #fafdff !important; /* Warna background tipis pembeda tetapi teks tetap jelas */
+        }
+
         @media (max-width: 768px) {
             .navbar { padding: 10px; flex-direction: column; align-items: stretch; gap: 10px; }
             .nav-header-top { width: 100%; display: flex; justify-content: space-between; }
@@ -581,7 +589,7 @@
                         window.currentActiveRombelObj = null; window.loadedMasterMapelLookup = {};
                         window.activeJSpreadsheetInstance = null;
                         window.activeSelectedMapelId = null; 
-                        window.masterMuridNamaMap = {}; // Inisialisasi map pencarian nama murid
+                        window.masterMuridNamaMap = {}; 
 
                         const selectTpPn = document.getElementById('filter_tp_penilaian');
                         if (selectTpPn) { selectTpPn.innerHTML = ''; const tpSnap = await getDocs(query(collection(db, "tahunpelajaran"), orderBy("tahun_mulai", "desc"))); let activeTpId = ""; tpSnap.forEach(doc => { const d = doc.data(); const opt = document.createElement('option'); opt.value = doc.id; opt.innerText = `${d.tahun_mulai}/${d.tahun_berakhir} (${d.semester})`; if(d.status_aktif === "Aktif") { opt.selected = true; activeTpId = doc.id; } selectTpPn.appendChild(opt); }); if(activeTpId) { selectTpPn.value = activeTpId; await handleFilterTpChangePenilaian(activeTpId); } }
@@ -605,7 +613,6 @@
                         try {
                             const rSnap = await getDocs(collection(db, "rombel")); const tSnap = await getDocs(collection(db, "teachers")); const teachersMap = {}; tSnap.forEach(d => { teachersMap[d.id] = d.data().nama_lengkap; });
                             
-                            // PERBAIKAN: Tarik data dari koleksi murid untuk memetakan NIS ke Nama Murid
                             const mSnap = await getDocs(collection(db, "murid"));
                             window.masterMuridNamaMap = {};
                             mSnap.forEach(d => {
@@ -896,7 +903,11 @@
                                 allowManualInsertColumn: false,
                                 allowDeleteColumn: false,
                                 search: false,
-                                pagination: false
+                                pagination: false,
+                                // PERBAIKAN SPREADSHEET SCROLL OVERFLOW HORIZONTAL & VERTIKAL
+                                tableOverflow: true,
+                                tableWidth: "100%",
+                                tableHeight: "400px"
                             });
 
                         } catch(err) { console.error(err); }
