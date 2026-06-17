@@ -21,7 +21,6 @@
     .table-rb th { background-color: #ff6b6b; color: black; font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
     .table-rb tr:hover { background-color: #fffdf5; }
 
-    /* INTEGRASI TOMBOL INTEGRASI STRUKTUR AKSI NEUBRUTALISM */
     .btn-group-actions { display: flex; gap: 5px; }
     .btn-edit-mp { background-color: #ffd23f; color: #000; border: 2px solid #000; padding: 6px 12px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12px; cursor: pointer; transition: all 0.1s; }
     .btn-edit-mp:hover { background-color: #7fdde0; }
@@ -41,6 +40,83 @@
     .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
     .tag-item { background: #ffd23f; color: black; border: 2px solid #000; padding: 6px 12px; font-size: 13px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; }
     .tag-item .remove-btn { cursor: pointer; color: #ff4d4d; font-weight: bold; font-size: 16px; }
+
+    /* LAYOUT IMPLEMENTASI DUAL-LIST BOX NEUBRUTALISM DENGAN PANAH TENGAH */
+    .neubrutalism-dual-list-container {
+        display: grid;
+        grid-template-columns: 1fr 60px 1fr;
+        gap: 15px;
+        align-items: center;
+        margin-top: 15px;
+    }
+    .dual-list-card-box {
+        background: #ffffff;
+        border: 3px solid #000000;
+        box-shadow: 4px 4px 0px #000000;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .dual-list-card-box h5 {
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 14px;
+        text-transform: uppercase;
+        font-weight: 700;
+        border-bottom: 2px solid #000;
+        padding-bottom: 4px;
+    }
+    .dual-list-select-element {
+        width: 100%;
+        height: 250px;
+        border: 2px solid #000000;
+        font-size: 13px;
+        padding: 8px;
+        outline: none;
+        background-color: #ffffff;
+    }
+    .dual-list-select-element option {
+        padding: 6px 10px;
+        border-bottom: 1px solid #eee;
+    }
+    .dual-list-select-element option:checked {
+        background-color: #7fdde0 !important;
+        color: black;
+    }
+    .dual-list-arrows-column {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
+    }
+    .btn-arrow-move {
+        width: 44px;
+        height: 44px;
+        background-color: #ffd23f;
+        border: 3px solid #000000;
+        font-size: 18px;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 3px 3px 0px #000000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.05s ease;
+    }
+    .btn-arrow-move:active {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0px #000000;
+    }
+
+    @media (max-width: 768px) {
+        .neubrutalism-dual-list-container {
+            grid-template-columns: 1fr;
+        }
+        .dual-list-arrows-column {
+            flex-direction: row;
+        }
+    }
 </style>
 
 <div class="rb-container">
@@ -103,16 +179,24 @@
             </div>
 
             <div class="form-box-mode">
-                <div class="section-title">2. Manajemen Anggota Peserta Didik (Siswa)</div>
-                <div class="sub-management-box">
-                    <div class="flex-row-input">
-                        <div class="form-field">
-                            <label>Pilih Siswa Aktif</label>
-                            <select id="select_tambah_siswa"><option value="">-- Pilih Siswa --</option></select>
-                        </div>
-                        <button type="button" class="btn-icon btn-primary" onclick="addSiswaToRombelList()">+</button>
+                <div class="section-title">2. Data Anggota Peserta Didik (Siswa)</div>
+                <p style="font-size:12px; font-weight:600; color:#555; margin-top:5px;">Pilih nama di box kanan lalu tekan tombol panah kiri (←) untuk memasukkan ke dalam kelas.</p>
+                
+                <div class="neubrutalism-dual-list-container">
+                    <div class="dual-list-card-box">
+                        <h5>👥 Anggota Kelas Rombel Ini</h5>
+                        <select id="select_siswa_anggota_rombel" class="dual-list-select-element" multiple></select>
                     </div>
-                    <div class="tag-list" id="siswaRombelContainer"></div>
+
+                    <div class="dual-list-arrows-column">
+                        <button type="button" class="btn-arrow-move" onclick="window.pindahkanSiswaMasukRombel()" title="Masukkan ke Rombel">←</button>
+                        <button type="button" class="btn-arrow-move" style="background-color:#ff6b6b;" onclick="window.keluarkanSiswaDariRombel()" title="Keluarkan dari Rombel">→</button>
+                    </div>
+
+                    <div class="dual-list-card-box">
+                        <h5>📂 Siswa Tersedia (Belum Ada Kelas)</h5>
+                        <select id="select_siswa_tersedia_db" class="dual-list-select-element" multiple></select>
+                    </div>
                 </div>
             </div>
 

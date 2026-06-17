@@ -428,7 +428,6 @@
         window.handleExcelImport = function(event) {
             const file = event.target.files[0];
             if(!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
@@ -436,18 +435,14 @@
                     const workbook = XLSX.read(data, { type: 'array' });
                     const sheetName = workbook.SheetNames[0];
                     const worksheet = workbook.Sheets[sheetName];
-                    
                     const rawJsonData = XLSX.utils.sheet_to_json(worksheet);
                     if(rawJsonData.length === 0) {
                         alert("Gagal! File excel kosong atau baris data tidak terdeteksi.");
                         return;
                     }
-
                     window.temporaryExcelImportSiswaList = rawJsonData;
-                    
                     const tbody = document.getElementById('tbodyExcelPreview');
                     tbody.innerHTML = '';
-                    
                     window.temporaryExcelImportSiswaList.forEach((siswa, index) => {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
@@ -460,11 +455,9 @@
                         `;
                         tbody.appendChild(tr);
                     });
-
                     document.getElementById('excelPreviewModal').style.display = 'flex';
                 } catch(err) {
-                    alert("Error saat membaca file Excel. Pastikan format file sesuai.");
-                    console.error(err);
+                    alert("Error saat membaca file Excel.");
                 }
             };
             reader.readAsArrayBuffer(file);
@@ -479,104 +472,44 @@
         window.eksekusiSimpanMassalExcel = async function() {
             const btn = document.getElementById('btnProsesSimpanMassalExcel');
             if(btn) { btn.disabled = true; btn.innerText = "Menyimpan Massal..."; }
-
             let suksesCount = 0;
             try {
                 for(const siswa of window.temporaryExcelImportSiswaList) {
                     const targetNisId = String(siswa.nis || '').trim();
                     if(!targetNisId) continue;
-
                     const payload = {
-                        nama_lengkap: siswa.nama_lengkap || '',
-                        nama_panggilan: siswa.nama_panggilan || '',
-                        nis: targetNisId,
-                        nisn: siswa.nisn ? String(siswa.nisn) : '',
-                        nik: siswa.nik ? String(siswa.nik) : '',
-                        no_akta: siswa.no_akta || '',
-                        jenis_kelamin: siswa.jenis_kelamin || 'Laki-laki',
-                        tempat_lahir: siswa.tempat_lahir || '',
-                        tanggal_lahir: siswa.tanggal_lahir || '',
-                        agama: siswa.agama || 'Islam',
-                        kewarganegaraan: siswa.kewarganegaraan || 'WNI',
-                        anak_ke: siswa.anak_ke ? parseInt(siswa.anak_ke) : 1,
-                        jumlah_saudara: siswa.jumlah_saudara ? parseInt(siswa.jumlah_saudara) : 0,
-                        gol_darah: siswa.gol_darah || '-',
-                        alamat_tinggal: siswa.alamat_tinggal || '',
-                        kode_pos: siswa.kode_pos ? String(siswa.kode_pos) : '',
-                        tempat_tinggal_bersama: siswa.tempat_tinggal_bersama || 'Orang Tua',
-                        transportasi: siswa.transportasi || 'Motor',
-                        no_hp_siswa: siswa.no_hp_siswa ? String(siswa.no_hp_siswa) : '',
-                        email_siswa: siswa.email_siswa || '',
-                        nama_ayah: siswa.nama_ayah || '',
-                        nik_ayah: siswa.nik_ayah ? String(siswa.nik_ayah) : '',
-                        tahun_lahir_ayah: siswa.tahun_lahir_ayah ? String(siswa.tahun_lahir_ayah) : '',
-                        pendidikan_ayah: siswa.pendidikan_ayah || '',
-                        pekerjaan_ayah: siswa.pekerjaan_ayah || '',
-                        penghasilan_ayah: siswa.penghasilan_ayah || 'Tidak Berpenghasilan',
-                        nama_ibu: siswa.nama_ibu || '',
-                        nik_ibu: siswa.nik_ibu ? String(siswa.nik_ibu) : '',
-                        tahun_lahir_ibu: siswa.tahun_lahir_ibu ? String(siswa.tahun_lahir_ibu) : '',
-                        pendidikan_ibu: siswa.pendidikan_ibu || '',
-                        pekerjaan_ibu: siswa.pekerjaan_ibu || '',
-                        penghasilan_ibu: siswa.penghasilan_ibu || 'Tidak Berpenghasilan',
-                        no_hp_ortu: siswa.no_hp_ortu ? String(siswa.no_hp_ortu) : '',
-                        nama_wali: siswa.nama_wali || '',
-                        nik_wali: siswa.nik_wali ? String(siswa.nik_wali) : '',
-                        hubungan_wali: siswa.hubungan_wali || '',
-                        pekerjaan_wali: siswa.pekerjaan_wali || '',
-                        no_hp_wali: siswa.no_hp_wali ? String(siswa.no_hp_wali) : '',
-                        status_murid: siswa.status_murid || 'Siswa Baru',
-                        asal_sekolah: siswa.asal_sekolah || '',
-                        no_ijazah: siswa.no_ijazah || '',
-                        no_skhun: siswa.no_skhun || '',
-                        tanggal_masuk: siswa.tanggal_masuk || '',
-                        foto_profil: siswa.foto_profil || '',
-                        id_kelas: siswa.id_kelas || '',
-                        nomor_absen: siswa.nomor_absen ? parseInt(siswa.nomor_absen) : 1,
-                        status_keaktifan: siswa.status_keaktifan || 'Aktif',
-                        username_murid: siswa.username_murid || targetNisId,
-                        password_murid: siswa.password_murid || 'password123',
-                        createdAt: serverTimestamp(),
-                        updatedAt: serverTimestamp()
+                        nama_lengkap: siswa.nama_lengkap || '', nama_panggilan: siswa.nama_panggilan || '', nis: targetNisId,
+                        nisn: siswa.nisn ? String(siswa.nisn) : '', nik: siswa.nik ? String(siswa.nik) : '', no_akta: siswa.no_akta || '',
+                        jenis_kelamin: siswa.jenis_kelamin || 'Laki-laki', tempat_lahir: siswa.tempat_lahir || '', tanggal_lahir: siswa.tanggal_lahir || '',
+                        agama: siswa.agama || 'Islam', kewarganegaraan: siswa.kewarganegaraan || 'WNI', anak_ke: siswa.anak_ke ? parseInt(siswa.anak_ke) : 1,
+                        jumlah_saudara: siswa.jumlah_saudara ? parseInt(siswa.jumlah_saudara) : 0, gol_darah: siswa.gol_darah || '-',
+                        alamat_tinggal: siswa.alamat_tinggal || '', kode_pos: siswa.kode_pos ? String(siswa.kode_pos) : '',
+                        tempat_tinggal_bersama: siswa.tempat_tinggal_bersama || 'Orang Tua', transportasi: siswa.transportasi || 'Motor',
+                        no_hp_siswa: siswa.no_hp_siswa ? String(siswa.no_hp_siswa) : '', email_siswa: siswa.email_siswa || '',
+                        nama_ayah: siswa.nama_ayah || '', nik_ayah: siswa.nik_ayah ? String(siswa.nik_ayah) : '', tahun_lahir_ayah: siswa.tahun_lahir_ayah ? String(siswa.tahun_lahir_ayah) : '',
+                        pendidikan_ayah: siswa.pendidikan_ayah || '', pekerjaan_ayah: siswa.pekerjaan_ayah || '', penhasilan_ayah: siswa.penghasilan_ayah || 'Tidak Berpenghasilan',
+                        nama_ibu: siswa.nama_ibu || '', nik_ibu: siswa.nik_ibu ? String(siswa.nik_ibu) : '', tahun_lahir_ibu: siswa.tahun_lahir_ibu ? String(siswa.tahun_lahir_ibu) : '',
+                        pendidikan_ibu: siswa.pendidikan_ibu || '', pekerjaan_ibu: siswa.pekerjaan_ibu || '', penghasilan_ibu: siswa.penghasilan_ibu || 'Tidak Berpenghasilan',
+                        no_hp_ortu: siswa.no_hp_ortu ? String(siswa.no_hp_ortu) : '', nama_wali: siswa.nama_wali || '', nik_wali: siswa.nik_wali ? String(siswa.nik_wali) : '',
+                        hubungan_wali: siswa.hubungan_wali || '', pekerjaan_wali: siswa.pekerjaan_wali || '', no_hp_wali: siswa.no_hp_wali ? String(siswa.no_hp_wali) : '',
+                        status_murid: siswa.status_murid || 'Siswa Baru', asal_sekolah: siswa.asal_sekolah || '', no_ijazah: siswa.no_ijazah || '', no_skhun: siswa.no_skhun || '',
+                        tanggal_masuk: siswa.tanggal_masuk || '', foto_profil: siswa.foto_profil || '', id_kelas: siswa.id_kelas || '',
+                        nomor_absen: siswa.nomor_absen ? parseInt(siswa.nomor_absen) : 1, status_keaktifan: siswa.status_keaktifan || 'Aktif',
+                        username_murid: siswa.username_murid || targetNisId, password_murid: siswa.password_murid || 'password123',
+                        createdAt: serverTimestamp(), updatedAt: serverTimestamp()
                     };
-
                     await setDoc(doc(db, "murid", targetNisId), payload, { merge: true });
                     suksesCount++;
                 }
-
                 alert(`Berhasil mengimpor massal ${suksesCount} data murid ke database!`);
                 tutupModalExcelPreview();
-                switchMenu('murid', document.querySelector('[onclick*="murid"]')); 
+                switchMenu('murid', document.querySelector('[onclick*="murid"]'));
             } catch(err) {
-                alert("Terjadi kesalahan penguncian DB saat simpan massal.");
-                console.error(err);
+                alert("Terjadi kesalahan massal.");
             } finally {
                 if(btn) { btn.disabled = false; btn.innerText = "Konfirmasi Simpan"; }
             }
         };
-
-        window.addEventListener('resize', adjustMobileLayout);
-        window.addEventListener('DOMContentLoaded', async () => {
-            adjustMobileLayout(); 
-            const isLoggedIn = localStorage.getItem('isLoggedIn');
-            if (isLoggedIn === 'true') { 
-                showDashboard(); 
-                return; 
-            }
-            try {
-                const snap = await getDocs(collection(db, "users"));
-                if (!snap.empty) showLogin(); else showRegister();
-            } catch (error) { 
-                showLogin(); 
-            }
-        });
-
-        function adjustMobileLayout() {
-            const headerTop = document.querySelector('.nav-header-top'); const navRight = document.querySelector('.nav-right'); const navbar = document.querySelector('.navbar');
-            if (!headerTop || !navRight || !navbar) return;
-            if (window.innerWidth <= 768) { if (navRight.parentElement === navbar) headerTop.appendChild(navRight); }
-            else { if (navRight.parentElement === headerTop) navbar.appendChild(navRight); }
-        }
 
         window.switchMenu = async function(menuName, element) {
             const items = document.querySelectorAll('.nav-item'); items.forEach(item => item.classList.remove('active'));
@@ -811,51 +744,90 @@
                     };
                     window.bukaFormRombel = async function() {
                         document.getElementById('viewTabelRombel').style.display = 'none'; document.getElementById('viewFormRombel').style.display = 'block'; document.getElementById('formRombelMaster').reset(); document.getElementById('rombel_id_hidden').value = '';
-                        window.rombelSiswaList = []; window.rombelMapelList = []; document.getElementById('siswaRombelContainer').innerHTML = ''; document.getElementById('tbodyRombelMapel').innerHTML = '';
+                        window.rombelSiswaList = []; window.rombelMapelList = [];
                         const tpId = document.getElementById('filter_tp_rombel').value; const krId = document.getElementById('filter_kurikulum_rombel').value;
                         try {
                             window.siswaSudahAdaRombel.clear(); 
-                            
-                            // PERBAIKAN LOGIKA: Memindai seluruh rombel yang terikat pada TP dan Kurikulum aktif ini
                             const rAllSnap = await getDocs(collection(db, "rombel")); 
                             rAllSnap.forEach(rDoc => { 
                                 const rData = rDoc.data(); 
                                 if(rData.tp_id === tpId && rData.kurikulum_id === krId) { 
-                                    (rData.siswa_ids || []).forEach(sId => window.siswaSudahAdaRombel.add(String(sId))); 
+                                    (rData.siswa_ids || []).forEach(sId => window.siswaSudahAdaRombel.add(sId)); 
                                 } 
                             });
-                            
                             const krSnap = await getDoc(doc(db, "kurikulum", krId)); const jenjangSelect = document.getElementById('rombel_jenjang');
                             if(jenjangSelect && krSnap.exists()) { jenjangSelect.innerHTML = ''; const maxJenjang = krSnap.data().jumlah_jenjang || 1; for(let j=1; j<=maxJenjang; j++) { const opt = document.createElement('option'); opt.value = j; opt.innerText = `Jenjang Tingkat ${j}`; jenjangSelect.appendChild(opt); } }
                             const tSnap = await getDocs(query(collection(db, "teachers"), orderBy("nama_lengkap", "asc"))); const waliSelect = document.getElementById('rombel_wali_id'); const pengampuSelect = document.getElementById('select_tambah_guru_pengampu'); if(waliSelect) waliSelect.innerHTML = '<option value="">-- Pilih Wali Kelas --</option>'; if(pengampuSelect) pengampuSelect.innerHTML = '<option value="">-- Pilih Guru Pengampu --</option>';
                             tSnap.forEach(tDoc => { const t = tDoc.data(); const name = `${t.gelar_depan ? t.gelar_depan+' ':''}${t.nama_lengkap}${t.gelar_belakang ? ', '+t.gelar_belakang:''}`; const optW = document.createElement('option'); optW.value = tDoc.id; optW.innerText = name; if(waliSelect) waliSelect.appendChild(optW); const optP = document.createElement('option'); optP.value = tDoc.id; optP.innerText = name; if(pengampuSelect)  pengampuSelect.appendChild(optP); });
-                            const sSnap = await getDocs(query(collection(db, "murid"), orderBy("nama_lengkap", "asc"))); window.masterSiswaArray = []; sSnap.forEach(sDoc => { const s = sDoc.data(); window.masterSiswaArray.push({ id: sDoc.id, nama: s.nama_lengkap, nisn: s.nisn }); }); window.refreshSiswaDropdownOptions();
+                            
+                            const sSnap = await getDocs(query(collection(db, "murid"), orderBy("nama_lengkap", "asc"))); 
+                            window.masterSiswaArray = []; 
+                            sSnap.forEach(sDoc => { 
+                                const s = sDoc.data(); 
+                                window.masterSiswaArray.push({ id: sDoc.id, nama: s.nama_lengkap, id_kelas: s.id_kelas || '' }); 
+                            }); 
+                            
+                            window.refreshDualListBoxRombel();
+                            
                             const mSnap = await getDocs(query(collection(db, "matapelajaran"), orderBy("createdAt", "asc"))); window.masterMapelArray = []; const mSelect = document.getElementById('select_tambah_mapel'); if(mSelect) mSelect.innerHTML = '<option value="">-- Pilih Mapel --</option>';
                             mSnap.forEach(mDoc => { const m = mDoc.data(); if(m.tipe === 'mapel' && m.tp_id === tpId && m.kurikulum_id === krId) { window.masterMapelArray.push({ id: mDoc.id, nama: m.nama, kode: m.kode_pendek, parent_id: m.parent_id }); const optM = document.createElement('option'); optM.value = mDoc.id; optM.innerText = `${m.nama} [${m.kode_pendek}]`; if(mSelect) mSelect.appendChild(optM); } });
                         } catch {}
                     };
                     window.kembaliKeTabelRombel = function() { document.getElementById('viewFormRombel').style.display = 'none'; document.getElementById('viewTabelRombel').style.display = 'block'; loadDaftarRombel(); };
                     
-                    window.refreshSiswaDropdownOptions = function() {
-                        const siswaSelect = document.getElementById('select_tambah_siswa'); if(!siswaSelect) return; siswaSelect.innerHTML = '<option value="">-- Pilih Siswa --</option>';
-                        const currentEditRombelId = document.getElementById('rombel_id_hidden').value;
-
-                        window.masterSiswaArray.forEach(sObj => { 
-                            const sudahAdaDiRombelLain = window.siswaSudahAdaRombel.has(String(sObj.id)); 
-                            const bagianDariRombelIni = window.rombelSiswaList.includes(String(sObj.id)); 
+                    // PERBAIKAN LOGIKA: Membangun sistem Dual-List select box kaku neubrutalism
+                    window.refreshDualListBoxRombel = function() {
+                        const selectTersedia = document.getElementById('select_siswa_tersedia_db');
+                        const selectRombel = document.getElementById('select_siswa_anggota_rombel');
+                        if(!selectTersedia || !selectRombel) return;
+                        
+                        selectTersedia.innerHTML = '';
+                        selectRombel.innerHTML = '';
+                        
+                        window.masterSiswaArray.forEach(sObj => {
+                            const sudahMasukKelasLain = window.siswaSudahAdaRombel.has(sObj.id);
+                            const bagianDariRombelIni = window.rombelSiswaList.includes(sObj.id);
                             
-                            // PERBAIKAN LOGIKA UTAMA: Siswa disembunyikan total dari list jika sudah terdaftar di rombel lain pada TP & Kurikulum berjalan
-                            if (!sudahAdaDiRombelLain || bagianDariRombelIni) { 
-                                const optS = document.createElement('option'); 
-                                optS.value = sObj.id; 
-                                optS.innerText = `${sObj.nama} (NIS: ${sObj.id})`; 
-                                siswaSelect.appendChild(optS); 
-                            } 
+                            if (bagianDariRombelIni) {
+                                const opt = document.createElement('option');
+                                opt.value = sObj.id;
+                                opt.innerText = `${sObj.nama} (NIS: ${sObj.id})`;
+                                selectRombel.appendChild(opt);
+                            } else if (!sudahMasukKelasLain) {
+                                const opt = document.createElement('option');
+                                opt.value = sObj.id;
+                                opt.innerText = `${sObj.nama} (NIS: ${sObj.id})`;
+                                selectTersedia.appendChild(opt);
+                            }
                         });
                     };
-                    window.addSiswaToRombelList = function() { const sId = document.getElementById('select_tambah_siswa').value; if(!sId) return; if(window.rombelSiswaList.includes(String(sId))) { alert("Siswa sudah masuk daftar."); return; } window.rombelSiswaList.push(String(sId)); renderSiswaBadges(); };
-                    window.removeSiswaFromRombelList = function(sId) { window.rombelSiswaList = window.rombelSiswaList.filter(id => String(id) !== String(sId)); renderSiswaBadges(); };
-                    function renderSiswaBadges() { const container = document.getElementById('siswaRombelContainer'); if(!container) return; container.innerHTML = ''; window.rombelSiswaList.forEach(id => { const sObj = window.masterSiswaArray.find(item => String(item.id) === String(id)); if(sObj) { const span = document.createElement('span'); span.className = 'tag-item'; span.innerHTML = `${sObj.nama} <span class="remove-btn" onclick="removeSiswaFromRombelList('${id}')">&times;</span>`; container.appendChild(span); } }); window.refreshSiswaDropdownOptions(); }
+
+                    window.pindahkanSiswaMasukRombel = function() {
+                        const selectTersedia = document.getElementById('select_siswa_tersedia_db');
+                        if(!selectTersedia) return;
+                        const selectedOptions = Array.from(selectTersedia.selectedOptions);
+                        if(selectedOptions.length === 0) { alert("Pilih satu atau beberapa siswa di kotak kanan terlebih dahulu."); return; }
+                        
+                        selectedOptions.forEach(opt => {
+                            if(!window.rombelSiswaList.includes(opt.value)) {
+                                window.rombelSiswaList.push(opt.value);
+                            }
+                        });
+                        window.refreshDualListBoxRombel();
+                    };
+
+                    window.keluarkanSiswaDariRombel = function() {
+                        const selectRombel = document.getElementById('select_siswa_anggota_rombel');
+                        if(!selectRombel) return;
+                        const selectedOptions = Array.from(selectRombel.selectedOptions);
+                        if(selectedOptions.length === 0) { alert("Pilih siswa di kotak kiri yang ingin dikeluarkan."); return; }
+                        
+                        selectedOptions.forEach(opt => {
+                            window.rombelSiswaList = window.rombelSiswaList.filter(id => id !== opt.value);
+                        });
+                        window.refreshDualListBoxRombel();
+                    };
+
                     window.addMapelToRombelList = function() { const mId = document.getElementById('select_tambah_mapel').value; const gId = document.getElementById('select_tambah_guru_pengampu').value; if(!mId || !gId) { alert("Pilih Mapel dan Guru."); return; } if(window.rombelMapelList.some(item => item.mapel_id === mId)) { alert("Mapel sudah ada."); return; } window.rombelMapelList.push({ mapel_id: mId, guru_id: gId }); renderRombelMapelTable(); };
                     window.removeMapelFromRombelList = function(mId) { window.rombelMapelList = window.rombelMapelList.filter(item => item.mapel_id !== mId); renderRombelMapelTable(); };
                     function renderRombelMapelTable() {
@@ -872,9 +844,38 @@
                     window.simpanStrukturRombel = async function(e) {
                         e.preventDefault(); const name = document.getElementById('rombel_nama').value.trim(); const jg = document.getElementById('rombel_jenjang').value; const wali = document.getElementById('rombel_wali_id').value; const isEdit = document.getElementById('rombel_id_hidden').value; if(!name || !jg || !wali) { alert("Lengkapi data."); return; }
                         const payload = { nama_rombel: name, jenjang: parseInt(jg), wali_kelas_id: wali, tp_id: document.getElementById('filter_tp_rombel').value, kurikulum_id: document.getElementById('filter_kurikulum_rombel').value, siswa_ids: window.rombelSiswaList, mapel_paket: window.rombelMapelList, updatedAt: serverTimestamp() }; const targetId = isEdit ? isEdit : "RB_" + Date.now().toString().slice(-6);
-                        try { if(!isEdit) payload['createdAt'] = serverTimestamp(); await setDoc(doc(db, "rombel", targetId), payload, { merge: true }); alert("Disimpan!"); kembaliKeTabelRombel(); } catch {}
+                        try { 
+                            if(!isEdit) payload['createdAt'] = serverTimestamp(); 
+                            await setDoc(doc(db, "rombel", targetId), payload, { merge: true }); 
+                            
+                            // Perbarui key id_kelas massal di doc murid biar sinkron
+                            for(const sId of window.rombelSiswaList) {
+                                await updateDoc(doc(db, "murid", sId), { id_kelas: targetId });
+                            }
+                            alert("Disimpan!"); kembaliKeTabelRombel(); 
+                        } catch {}
                     };
-                    window.editRombel = async function(id) { await window.bukaFormRombel(); document.getElementById('formRombelTitle').innerText = "Edit Data Rombel"; document.getElementById('rombel_id_hidden').value = id; try { const snap = await getDoc(doc(db, "rombel", id)); if(snap.exists()) { const d = snap.data(); document.getElementById('rombel_nama').value = d.nama_rombel || ''; document.getElementById('rombel_jenjang').value = d.jenjang || 1; document.getElementById('rombel_wali_id').value = d.wali_kelas_id || ''; window.rombelSiswaList = (d.siswa_ids || []).map(id => String(id)); window.rombelMapelList = d.mapel_paket || []; renderSiswaBadges(); renderRombelMapelTable(); } } catch { alert("Gagal."); } };
+                    window.editRombel = async function(id) { 
+                        await window.bukaFormRombel(); 
+                        document.getElementById('formRombelTitle').innerText = "Edit Data Rombel"; 
+                        document.getElementById('rombel_id_hidden').value = id; 
+                        try { 
+                            const snap = await getDoc(doc(db, "rombel", id)); 
+                            if(snap.exists()) { 
+                                const d = snap.data(); 
+                                document.getElementById('rombel_nama').value = d.nama_rombel || ''; 
+                                document.getElementById('rombel_jenjang').value = d.jenjang || 1; 
+                                document.getElementById('rombel_wali_id').value = d.wali_kelas_id || ''; 
+                                window.rombelSiswaList = d.siswa_ids || []; 
+                                window.rombelMapelList = d.mapel_paket || []; 
+                                
+                                // Hapus kepemilikan rombel ini dari blacklist global sementara agar bisa tampil di list kiri rombel edit
+                                window.rombelSiswaList.forEach(sId => window.siswaSudahAdaRombel.delete(sId));
+                                window.refreshDualListBoxRombel(); 
+                                renderRombelMapelTable(); 
+                            } 
+                        } catch { alert("Gagal."); } 
+                    };
                     window.hapusRombel = async function(id) { if(confirm("Hapus?")) { try { await deleteDoc(doc(db, "rombel", id)); loadDaftarRombel(); } catch {} } };
                     break;
 
@@ -908,30 +909,17 @@
                         if(!tpId || !krId) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Silakan filter data.</td></tr>'; return; } tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Mengatur struktur...</td></tr>';
                         try {
                             const rSnap = await getDocs(collection(db, "rombel")); const tSnap = await getDocs(collection(db, "teachers")); const teachersMap = {}; tSnap.forEach(d => { teachersMap[d.id] = d.data().nama_lengkap; });
-                            
                             const mSnap = await getDocs(collection(db, "murid"));
                             window.masterMuridNamaMap = {};
-                            mSnap.forEach(d => {
-                                window.masterMuridNamaMap[d.id] = d.data().nama_lengkap;
-                            });
-
+                            mSnap.forEach(d => { window.masterMuridNamaMap[d.id] = d.data().nama_lengkap; });
                             tbody.innerHTML = ''; let idx = 1; let empty = true;
-                            
                             const mapelGlobalSnap = await getDocs(collection(db, "matapelajaran")); 
                             window.loadedMasterMapelLookup = {}; 
-                            mapelGlobalSnap.forEach(d => { 
-                                const mData = d.data();
-                                window.loadedMasterMapelLookup[d.id] = mData.kode_pendek || mData.nama; 
-                            });
-
+                            mapelGlobalSnap.forEach(d => { const mData = d.data(); window.loadedMasterMapelLookup[d.id] = mData.kode_pendek || mData.nama; });
                             rSnap.forEach(doc => {
                                 const r = doc.data(); 
                                 if(r.tp_id === tpId && r.kurikulum_id === krId) { 
-                                    empty = false; 
-                                    const tr = document.createElement('tr'); 
-                                    tr.className = 'clickable-row-kelas';
-                                    tr.id = `row_id_pd_kelas_${doc.id}`;
-                                    tr.setAttribute("onclick", `selectActiveRowKelasSplit('${doc.id}')`);
+                                    empty = false; const tr = document.createElement('tr'); tr.className = 'clickable-row-kelas'; tr.id = `row_id_pd_kelas_${doc.id}`; tr.setAttribute("onclick", `selectActiveRowKelasSplit('${doc.id}')`);
                                     const wName = teachersMap[r.wali_kelas_id] || r.wali_kelas_id; 
                                     tr.innerHTML = `<td>${idx++}</td><td><strong>${r.nama_rombel}</strong></td><td>${wName}</td><td style="text-align:center;" onclick="event.stopPropagation();"><button class="btn-table-action-neubrutalism" onclick="bukaInputNilaiSiswa('${doc.id}')" title="Input Nilai"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="display:block;"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></button></td>`; 
                                     tbody.appendChild(tr); 
@@ -945,295 +933,76 @@
                         const container = document.getElementById(containerId); if(!container) return;
                         container.innerHTML = '';
                         dataMapel.forEach((m, idx) => {
-                            const div = document.createElement('div');
-                            div.className = `tab-item ${idx === 0 ? 'active' : ''}`;
-                            div.innerText = window.loadedMasterMapelLookup[m.mapel_id] || m.mapel_id;
-                            div.onclick = () => {
-                                const siblingTabs = container.querySelectorAll('.tab-item');
-                                siblingTabs.forEach(el => el.classList.remove('active'));
-                                div.classList.add('active');
-                                callbackFunction(m.mapel_id);
-                            };
+                            const div = document.createElement('div'); div.className = `tab-item ${idx === 0 ? 'active' : ''}`; div.innerText = window.loadedMasterMapelLookup[m.mapel_id] || m.mapel_id;
+                            div.onclick = () => { const siblingTabs = container.querySelectorAll('.tab-item'); siblingTabs.forEach(el => el.classList.remove('active')); div.classList.add('active'); callbackFunction(m.mapel_id); };
                             container.appendChild(div);
                         });
                     };
 
-                    window.selectActiveRowKelasSplit = function(rombelId) {
-                        document.querySelectorAll('.clickable-row-kelas').forEach(el => el.classList.remove('selected-active-kelas'));
-                        const targetRow = document.getElementById(`row_id_pd_kelas_${rombelId}`);
-                        if(targetRow) targetRow.classList.add('selected-active-kelas');
-                        
-                        window.bukaManajemenTP(rombelId);
-                    };
-
+                    window.selectActiveRowKelasSplit = function(rombelId) { document.querySelectorAll('.clickable-row-kelas').forEach(el => el.classList.remove('selected-active-kelas')); const targetRow = document.getElementById(`row_id_pd_kelas_${rombelId}`); if(targetRow) targetRow.classList.add('selected-active-kelas'); window.bukaManajemenTP(rombelId); };
                     window.bukaManajemenTP = async function(rombelId) {
-                        const fieldsToEnable = ['input_nama_topik', 'input_teks_tp', 'select_wadah_topik', 'btnSimpanTopikInduk', 'btnSimpanSubTPTeks'];
-                        fieldsToEnable.forEach(id => {
-                            const el = document.getElementById(id);
-                            if(el) el.disabled = false;
-                        });
-
-                        document.getElementById('input_nama_topik').value = ''; 
-                        document.getElementById('input_teks_tp').value = '';
-                        
+                        const fieldsToEnable = ['input_nama_topik', 'input_teks_tp', 'select_wadah_topik', 'btnSimpanTopikInduk', 'btnSimpanSubTPTeks']; fieldsToEnable.forEach(id => { const el = document.getElementById(id); if(el) el.disabled = false; });
+                        document.getElementById('input_nama_topik').value = ''; document.getElementById('input_teks_tp').value = '';
                         try {
-                            const rSnap = await getDoc(doc(db, "rombel", rombelId)); window.currentActiveRombelObj = { id: rombelId, ...rSnap.data() };
-                            document.getElementById('titleHeaderStrukturTPKanan').innerText = `🎯 STRUKTUR TOPIK & TP - KELAS ${window.currentActiveRombelObj.nama_rombel}`;
-                            
-                            const paketMapel = window.currentActiveRombelObj.mapel_paket || [];
-                            if(paketMapel.length === 0) { 
-                                document.getElementById('tp_tab_mapel').innerHTML = '<span>Mapel Paketan Kosong</span>'; 
-                                document.getElementById('containerPohonStruktur').innerHTML = ''; 
-                                return; 
-                            }
-                            
-                            window.renderTabsMapel('tp_tab_mapel', paketMapel, (mapelId) => {
-                                window.activeSelectedMapelId = mapelId;
-                                loadStrukturTopikDanTP();
-                            });
-                            
-                            window.activeSelectedMapelId = paketMapel[0].mapel_id;
-                            loadStrukturTopikDanTP();
+                            const rSnap = await getDoc(doc(db, "rombel", rombelId)); window.currentActiveRombelObj = { id: rombelId, ...rSnap.data() }; document.getElementById('titleHeaderStrukturTPKanan').innerText = `🎯 STRUKTUR TOPIK & TP - KELAS ${window.currentActiveRombelObj.nama_rombel}`;
+                            const paketMapel = window.currentActiveRombelObj.mapel_paket || []; if(paketMapel.length === 0) { document.getElementById('tp_tab_mapel').innerHTML = '<span>Mapel Paketan Kosong</span>'; document.getElementById('containerPohonStruktur').innerHTML = ''; return; }
+                            window.renderTabsMapel('tp_tab_mapel', paketMapel, (mapelId) => { window.activeSelectedMapelId = mapelId; loadStrukturTopikDanTP(); });
+                            window.activeSelectedMapelId = paketMapel[0].mapel_id; loadStrukturTopikDanTP();
                         } catch(err) { console.error(err); }
                     };
 
                     window.loadStrukturTopikDanTP = async function() {
-                        const container = document.getElementById('containerPohonStruktur'); const selectWadahTopik = document.getElementById('select_wadah_topik');
-                        if(!container || !selectWadahTopik) return; selectWadahTopik.innerHTML = '<option value="">-- Pilih Topik --</option>';
-                        if(!window.activeSelectedMapelId) { container.innerHTML = '<p>Pilih mapel.</p>'; return; } container.innerHTML = '<span>Membongkar pohon kompetensi...</span>';
+                        const container = document.getElementById('containerPohonStruktur'); const selectWadahTopik = document.getElementById('select_wadah_topik'); if(!container || !selectWadahTopik) return; selectWadahTopik.innerHTML = '<option value="">-- Pilih Topik --</option>'; if(!window.activeSelectedMapelId) { container.innerHTML = '<p>Pilih mapel.</p>'; return; } container.innerHTML = '<span>Membongkar pohon kompetensi...</span>';
                         try {
                             const snap = await getDocs(query(collection(db, "penilaian"), orderBy("createdAt", "asc"))); const items = []; snap.forEach(d => { const data = d.data(); if(data.rombel_id === window.currentActiveRombelObj.id && data.mapel_id === window.activeSelectedMapelId) { items.push({ id: d.id, ...data }); } });
-                            container.innerHTML = ''; 
-                            
-                            const listTopik = items.filter(i => i.tipe_komponen === 'topik'); 
-                            const listTP = items.filter(i => i.tipe_komponen === 'tp');
-                            
+                            container.innerHTML = ''; const listTopik = items.filter(i => i.tipe_komponen === 'topik'); const listTP = items.filter(i => i.tipe_komponen === 'tp');
                             if(listTopik.length === 0) { container.innerHTML = '<p style="color:#000; text-align:center; font-size:12px; padding:15px;">Belum ada nama Topik/Bab dibuat.</p>'; return; }
                             listTopik.forEach(topik => {
                                 const opt = document.createElement('option'); opt.value = topik.id; opt.innerText = topik.nama_topik; selectWadahTopik.appendChild(opt);
-                                
-                                const divTopik = document.createElement('div'); 
-                                divTopik.className = 'topik-group'; 
-                                divTopik.innerHTML = `
-                                    <div class="topik-header">
-                                        <span contenteditable="true" 
-                                              class="editable-text-field" 
-                                              onblur="updateInlineKomponenPenilaian('${topik.id}', 'topik', this.innerText)"
-                                              onkeydown="handleInlineEnterKey(event, this)">${topik.nama_topik}</span>
-                                        <button class="btn-del-small" onclick="hapusKomponenPenilaian('${topik.id}')">&times;</button>
-                                    </div>
-                                    <div id="tp_list_sub_${topik.id}" class="tp-sub-list"></div>
-                                `;
-                                container.appendChild(divTopik);
-                                
-                                const subContainer = document.getElementById(`tp_list_sub_${topik.id}`);
-                                const anakTP = listTP.filter(t => t.parent_topik_id === topik.id);
-                                anakTP.forEach((tp, idx) => {
-                                    const divTP = document.createElement('div'); 
-                                    divTP.className = 'tp-item-row'; 
-                                    divTP.innerHTML = `
-                                        <div>
-                                            <strong>TP ${idx+1}: </strong>
-                                            <span contenteditable="true" 
-                                                  class="editable-text-field" 
-                                                  onblur="updateInlineKomponenPenilaian('${tp.id}', 'tp', this.innerText)"
-                                                  onkeydown="handleInlineEnterKey(event, this)">${tp.teks_tujuan}</span>
-                                        </div>
-                                        <button class="btn-del-small" onclick="hapusKomponenPenilaian('${tp.id}')">&times;</button>
-                                    `;
-                                    if(subContainer) subContainer.appendChild(divTP);
-                                });
+                                const divTopik = document.createElement('div'); divTopik.className = 'topik-group'; divTopik.innerHTML = `<div class="topik-header"><span contenteditable="true" class="editable-text-field" onblur="updateInlineKomponenPenilaian('${topik.id}', 'topik', this.innerText)" onkeydown="handleInlineEnterKey(event, this)">${topik.nama_topik}</span><button class="btn-del-small" onclick="hapusKomponenPenilaian('${topik.id}')">&times;</button></div><div id="tp_list_sub_${topik.id}" class="tp-sub-list"></div>`; container.appendChild(divTopik);
+                                const subContainer = document.getElementById(`tp_list_sub_${topik.id}`); const anakTP = listTP.filter(t => t.parent_topik_id === topik.id);
+                                anakTP.forEach((tp, idx) => { const divTP = document.createElement('div'); divTP.className = 'tp-item-row'; divTP.innerHTML = `<div><strong>TP ${idx+1}: </strong><span contenteditable="true" class="editable-text-field" onblur="updateInlineKomponenPenilaian('${tp.id}', 'tp', this.innerText)" onkeydown="handleInlineEnterKey(event, this)">${tp.teks_tujuan}</span></div><button class="btn-del-small" onclick="hapusKomponenPenilaian('${tp.id}')">&times;</button>`; if(subContainer) subContainer.appendChild(divTP); });
                             });
                         } catch(err) { console.error(err); }
                     };
 
                     window.updateInlineKomponenPenilaian = async function(docId, tipe, teksBaru) {
-                        const teksBersih = teksBaru.trim();
-                        if(teksBersih === "") {
-                            alert("Teks tidak boleh kosong!");
-                            loadStrukturTopikDanTP();
-                            return;
-                        }
-                        try {
-                            const docRef = doc(db, "penilaian", docId);
-                            if(tipe === 'topik') {
-                                await updateDoc(docRef, { nama_topik: teksBersih, updatedAt: serverTimestamp() });
-                            } else if(tipe === 'tp') {
-                                await updateDoc(docRef, { teks_tujuan: teksBersih, updatedAt: serverTimestamp() });
-                            }
-                            
-                            const snap = await getDocs(query(collection(db, "penilaian"), orderBy("createdAt", "asc")));
-                            const selectWadahTopik = document.getElementById('select_wadah_topik');
-                            if(selectWadahTopik) {
-                                selectWadahTopik.innerHTML = '<option value="">-- Pilih Topik --</option>';
-                                snap.forEach(d => {
-                                    const data = d.data();
-                                    if(data.rombel_id === window.currentActiveRombelObj.id && data.mapel_id === window.activeSelectedMapelId && data.tipe_komponen === 'topik') {
-                                        selectWadahTopik.innerHTML += `<option value="${d.id}">${data.nama_topik}</option>`;
-                                    }
-                                });
-                            }
-                        } catch(err) { console.error("Gagal memperbarui: ", err); }
+                        const teksBersih = teksBaru.trim(); if(teksBersih === "") { alert("Teks tidak boleh kosong!"); loadStrukturTopikDanTP(); return; }
+                        try { const docRef = doc(db, "penilaian", docId); if(tipe === 'topik') { await updateDoc(docRef, { nama_topik: teksBersih, updatedAt: serverTimestamp() }); } else if(tipe === 'tp') { await updateDoc(docRef, { teks_tujuan: teksBersih, updatedAt: serverTimestamp() }); } const snap = await getDocs(query(collection(db, "penilaian"), orderBy("createdAt", "asc"))); const selectWadahTopik = document.getElementById('select_wadah_topik'); if(selectWadahTopik) { selectWadahTopik.innerHTML = '<option value="">-- Pilih Topik --</option>'; snap.forEach(d => { const data = d.data(); if(data.rombel_id === window.currentActiveRombelObj.id && data.mapel_id === window.activeSelectedMapelId && data.tipe_komponen === 'topik') { selectWadahTopik.innerHTML += `<option value="${d.id}">${data.nama_topik}</option>`; } }); } } catch(err) { console.error("Gagal memperbarui: ", err); }
                     };
 
-                    window.handleInlineEnterKey = function(event, element) {
-                        if(event.key === 'Enter') {
-                            event.preventDefault();
-                            element.blur();
-                        }
-                    };
-
-                    window.simpanTopikBaru = async function() {
-                        const namaTopik = document.getElementById('input_nama_topik').value.trim(); if(!namaTopik || !window.activeSelectedMapelId) { alert("Ketik nama topik/bab dahulu."); return; }
-                        const idTopik = "TPK_" + Date.now().toString().slice(-6);
-                        try { await setDoc(doc(db, "penilaian", idTopik), { tipe_komponen: "topik", rombel_id: window.currentActiveRombelObj.id, mapel_id: window.activeSelectedMapelId, nama_topik: namaTopik, createdAt: serverTimestamp() }); document.getElementById('input_nama_topik').value = ''; loadStrukturTopikDanTP(); } catch { alert("Gagal."); }
-                    };
-                    window.simpanTPTeksKeTopik = async function() {
-                        const parentTopikId = document.getElementById('select_wadah_topik').value; const teksTp = document.getElementById('input_teks_tp').value.trim(); if(!parentTopikId || !teksTp || !window.activeSelectedMapelId) { alert("Pilih Wadah Topik & Isi Deskripsi TP."); return; }
-                        const idTP = "TPM_" + Date.now().toString().slice(-6);
-                        try { await setDoc(doc(db, "penilaian", idTP), { tipe_komponen: "tp", parent_topik_id: parentTopikId, rombel_id: window.currentActiveRombelObj.id, mapel_id: window.activeSelectedMapelId, teks_tujuan: teksTp, createdAt: serverTimestamp() }); document.getElementById('input_teks_tp').value = ''; loadStrukturTopikDanTP(); } catch { alert("Gagal."); }
-                    };
+                    window.handleInlineEnterKey = function(event, element) { if(event.key === 'Enter') { event.preventDefault(); element.blur(); } };
+                    window.simpanTopikBaru = async function() { const namaTopik = document.getElementById('input_nama_topik').value.trim(); if(!namaTopik || !window.activeSelectedMapelId) { alert("Ketik nama topik/bab dahulu."); return; } const idTopik = "TPK_" + Date.now().toString().slice(-6); try { await setDoc(doc(db, "penilaian", idTopik), { tipe_komponen: "topik", rombel_id: window.currentActiveRombelObj.id, mapel_id: window.activeSelectedMapelId, nama_topik: namaTopik, createdAt: serverTimestamp() }); document.getElementById('input_nama_topik').value = ''; loadStrukturTopikDanTP(); } catch { alert("Gagal."); } };
+                    window.simpanTPTeksKeTopik = async function() { const parentTopikId = document.getElementById('select_wadah_topik').value; const teksTp = document.getElementById('input_teks_tp').value.trim(); if(!parentTopikId || !teksTp || !window.activeSelectedMapelId) { alert("Pilih Wadah Topik & Isi Deskripsi TP."); return; } const idTP = "TPM_" + Date.now().toString().slice(-6); try { await setDoc(doc(db, "penilaian", idTP), { tipe_komponen: "tp", parent_topik_id: parentTopikId, rombel_id: window.currentActiveRombelObj.id, mapel_id: window.activeSelectedMapelId, teks_tujuan: teksTp, createdAt: serverTimestamp() }); document.getElementById('input_teks_tp').value = ''; loadStrukturTopikDanTP(); } catch { alert("Gagal."); } };
                     window.hapusKomponenPenilaian = async function(id) { if(confirm("Hapus komponen struktur ini?")) { try { await deleteDoc(doc(db, "penilaian", id)); loadStrukturTopikDanTP(); } catch {} } };
                     
                     window.bukaInputNilaiSiswa = async function(rombelId) {
-                        document.getElementById('wrapperLayoutSplitPenilaian').style.display = 'none'; 
-                        document.getElementById('viewFormInputNilai').style.display = 'block';
+                        document.getElementById('wrapperLayoutSplitPenilaian').style.display = 'none'; document.getElementById('viewFormInputNilai').style.display = 'block';
                         try {
-                            const rSnap = await getDoc(doc(db, "rombel", rombelId)); window.currentActiveRombelObj = { id: rombelId, ...rSnap.data() };
-                            document.getElementById('titleFormInputNilaiHeader').innerText = `📝 INPUT NILAI SPREADSHEET MURID - KELAS ${window.currentActiveRombelObj.nama_rombel}`;
-                            
-                            const paketMapel = window.currentActiveRombelObj.mapel_paket || [];
-                            if(paketMapel.length === 0) { document.getElementById('nilai_tab_mapel').innerHTML = '<span>Mapel Rombel Kosong</span>'; return; }
-                            
-                            window.renderTabsMapel('nilai_tab_mapel', paketMapel, (mapelId) => {
-                                window.activeSelectedMapelId = mapelId;
-                                renderJSpreadsheetCEDinamis();
-                            });
-                            
-                            window.activeSelectedMapelId = paketMapel[0].mapel_id;
-                            window.renderJSpreadsheetCEDinamis();
+                            const rSnap = await getDoc(doc(db, "rombel", rombelId)); window.currentActiveRombelObj = { id: rombelId, ...rSnap.data() }; document.getElementById('titleFormInputNilaiHeader').innerText = `📝 INPUT NILAI SPREADSHEET MURID - KELAS ${window.currentActiveRombelObj.nama_rombel}`;
+                            const paketMapel = window.currentActiveRombelObj.mapel_paket || []; if(paketMapel.length === 0) { document.getElementById('nilai_tab_mapel').innerHTML = '<span>Mapel Rombel Kosong</span>'; return; }
+                            window.renderTabsMapel('nilai_tab_mapel', paketMapel, (mapelId) => { window.activeSelectedMapelId = mapelId; renderJSpreadsheetCEDinamis(); });
+                            window.activeSelectedMapelId = paketMapel[0].mapel_id; window.renderJSpreadsheetCEDinamis();
                         } catch(err) { console.error(err); }
                     };
 
                     window.renderJSpreadsheetCEDinamis = async function() {
-                        const containerEl = document.getElementById('jspreadsheet_container_nilai');
-                        if(!containerEl || !window.activeSelectedMapelId) return;
-
-                        if(window.activeJSpreadsheetInstance) {
-                            window.activeJSpreadsheetInstance.destroy();
-                            window.activeJSpreadsheetInstance = null;
-                        }
-                        containerEl.innerHTML = '';
-
+                        const containerEl = document.getElementById('jspreadsheet_container_nilai'); if(!containerEl || !window.activeSelectedMapelId) return; if(window.activeJSpreadsheetInstance) { window.activeJSpreadsheetInstance.destroy(); window.activeJSpreadsheetInstance = null; } containerEl.innerHTML = '';
                         try {
-                            const snap = await getDocs(query(collection(db, "penilaian"), orderBy("createdAt", "asc")));
-                            const items = [];
-                            snap.forEach(d => {
-                                const data = d.data();
-                                if(data.rombel_id === window.currentActiveRombelObj.id && data.mapel_id === window.activeSelectedMapelId) {
-                                    items.push({ id: d.id, ...data });
-                                }
-                            });
-
-                            const listTopik = items.filter(i => i.tipe_komponen === 'topik');
-                            const listTP = items.filter(i => i.tipe_komponen === 'tp');
-
-                            if(listTP.length === 0) {
-                                containerEl.innerHTML = `<p style="color:red; font-weight:bold; text-align:center; padding:20px;">Tujuan Pembelajaran (TP) mapel ini belum diisi di form manajemen sebelah kanan. Atur terlebih dahulu.</p>`;
-                                return;
-                            }
-
-                            const rawNestedHeadersArray = [
-                                { title: "Identitas Utama Murid", colspan: "2" }
-                            ];
-                            
-                            window.currentActiveTPListArray = []; 
-                            const headerColumns = [
-                                { title: "NIS", width: 120, readOnly: true },
-                                { title: "Nama Lengkap Murid", width: 280, readOnly: true }
-                            ];
-
-                            listTopik.forEach(topik => {
-                                const anakTP = listTP.filter(t => t.parent_topik_id === topik.id);
-                                if(anakTP.length > 0) {
-                                    rawNestedHeadersArray.push({
-                                        title: `${topik.nama_topik}`,
-                                        colspan: anakTP.length.toString()
-                                    });
-
-                                    anakTP.forEach((tp, subIdx) => {
-                                        window.currentActiveTPListArray.push(tp); 
-                                        headerColumns.push({
-                                            title: `TP ${subIdx + 1}`, 
-                                            width: 90,
-                                            type: "text"
-                                        });
-                                    });
-                                }
-                            });
-
-                            const matrixRowsData = [];
-                            const arraySiswaRombel = window.currentActiveRombelObj.siswa_ids || [];
-                            const skorSnap = await getDoc(doc(db, "penilaian", `SCORE_${window.currentActiveRombelObj.id}_${window.activeSelectedMapelId}`));
-                            const skorSiswaMap = skorSnap.exists() ? (skorSnap.data().skor_map || {}) : {};
-
-                            arraySiswaRombel.forEach(nisId => {
-                                const sNama = window.masterMuridNamaMap[nisId] || "Siswa Terhapus";
-                                const rowCells = [nisId, sNama];
-                                
-                                window.currentActiveTPListArray.forEach(tp => {
-                                    const nilaiLama = (skorSiswaMap[nisId] && skorSiswaMap[nisId][tp.id] !== undefined) ? skorSiswaMap[nisId][tp.id] : '';
-                                    rowCells.push(nilaiLama);
-                                });
-                                matrixRowsData.push(rowCells);
-                            });
-
-                            window.activeJSpreadsheetInstance = jspreadsheet(containerEl, {
-                                data: matrixRowsData,
-                                columns: headerColumns,
-                                nestedHeaders: [ rawNestedHeadersArray ], 
-                                allowInsertRow: false,
-                                allowManualInsertRow: false,
-                                allowDeleteRow: false,
-                                allowInsertColumn: false,
-                                allowManualInsertColumn: false,
-                                allowDeleteColumn: false,
-                                search: false,
-                                pagination: false,
-                                tableOverflow: true,
-                                tableWidth: "100%",
-                                tableHeight: "400px"
-                            });
-
+                            const snap = await getDocs(query(collection(db, "penilaian"), orderBy("createdAt", "asc"))); const items = []; snap.forEach(d => { const data = d.data(); if(data.rombel_id === window.currentActiveRombelObj.id && data.mapel_id === window.activeSelectedMapelId) { items.push({ id: d.id, ...data }); } });
+                            const listTopik = items.filter(i => i.tipe_komponen === 'topik'); const listTP = items.filter(i => i.tipe_komponen === 'tp'); if(listTP.length === 0) { containerEl.innerHTML = `<p style="color:red; font-weight:bold; text-align:center; padding:20px;">Tujuan Pembelajaran (TP) mapel ini belum diisi di form manajemen sebelah kanan. Atur terlebih dahulu.</p>`; return; }
+                            const rawNestedHeadersArray = [ { title: "Identitas Utama Murid", colspan: "2" } ]; window.currentActiveTPListArray = []; const headerColumns = [ { title: "NIS", width: 120, readOnly: true }, { title: "Nama Lengkap Murid", width: 280, readOnly: true } ];
+                            listTopik.forEach(topik => { const anakTP = listTP.filter(t => t.parent_topik_id === topik.id); if(anakTP.length > 0) { rawNestedHeadersArray.push({ title: `${topik.nama_topik}`, colspan: anakTP.length.toString() }); anakTP.forEach((tp, subIdx) => { window.currentActiveTPListArray.push(tp); headerColumns.push({ title: `TP ${subIdx + 1}`, width: 90, type: "text" }); }); } });
+                            const matrixRowsData = []; const arraySiswaRombel = window.currentActiveRombelObj.siswa_ids || []; const skorSnap = await getDoc(doc(db, "penilaian", `SCORE_${window.currentActiveRombelObj.id}_${window.activeSelectedMapelId}`)); const skorSiswaMap = skorSnap.exists() ? (skorSnap.data().skor_map || {}) : {};
+                            arraySiswaRombel.forEach(nisId => { const sNama = window.masterMuridNamaMap[nisId] || "Siswa Terhapus"; const rowCells = [nisId, sNama]; window.currentActiveTPListArray.forEach(tp => { const nilaiLama = (skorSiswaMap[nisId] && skorSiswaMap[nisId][tp.id] !== undefined) ? skorSiswaMap[nisId][tp.id] : ''; rowCells.push(nilaiLama); }); matrixRowsData.push(rowCells); });
+                            window.activeJSpreadsheetInstance = jspreadsheet(containerEl, { data: matrixRowsData, columns: headerColumns, nestedHeaders: [ rawNestedHeadersArray ], allowInsertRow: false, allowManualInsertRow: false, allowDeleteRow: false, allowInsertColumn: false, allowManualInsertColumn: false, allowDeleteColumn: false, search: false, pagination: false, tableOverflow: true, tableWidth: "100%", tableHeight: "400px" });
                         } catch(err) { console.error(err); }
                     };
 
                     window.simpanKumpulanNilaiJSpreadsheetCE = async function() {
-                        if(!window.activeJSpreadsheetInstance || !window.activeSelectedMapelId) return;
-
-                        const spreadsheetRows = window.activeJSpreadsheetInstance.getData();
-                        const skorSiswaMap = {};
-
-                        spreadsheetRows.forEach(row => {
-                            const nis = row[0]; 
-                            if(!nis) return;
-
-                            skorSiswaMap[nis] = {};
-                            window.currentActiveTPListArray.forEach((tp, idx) => {
-                                const cellValue = row[2 + idx];
-                                const parsedValue = (cellValue === '' || cellValue === undefined || cellValue === null) ? '' : parseInt(cellValue);
-                                skorSiswaMap[nis][tp.id] = parsedValue;
-                            });
-                        });
-
-                        try {
-                            await setDoc(doc(db, "penilaian", `SCORE_${window.currentActiveRombelObj.id}_${window.activeSelectedMapelId}`), {
-                                tipe_dokumen: "skor_siswa", rombel_id: window.currentActiveRombelObj.id,
-                                mapel_id: window.activeSelectedMapelId, skor_map: skorSiswaMap, updatedAt: serverTimestamp()
-                            }, { merge: true });
-                            alert("Kumpulan Nilai jSpreadsheet Berhasil Disimpan!");
-                            window.kembaliKeTabelRombelPenilaian();
-                        } catch { alert("Gagal mengunci database nilai."); }
+                        if(!window.activeJSpreadsheetInstance || !window.activeSelectedMapelId) return; const spreadsheetRows = window.activeJSpreadsheetInstance.getData(); const skorSiswaMap = {};
+                        spreadsheetRows.forEach(row => { const nis = row[0]; if(!nis) return; skorSiswaMap[nis] = {}; window.currentActiveTPListArray.forEach((tp, idx) => { const cellValue = row[2 + idx]; const parsedValue = (cellValue === '' || cellValue === undefined || cellValue === null) ? '' : parseInt(cellValue); skorSiswaMap[nis][tp.id] = parsedValue; }); });
+                        try { await setDoc(doc(db, "penilaian", `SCORE_${window.currentActiveRombelObj.id}_${window.activeSelectedMapelId}`), { tipe_dokumen: "skor_siswa", rombel_id: window.currentActiveRombelObj.id, mapel_id: window.activeSelectedMapelId, skor_map: skorSiswaMap, updatedAt: serverTimestamp() }, { merge: true }); alert("Kumpulan Nilai jSpreadsheet Berhasil Disimpan!"); window.kembaliKeTabelRombelPenilaian(); } catch { alert("Gagal mengunci database nilai."); }
                     };
                     break;
 
@@ -1244,15 +1013,8 @@
 
         window.handleRegisterKeyPress = function(event) { if (event.key === 'Enter') handleRegister(); }
         window.handleLoginKeyPress = function(event) { if (event.key === 'Enter') handleLogin(); }
-        window.handleRegister = async function() {
-            const userInp = document.getElementById('reg-username').value.trim(); const passInp = document.getElementById('reg-password').value;
-            if (userInp === "" || passInp.trim() === "") { alert("Data tidak boleh kosong"); return; }
-            try { await setDoc(doc(db, "users", userInp), { username: userInp, password: passInp, role: "administrator", createdAt: serverTimestamp() }); alert("Admin dibuat!"); showLogin(); } catch { alert("Gagal."); }
-        }
-        window.handleLogin = async function() {
-            const userInp = document.getElementById('username').value.trim(); const passInp = document.getElementById('password').value;
-            try { const userDocSnap = await getDoc(doc(db, "users", userInp)); if (userDocSnap.exists() && userDocSnap.data().password === passInp) { await updateDoc(doc(db, "users", userInp), { lastLogin: serverTimestamp() }); localStorage.setItem('isLoggedIn', 'true'); localStorage.setItem('username', userInp); showDashboard(); } else { alert('Username/Password salah'); } } catch { alert("Kesalahan database."); }
-        }
+        window.handleRegister = async function() { const userInp = document.getElementById('reg-username').value.trim(); const passInp = document.getElementById('reg-password').value; if (userInp === "" || passInp.trim() === "") { alert("Data tidak boleh kosong"); return; } try { await setDoc(doc(db, "users", userInp), { username: userInp, password: passInp, role: "administrator", createdAt: serverTimestamp() }); alert("Admin dibuat!"); showLogin(); } catch { alert("Gagal."); } }
+        window.handleLogin = async function() { const userInp = document.getElementById('username').value.trim(); const passInp = document.getElementById('password').value; try { const userDocSnap = await getDoc(doc(db, "users", userInp)); if (userDocSnap.exists() && userDocSnap.data().password === passInp) { await updateDoc(doc(db, "users", userInp), { lastLogin: serverTimestamp() }); localStorage.setItem('isLoggedIn', 'true'); localStorage.setItem('username', userInp); showDashboard(); } else { alert('Username/Password salah'); } } catch { alert("Kesalahan database."); } }
         window.handleLogout = function() { localStorage.removeItem('isLoggedIn'); localStorage.removeItem('username'); document.getElementById('profileDropdown').classList.remove('show'); showLogin(); }
         window.toggleDropdown = function() { document.getElementById('profileDropdown').classList.toggle('show'); }
         function showRegister() { document.getElementById('register-page').style.display = 'flex'; document.getElementById('login-page').style.display = 'none'; document.getElementById('dashboard-page').style.display = 'none'; }
