@@ -10,12 +10,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@700&family=Inter:wght@400;600;700&family=Syne:wght@800&display=swap" rel="stylesheet">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js" crossorigin="anonymous"></script>
+    
     <script src="https://bossanova.uk/jspreadsheet/v4/jexcel.js"></script>
     <link rel="stylesheet" href="https://bossanova.uk/jspreadsheet/v4/jexcel.css" type="text/css" />
     <script src="https://jsuites.net/v4/jsuites.js"></script>
     <link rel="stylesheet" href="https://jsuites.net/v4/jsuites.css" type="text/css" />
-
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
@@ -848,7 +852,6 @@
                             if(!isEdit) payload['createdAt'] = serverTimestamp(); 
                             await setDoc(doc(db, "rombel", targetId), payload, { merge: true }); 
                             
-                            // Perbarui key id_kelas massal di doc murid biar sinkron
                             for(const sId of window.rombelSiswaList) {
                                 await updateDoc(doc(db, "murid", sId), { id_kelas: targetId });
                             }
@@ -869,7 +872,6 @@
                                 window.rombelSiswaList = d.siswa_ids || []; 
                                 window.rombelMapelList = d.mapel_paket || []; 
                                 
-                                // Hapus kepemilikan rombel ini dari blacklist global sementara agar bisa tampil di list kiri rombel edit
                                 window.rombelSiswaList.forEach(sId => window.siswaSudahAdaRombel.delete(sId));
                                 window.refreshDualListBoxRombel(); 
                                 renderRombelMapelTable(); 
@@ -1013,9 +1015,45 @@
 
         window.handleRegisterKeyPress = function(event) { if (event.key === 'Enter') handleRegister(); }
         window.handleLoginKeyPress = function(event) { if (event.key === 'Enter') handleLogin(); }
-        window.handleRegister = async function() { const userInp = document.getElementById('reg-username').value.trim(); const passInp = document.getElementById('reg-password').value; if (userInp === "" || passInp.trim() === "") { alert("Data tidak boleh kosong"); return; } try { await setDoc(doc(db, "users", userInp), { username: userInp, password: passInp, role: "administrator", createdAt: serverTimestamp() }); alert("Admin dibuat!"); showLogin(); } catch { alert("Gagal."); } }
-        window.handleLogin = async function() { const userInp = document.getElementById('username').value.trim(); const passInp = document.getElementById('password').value; try { const userDocSnap = await getDoc(doc(db, "users", userInp)); if (userDocSnap.exists() && userDocSnap.data().password === passInp) { await updateDoc(doc(db, "users", userInp), { lastLogin: serverTimestamp() }); localStorage.setItem('isLoggedIn', 'true'); localStorage.setItem('username', userInp); showDashboard(); } else { alert('Username/Password salah'); } } catch { alert("Kesalahan database."); } }
-        window.handleLogout = function() { localStorage.removeItem('isLoggedIn'); localStorage.removeItem('username'); document.getElementById('profileDropdown').classList.remove('show'); showLogin(); }
+        
+        window.handleRegister = async function() { 
+            const userInp = document.getElementById('reg-username').value.trim(); 
+            const passInp = document.getElementById('reg-password').value; 
+            if (userInp === "" || passInp.trim() === "") { alert("Data tidak boleh kosong"); return; } 
+            try { 
+                await setDoc(doc(db, "users", userInp), { username: userInp, password: passInp, role: "administrator", createdAt: serverTimestamp() }); 
+                alert("Admin dibuat!"); 
+                showLogin(); 
+            } catch { alert("Gagal."); } 
+        }
+        
+        window.handleLogin = async function() { 
+            const userInp = document.getElementById('username').value.trim(); 
+            const passInp = document.getElementById('password').value; 
+            try { 
+                const userDocSnap = await getDoc(doc(db, "users", userInp)); 
+                if (userDocSnap.exists() && userDocSnap.data().password === passInp) { 
+                    await updateDoc(doc(db, "users", userInp), { lastLogin: serverTimestamp() }); 
+                    try {
+                        localStorage.setItem('isLoggedIn', 'true'); 
+                        localStorage.setItem('username', userInp); 
+                    } catch(e) { console.warn('LocalStorage tidak tersedia.'); }
+                    showDashboard(); 
+                } else { 
+                    alert('Username/Password salah'); 
+                } 
+            } catch { alert("Kesalahan database."); } 
+        }
+        
+        window.handleLogout = function() { 
+            try {
+                localStorage.removeItem('isLoggedIn'); 
+                localStorage.removeItem('username'); 
+            } catch(e) { console.warn('LocalStorage tidak tersedia.'); }
+            document.getElementById('profileDropdown').classList.remove('show'); 
+            showLogin(); 
+        }
+        
         window.toggleDropdown = function() { document.getElementById('profileDropdown').classList.toggle('show'); }
         function showRegister() { document.getElementById('register-page').style.display = 'flex'; document.getElementById('login-page').style.display = 'none'; document.getElementById('dashboard-page').style.display = 'none'; }
         function showLogin() { document.getElementById('register-page').style.display = 'none'; document.getElementById('login-page').style.display = 'flex'; document.getElementById('dashboard-page').style.display = 'none'; }

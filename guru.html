@@ -1,158 +1,241 @@
 <style>
-    .guru-container { display: flex; flex-direction: column; gap: 20px; }
-    .action-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
-    
-    .btn-primary {
-        padding: 10px 20px;
-        background-color: #ffd23f;
-        color: black;
-        border: 3px solid #000000;
-        font-family: 'Space Grotesk', sans-serif;
-        font-weight: 700;
-        font-size: 14px;
-        cursor: pointer;
-        box-shadow: 3px 3px 0px #000000;
-    }
-    .btn-primary:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0px #000000; }
-    
-    .btn-secondary {
-        padding: 10px 20px;
-        background-color: #ffffff;
-        color: black;
-        border: 3px solid #000000;
-        font-family: 'Space Grotesk', sans-serif;
-        font-weight: 700;
-        font-size: 14px;
-        cursor: pointer;
-        box-shadow: 2px 2px 0px #000000;
-    }
-
-    .table-responsive { width: 100%; overflow-x: auto; background: white; border: 3px solid #000000; box-shadow: 4px 4px 0px #000000; }
-    .table-guru { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
-    .table-guru th, .table-guru td { padding: 12px 15px; border: 2px solid #000000; }
-    .table-guru th { background-color: #ff6b6b; color: black; font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
-    .table-guru tr:hover { background-color: #fffdf5; }
-    
-    .form-card { background: white; padding: 25px; border: 3px solid #000000; box-shadow: 4px 4px 0px #000000; }
-    .section-title {
-        font-family: 'Space Grotesk', sans-serif;
-        font-size: 16px;
-        color: black;
-        border-bottom: 3px solid #000000;
-        padding-bottom: 6px;
-        margin: 25px 0 15px 0;
-        font-weight: 700;
-        text-transform: uppercase;
-    }
-    .section-title:first-child { margin-top: 0; }
-    
-    .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px 20px; }
-    .form-field { display: flex; flex-direction: column; gap: 5px; }
-    .form-field label { font-family: 'Space Grotesk', sans-serif; font-size: 13px; font-weight: 700; text-transform: uppercase; }
-    .form-field input, .form-field select { padding: 10px; border: 2px solid #000000; font-size: 14px; }
-    .form-field input:focus, .form-field select:focus { background-color: #7fdde0; outline: none; }
-    
-    .btn-group-actions { display: flex; gap: 5px; }
-    .btn-edit { background-color: #ffd23f; border: 2px solid #000; font-weight: bold; cursor: pointer; padding: 6px 12px; }
-    .btn-delete { background-color: #ff4d4d; border: 2px solid #000; color: white; font-weight: bold; cursor: pointer; padding: 6px 12px; }
-
-    @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } }
+    /* Styling khusus tombol tabel injeksi Javascript */
+    .btn-group-actions { display: flex; gap: 8px; justify-content: center; }
+    .btn-edit { background-color: #7fdde0; border: 2px solid #000; padding: 6px 14px; font-family: 'Space Grotesk', sans-serif; font-weight: bold; cursor: pointer; box-shadow: 2px 2px 0 0 #000; transition: all 0.1s; font-size: 11px; text-transform: uppercase; color: #000; }
+    .btn-edit:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 0 #000; }
+    .btn-edit:active { transform: translate(1px, 1px); box-shadow: 0px 0px 0 0 #000; }
+    .btn-delete { background-color: #ff4d4d; border: 2px solid #000; padding: 6px 14px; font-family: 'Space Grotesk', sans-serif; font-weight: bold; cursor: pointer; box-shadow: 2px 2px 0 0 #000; transition: all 0.1s; font-size: 11px; text-transform: uppercase; color: #000; }
+    .btn-delete:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 0 #000; }
+    .btn-delete:active { transform: translate(1px, 1px); box-shadow: 0px 0px 0 0 #000; }
 </style>
 
-<div class="guru-container">
-    <div id="viewTabelGuru">
-        <div class="action-bar" style="margin-bottom: 15px;">
-            <h3 style="font-family: 'Space Grotesk'; font-size: 20px;">Manajemen Data Guru</h3>
-            <button class="btn-primary" onclick="bukaFormGuru()">+ Tambah Guru Baru</button>
-        </div>
+<!-- TAMPILAN TABEL -->
+<div id="viewTabelGuru">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b-4 border-black pb-5 gap-4">
+        <h3 class="text-3xl font-syne font-black uppercase text-black">Data Pendidik & Tenaga Kependidikan</h3>
+        <button onclick="bukaFormGuru()" class="bg-brutal-secondary text-black font-space font-bold px-6 py-3 border-4 border-black shadow-[4px_4px_0_0_#000] hover:shadow-[6px_6px_0_0_#000] hover:-translate-y-1 active:translate-y-1 active:shadow-none transition-all uppercase tracking-wider text-sm">
+            <i class="fas fa-plus mr-2"></i> Tambah Guru
+        </button>
+    </div>
+    <div class="overflow-x-auto bg-white border-4 border-black shadow-brutal-lg p-0">
+        <table class="w-full text-left border-collapse min-w-[900px] font-inter">
+            <thead>
+                <tr class="bg-brutal-neutral border-b-4 border-black text-xs font-space font-bold uppercase tracking-widest text-black">
+                    <th class="p-4 border-r-2 border-black w-14 text-center">No</th>
+                    <th class="p-4 border-r-2 border-black">NUPTK / NIP</th>
+                    <th class="p-4 border-r-2 border-black">Nama Lengkap</th>
+                    <th class="p-4 border-r-2 border-black">Jabatan</th>
+                    <th class="p-4 border-r-2 border-black">Status</th>
+                    <th class="p-4 text-center">Aksi Manajemen</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyGuru" class="text-sm font-medium text-black divide-y-2 divide-black">
+                <tr><td colspan="6" class="p-10 text-center font-space font-bold text-lg uppercase tracking-widest bg-brutal-surface"><i class="fas fa-spinner fa-spin mr-3"></i> Memuat Data...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- TAMPILAN FORMULIR -->
+<div id="viewFormGuru" style="display: none;">
+    <div class="flex justify-between items-center mb-8 border-b-4 border-black pb-5">
+        <h3 class="text-3xl font-syne font-black uppercase text-black" id="formGuruTitle">Formulir Data Guru</h3>
+        <button onclick="kembaliKeTabelGuru()" class="bg-white text-black font-space font-bold px-6 py-3 border-4 border-black shadow-[4px_4px_0_0_#000] hover:shadow-[6px_6px_0_0_#000] hover:-translate-y-1 active:translate-y-1 active:shadow-none transition-all uppercase tracking-wider text-sm">
+            <i class="fas fa-arrow-left mr-2"></i> Kembali
+        </button>
+    </div>
+    
+    <form id="formGuru" onsubmit="simpanDataGuru(event)" class="bg-white p-8 md:p-10 border-4 border-black shadow-brutal-lg font-inter space-y-10">
+        <input type="hidden" id="guru_id_hidden">
         
-        <div class="table-responsive">
-            <table class="table-guru">
-                <thead>
-                    <tr>
-                        <th>No</th>
-                        <th>NUPT / NIP</th>
-                        <th>Nama Lengkap</th>
-                        <th>Jabatan / Tugas</th>
-                        <th>Status Keaktifan</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="tbodyGuru"></tbody>
-            </table>
+        <!-- Identitas Diri -->
+        <div class="border-4 border-black p-6 bg-brutal-surface relative mt-6">
+            <h4 class="absolute -top-5 left-6 bg-brutal-secondary border-4 border-black px-4 py-1.5 font-space font-bold uppercase text-sm shadow-[2px_2px_0_0_#000]">Identitas Diri</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
+                <div class="md:col-span-3">
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Nama Lengkap (Sesuai Ijazah)</label>
+                    <input type="text" id="nama_lengkap" required class="w-full bg-white border-4 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all text-base">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Gelar Depan</label>
+                    <input type="text" id="gelar_depan" placeholder="Cth: Drs." class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Gelar Belakang</label>
+                    <input type="text" id="gelar_belakang" placeholder="Cth: S.Pd., M.Pd." class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">NIK (KTP)</label>
+                    <input type="text" id="nik" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Jenis Kelamin</label>
+                    <select id="jenis_kelamin" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                        <option value="Laki-laki">Laki-laki</option>
+                        <option value="Perempuan">Perempuan</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Tempat Lahir</label>
+                    <input type="text" id="tempat_lahir" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Tanggal Lahir</label>
+                    <input type="date" id="tanggal_lahir" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all cursor-pointer">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Agama</label>
+                    <select id="agama" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                        <option value="Islam">Islam</option><option value="Kristen">Kristen</option><option value="Katolik">Katolik</option>
+                        <option value="Hindu">Hindu</option><option value="Buddha">Buddha</option><option value="Konghucu">Konghucu</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Golongan Darah</label>
+                    <input type="text" id="gol_darah" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Status Pernikahan</label>
+                    <select id="status_pernikahan" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                        <option value="Belum Kawin">Belum Kawin</option><option value="Kawin">Kawin</option><option value="Cerai Hidup">Cerai Hidup</option><option value="Cerai Mati">Cerai Mati</option>
+                    </select>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div id="viewFormGuru" style="display: none;">
-        <div class="action-bar" style="margin-bottom: 15px;">
-            <h3 id="formGuruTitle" style="font-family: 'Space Grotesk'; font-size: 20px;">Tambah Data Guru Baru</h3>
-            <button class="btn-secondary" onclick="kembaliKeTabelGuru()">Kembali</button>
+        <!-- Kepegawaian -->
+        <div class="border-4 border-black p-6 bg-brutal-surface relative mt-8">
+            <h4 class="absolute -top-5 left-6 bg-brutal-cyan border-4 border-black px-4 py-1.5 font-space font-bold uppercase text-sm shadow-[2px_2px_0_0_#000]">Data Kepegawaian</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">NUPTK</label>
+                    <input type="text" id="nuptk" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">NIP (PNS/PPPK)</label>
+                    <input type="text" id="nip" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">NIY / NIGK (Swasta)</label>
+                    <input type="text" id="niy_nigk" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Status Kepegawaian</label>
+                    <select id="status_kepegawaian" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                        <option value="PNS">PNS</option><option value="PPPK">PPPK</option><option value="GTY/PTY">GTY/PTY (Guru Tetap Yayasan)</option>
+                        <option value="GTT/PTT">GTT/PTT (Honor Daerah/Sekolah)</option><option value="Guru Bantu">Guru Bantu</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Jabatan (Tugas Utama)</label>
+                    <input type="text" id="jabatan" placeholder="Cth: Guru Kelas / Guru Mapel" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Pangkat / Golongan</label>
+                    <input type="text" id="pangkat_golongan" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">TMT Pengangkatan</label>
+                    <input type="date" id="tmt_pengangkatan" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all cursor-pointer">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">SK Pengangkatan</label>
+                    <input type="text" id="sk_pengangkatan" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Lembaga Pengangkat</label>
+                    <input type="text" id="lembaga_pengangkat" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">NPWP</label>
+                    <input type="text" id="npwp" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+            </div>
         </div>
 
-        <div class="form-card">
-            <form id="formGuru" onsubmit="simpanDataGuru(event)">
-                <input type="hidden" id="guru_id_hidden">
-
-                <div class="section-title">1. Identitas Pribadi Utama</div>
-                <div class="form-grid">
-                    <div class="form-field"><label>Nama Lengkap (Tanpa Gelar)</label><input type="text" id="nama_lengkap" required></div>
-                    <div class="form-field"><label>Gelar Depan</label><input type="text" id="gelar_depan" placeholder="Contoh: Drs."></div>
-                    <div class="form-field"><label>Gelar Belakang</label><input type="text" id="gelar_belakang" placeholder="Contoh: S.Pd"></div>
-                    <div class="form-field"><label>NIK (Nomor Induk Kependudukan)</label><input type="text" id="nik" required></div>
-                    <div class="form-field"><label>Jenis Kelamin</label><select id="jenis_kelamin"><option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option></select></div>
-                    <div class="form-field"><label>Tempat Lahir</label><input type="text" id="tempat_lahir"></div>
-                    <div class="form-field"><label>Tanggal Lahir</label><input type="date" id="tanggal_lahir"></div>
-                    <div class="form-field"><label>Agama</label><select id="agama"><option value="Islam">Islam</option><option value="Kristen">Kristen</option><option value="Katolik">Katolik</option><option value="Hindu">Hindu</option><option value="Buddha">Buddha</option><option value="Khonghucu">Khonghucu</option></select></div>
-                    <div class="form-field"><label>Golongan Darah</label><select id="gol_darah"><option value="-">-</option><option value="A">A</option><option value="B">B</option><option value="AB">AB</option><option value="O">O</option></select></div>
-                    <div class="form-field"><label>Status Pernikahan</label><select id="status_pernikahan"><option value="Belum Kawin">Belum Kawin</option><option value="Kawin">Kawin</option><option value="Cerai Hidup">Cerai Hidup</option><option value="Cerai Mati">Cerai Mati</option></select></div>
+        <!-- Pendidikan -->
+        <div class="border-4 border-black p-6 bg-brutal-surface relative mt-8">
+            <h4 class="absolute -top-5 left-6 bg-brutal-tertiary border-4 border-black px-4 py-1.5 font-space font-bold uppercase text-sm shadow-[2px_2px_0_0_#000]">Riwayat Pendidikan</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Tingkat Pendidikan</label>
+                    <select id="tingkat_pendidikan" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                        <option value="S1">S1</option><option value="S2">S2</option><option value="S3">S3</option><option value="D4">D4</option><option value="D3">D3</option><option value="SMA/SMK">SMA/SMK Sederajat</option>
+                    </select>
                 </div>
-
-                <div class="section-title">2. Identitas Kepegawaian dan Legalitas</div>
-                <div class="form-grid">
-                    <div class="form-field"><label>NUPTK</label><input type="text" id="nuptk"></div>
-                    <div class="form-field"><label>NIP (Khusus PNS)</label><input type="text" id="nip"></div>
-                    <div class="form-field"><label>NIY / NIGK</label><input type="text" id="niy_nigk"></div>
-                    <div class="form-field"><label>Status Kepegawaian</label><select id="status_kepegawaian"><option value="PNS">PNS</option><option value="PPPK">PPPK</option><option value="GTT">GTT</option><option value="Guru Tetap Yayasan">Guru Tetap Yayasan</option></select></div>
-                    <div class="form-field"><label>Jabatan / Tugas Utama</label><select id="jabatan"><option value="Guru Kelas">Guru Kelas</option><option value="Guru Mata Pelajaran">Guru Mata Pelajaran</option><option value="Kepala Sekolah">Kepala Sekolah</option></select></div>
-                    <div class="form-field"><label>Pangkat / Golongan</label><input type="text" id="pangkat_golongan" placeholder="Contoh: Penata / IIIc"></div>
-                    <div class="form-field"><label>TMT Pengangkatan</label><input type="date" id="tmt_pengangkatan"></div>
-                    <div class="form-field"><label>SK Pengangkatan</label><input type="text" id="sk_pengangkatan"></div>
-                    <div class="form-field"><label>Lembaga Pengangkat</label><input type="text" id="lembaga_pengangkat"></div>
-                    <div class="form-field"><label>NPWP</label><input type="text" id="npwp"></div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Gelar Akademik</label>
+                    <input type="text" id="gelar_akademik" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
-
-                <div class="section-title">3. Riwayat Pendidikan Terakhir</div>
-                <div class="form-grid">
-                    <div class="form-field"><label>Tingkat Pendidikan</label><select id="tingkat_pendidikan"><option value="D3">D3</option><option value="S1">S1</option><option value="S2">S2</option><option value="S3">S3</option></select></div>
-                    <div class="form-field"><label>Gelar Akademik</label><input type="text" id="gelar_akademik"></div>
-                    <div class="form-field"><label>Bidang Studi / Jurusan</label><input type="text" id="jurusan"></div>
-                    <div class="form-field"><label>Universitas</label><input type="text" id="universitas"></div>
-                    <div class="form-field"><label>Tahun Kelulusan</label><input type="text" id="tahun_kelulusan"></div>
+                <div class="md:col-span-2">
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Jurusan / Program Studi</label>
+                    <input type="text" id="jurusan" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
-
-                <div class="section-title">4. Kontak dan Domisili</div>
-                <div class="form-grid">
-                    <div class="form-field"><label>Alamat Rumah</label><input type="text" id="alamat_rumah"></div>
-                    <div class="form-field"><label>Kode Pos</label><input type="text" id="kode_pos_guru"></div>
-                    <div class="form-field"><label>Nomor HP / WhatsApp</label><input type="text" id="no_hp" required></div>
-                    <div class="form-field"><label>Email Pribadi</label><input type="email" id="email_pribadi"></div>
-                    <div class="form-field"><label>Email Institusi</label><input type="text" id="email_institusi"></div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Universitas / Instansi</label>
+                    <input type="text" id="universitas" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
-
-                <div class="section-title">5. Data Tambahan Aplikasi (Sistem)</div>
-                <div class="form-grid">
-                    <div class="form-field"><label>URL Foto Profil</label><input type="text" id="foto_profil"></div>
-                    <div class="form-field"><label>Status Keaktifan</label><select id="status_keaktifan"><option value="Aktif">Aktif</option><option value="Cuti">Cuti</option><option value="Mutasi">Mutasi</option><option value="Pensiun">Pensiun</option></select></div>
-                    <div class="form-field"><label>Mata Pelajaran Diampu</label><input type="text" id="mapel_diampu"></div>
-                    <div class="form-field"><label>Username Sistem</label><input type="text" id="username_sistem" required></div>
-                    <div class="form-field"><label>Password Akun</label><input type="password" id="password_sistem" required></div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Tahun Kelulusan</label>
+                    <input type="text" id="tahun_kelulusan" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
-
-                <div style="margin-top: 30px; display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="button" class="btn-secondary" onclick="kembaliKeTabelGuru()">Batal</button>
-                    <button type="submit" class="btn-primary" id="btnSimpanGuru">Simpan Data Guru</button>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
+
+        <!-- Kontak & Sistem -->
+        <div class="border-4 border-black p-6 bg-brutal-surface relative mt-8">
+            <h4 class="absolute -top-5 left-6 bg-white border-4 border-black px-4 py-1.5 font-space font-bold uppercase text-sm shadow-[2px_2px_0_0_#000]">Kontak & Sistem Akun</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                <div class="md:col-span-2">
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Alamat Lengkap</label>
+                    <input type="text" id="alamat_rumah" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Kode Pos</label>
+                    <input type="text" id="kode_pos_guru" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Nomor HP / WA Aktif</label>
+                    <input type="text" id="no_hp" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Email Pribadi</label>
+                    <input type="email" id="email_pribadi" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Email Institusi (Belajar.id)</label>
+                    <input type="email" id="email_institusi" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Link URL Foto Profil</label>
+                    <input type="url" id="foto_profil" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Status Keaktifan</label>
+                    <select id="status_keaktifan" class="w-full bg-brutal-neutral border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                        <option value="Aktif">Aktif Mengajar</option><option value="Cuti">Cuti</option><option value="Pensiun">Pensiun</option><option value="Pindah Tugas">Pindah Tugas / Mutasi</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Mata Pelajaran yang Diampu (Opsional jika bukan Wali Kelas)</label>
+                    <input type="text" id="mapel_diampu" placeholder="Pisahkan dengan koma, Cth: Matematika, IPA" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                </div>
+                <div class="md:col-span-2 border-t-4 border-black pt-6 mt-2">
+                    <label class="block font-space font-bold text-xs uppercase mb-2 bg-black text-white inline-block px-3 py-1">Konfigurasi Akses Sistem e-Raport</label>
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Username e-Raport</label>
+                    <input type="text" id="username_sistem" required class="w-full bg-brutal-neutral border-4 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all text-base" placeholder="Tanpa Spasi. Cth: budi123">
+                </div>
+                <div>
+                    <label class="block font-space font-bold text-xs uppercase mb-2">Password e-Raport</label>
+                    <input type="text" id="password_sistem" required class="w-full bg-brutal-neutral border-4 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all text-base" placeholder="Minimal 6 Karakter">
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" id="btnSimpanGuru" class="w-full bg-black text-white font-space font-bold py-5 border-4 border-black shadow-[8px_8px_0_0_#ffd23f] hover:-translate-y-1 hover:shadow-[12px_12px_0_0_#ffd23f] active:translate-y-1 active:shadow-none transition-all rounded-none uppercase tracking-widest text-lg mt-8">
+            <i class="fas fa-save mr-3"></i> Simpan Data Guru
+        </button>
+    </form>
 </div>
