@@ -4,7 +4,7 @@
         <h3 class="text-3xl font-syne font-black uppercase text-black">Buku Induk Peserta Didik</h3>
         
         <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-            <input type="file" id="excel_file_input" accept=".xlsx, .xls" class="hidden" onchange="handleExcelImport(event)">
+            <input type="file" id="excel_file_input" name="excel_file_input" autocomplete="off" accept=".xlsx, .xls" class="hidden" onchange="handleExcelImport(event)">
             <button onclick="unduhTemplateExcelMurid()" class="bg-white text-black font-space font-bold px-4 py-3 border-4 border-black shadow-[4px_4px_0_0_#000] hover:shadow-[6px_6px_0_0_#000] hover:-translate-y-1 active:translate-y-1 active:shadow-none transition-all uppercase text-xs">
                 <i class="fas fa-download mr-1.5"></i> Unduh Template
             </button>
@@ -46,74 +46,74 @@
     </div>
     
     <form id="formMurid" onsubmit="simpanDataMurid(event)" class="bg-white p-8 md:p-10 border-4 border-black shadow-brutal-lg font-inter space-y-10">
-        <input type="hidden" id="murid_id_hidden">
+        <input type="hidden" id="murid_id_hidden" name="murid_id_hidden" autocomplete="off">
         
         <!-- Data Diri Murid -->
         <div class="border-4 border-black p-6 bg-brutal-surface relative mt-6">
             <h4 class="absolute -top-5 left-6 bg-brutal-secondary border-4 border-black px-4 py-1.5 font-space font-bold uppercase text-sm shadow-[2px_2px_0_0_#000]">Data Pribadi Siswa</h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
                 <div class="md:col-span-2">
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Nama Lengkap (Sesuai Akta)</label>
-                    <input type="text" id="nama_lengkap" required class="w-full bg-white border-4 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all text-base">
+                    <label for="nama_lengkap" class="block font-space font-bold text-xs uppercase mb-2">Nama Lengkap (Sesuai Akta)</label>
+                    <input type="text" id="nama_lengkap" name="nama_lengkap" autocomplete="name" required class="w-full bg-white border-4 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all text-base">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Nama Panggilan</label>
-                    <input type="text" id="nama_panggilan" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="nama_panggilan" class="block font-space font-bold text-xs uppercase mb-2">Nama Panggilan</label>
+                    <input type="text" id="nama_panggilan" name="nama_panggilan" autocomplete="nickname" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div class="md:col-span-1">
-                    <label class="block font-space font-bold text-xs uppercase mb-2">NIS (Nomor Induk Siswa)</label>
-                    <input type="text" id="nis" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all" placeholder="Sebagai ID Unik">
+                    <label for="nis" class="block font-space font-bold text-xs uppercase mb-2">NIS (Nomor Induk Siswa)</label>
+                    <input type="text" id="nis" name="nis" autocomplete="off" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all" placeholder="Sebagai ID Unik">
                 </div>
                 <div class="md:col-span-2">
-                    <label class="block font-space font-bold text-xs uppercase mb-2">NISN (Nomor Induk Siswa Nasional)</label>
-                    <input type="text" id="nisn" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="nisn" class="block font-space font-bold text-xs uppercase mb-2">NISN (Nomor Induk Siswa Nasional)</label>
+                    <input type="text" id="nisn" name="nisn" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">NIK Siswa</label>
-                    <input type="text" id="nik" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="nik" class="block font-space font-bold text-xs uppercase mb-2">NIK Siswa</label>
+                    <input type="text" id="nik" name="nik" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">No Seri Akta Kelahiran</label>
-                    <input type="text" id="no_akta" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="no_akta" class="block font-space font-bold text-xs uppercase mb-2">No Seri Akta Kelahiran</label>
+                    <input type="text" id="no_akta" name="no_akta" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Jenis Kelamin</label>
-                    <select id="jenis_kelamin" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                    <label for="jenis_kelamin" class="block font-space font-bold text-xs uppercase mb-2">Jenis Kelamin</label>
+                    <select id="jenis_kelamin" name="jenis_kelamin" autocomplete="sex" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
                         <option value="Laki-laki">Laki-laki</option><option value="Perempuan">Perempuan</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Tempat Lahir</label>
-                    <input type="text" id="tempat_lahir" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="tempat_lahir" class="block font-space font-bold text-xs uppercase mb-2">Tempat Lahir</label>
+                    <input type="text" id="tempat_lahir" name="tempat_lahir" autocomplete="off" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Tanggal Lahir</label>
-                    <input type="date" id="tanggal_lahir" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all cursor-pointer">
+                    <label for="tanggal_lahir" class="block font-space font-bold text-xs uppercase mb-2">Tanggal Lahir</label>
+                    <input type="date" id="tanggal_lahir" name="tanggal_lahir" autocomplete="bday" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all cursor-pointer">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Agama</label>
-                    <select id="agama" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                    <label for="agama" class="block font-space font-bold text-xs uppercase mb-2">Agama</label>
+                    <select id="agama" name="agama" autocomplete="off" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
                         <option value="Islam">Islam</option><option value="Kristen">Kristen</option><option value="Katolik">Katolik</option>
                         <option value="Hindu">Hindu</option><option value="Buddha">Buddha</option><option value="Konghucu">Konghucu</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Kewarganegaraan</label>
-                    <select id="kewarganegaraan" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                    <label for="kewarganegaraan" class="block font-space font-bold text-xs uppercase mb-2">Kewarganegaraan</label>
+                    <select id="kewarganegaraan" name="kewarganegaraan" autocomplete="off" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
                         <option value="WNI">WNI (Warga Negara Indonesia)</option><option value="WNA">WNA (Warga Negara Asing)</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Anak Ke-</label>
-                    <input type="number" id="anak_ke" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="anak_ke" class="block font-space font-bold text-xs uppercase mb-2">Anak Ke-</label>
+                    <input type="number" id="anak_ke" name="anak_ke" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Jumlah Saudara</label>
-                    <input type="number" id="jumlah_saudara" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="jumlah_saudara" class="block font-space font-bold text-xs uppercase mb-2">Jumlah Saudara</label>
+                    <input type="number" id="jumlah_saudara" name="jumlah_saudara" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Golongan Darah</label>
-                    <input type="text" id="gol_darah" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="gol_darah" class="block font-space font-bold text-xs uppercase mb-2">Golongan Darah</label>
+                    <input type="text" id="gol_darah" name="gol_darah" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
             </div>
         </div>
@@ -123,30 +123,30 @@
             <h4 class="absolute -top-5 left-6 bg-brutal-cyan border-4 border-black px-4 py-1.5 font-space font-bold uppercase text-sm shadow-[2px_2px_0_0_#000]">Domisili & Kontak Siswa</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                 <div class="md:col-span-2">
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Alamat Tempat Tinggal Lengkap</label>
-                    <input type="text" id="alamat_tinggal" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="alamat_tinggal" class="block font-space font-bold text-xs uppercase mb-2">Alamat Tempat Tinggal Lengkap</label>
+                    <input type="text" id="alamat_tinggal" name="alamat_tinggal" autocomplete="street-address" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Kode Pos</label>
-                    <input type="text" id="kode_pos" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="kode_pos" class="block font-space font-bold text-xs uppercase mb-2">Kode Pos</label>
+                    <input type="text" id="kode_pos" name="kode_pos" autocomplete="postal-code" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Tempat Tinggal Bersama</label>
-                    <select id="tempat_tinggal_bersama" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                    <label for="tempat_tinggal_bersama" class="block font-space font-bold text-xs uppercase mb-2">Tempat Tinggal Bersama</label>
+                    <select id="tempat_tinggal_bersama" name="tempat_tinggal_bersama" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
                         <option value="Orang Tua">Orang Tua</option><option value="Wali">Wali</option><option value="Kos/Asrama">Kos / Asrama / Panti</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Transportasi Ke Sekolah</label>
-                    <input type="text" id="transportasi" placeholder="Cth: Sepeda Motor, Jalan Kaki" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="transportasi" class="block font-space font-bold text-xs uppercase mb-2">Transportasi Ke Sekolah</label>
+                    <input type="text" id="transportasi" name="transportasi" autocomplete="off" placeholder="Cth: Sepeda Motor, Jalan Kaki" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">No. HP Siswa (Opsional)</label>
-                    <input type="text" id="no_hp_siswa" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="no_hp_siswa" class="block font-space font-bold text-xs uppercase mb-2">No. HP Siswa (Opsional)</label>
+                    <input type="text" id="no_hp_siswa" name="no_hp_siswa" autocomplete="tel" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div class="md:col-span-2">
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Email Siswa Aktif</label>
-                    <input type="email" id="email_siswa" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="email_siswa" class="block font-space font-bold text-xs uppercase mb-2">Email Siswa Aktif</label>
+                    <input type="email" id="email_siswa" name="email_siswa" autocomplete="email" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
             </div>
         </div>
@@ -159,13 +159,13 @@
                 <!-- Kolom Ayah -->
                 <div class="space-y-4 border-r-0 md:border-r-4 border-black md:pr-6 pb-6 md:pb-0 border-b-4 md:border-b-0">
                     <h5 class="font-syne font-black uppercase text-lg bg-black text-white px-3 py-1 inline-block">Data Ayah</h5>
-                    <div><label class="block font-space font-bold text-xs uppercase mb-2">Nama Ayah</label><input type="text" id="nama_ayah" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
-                    <div><label class="block font-space font-bold text-xs uppercase mb-2">NIK Ayah</label><input type="text" id="nik_ayah" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
-                    <div><label class="block font-space font-bold text-xs uppercase mb-2">Tahun Lahir</label><input type="text" id="tahun_lahir_ayah" placeholder="Cth: 1980" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
-                    <div><label class="block font-space font-bold text-xs uppercase mb-2">Pendidikan Terakhir</label><input type="text" id="pendidikan_ayah" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
-                    <div><label class="block font-space font-bold text-xs uppercase mb-2">Pekerjaan</label><input type="text" id="pekerjaan_ayah" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
-                    <div><label class="block font-space font-bold text-xs uppercase mb-2">Penghasilan Bulanan</label>
-                        <select id="penghasilan_ayah" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none appearance-none">
+                    <div><label for="nama_ayah" class="block font-space font-bold text-xs uppercase mb-2">Nama Ayah</label><input type="text" id="nama_ayah" name="nama_ayah" autocomplete="off" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
+                    <div><label for="nik_ayah" class="block font-space font-bold text-xs uppercase mb-2">NIK Ayah</label><input type="text" id="nik_ayah" name="nik_ayah" autocomplete="off" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
+                    <div><label for="tahun_lahir_ayah" class="block font-space font-bold text-xs uppercase mb-2">Tahun Lahir</label><input type="text" id="tahun_lahir_ayah" name="tahun_lahir_ayah" autocomplete="off" placeholder="Cth: 1980" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
+                    <div><label for="pendidikan_ayah" class="block font-space font-bold text-xs uppercase mb-2">Pendidikan Terakhir</label><input type="text" id="pendidikan_ayah" name="pendidikan_ayah" autocomplete="off" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
+                    <div><label for="pekerjaan_ayah" class="block font-space font-bold text-xs uppercase mb-2">Pekerjaan</label><input type="text" id="pekerjaan_ayah" name="pekerjaan_ayah" autocomplete="off" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
+                    <div><label for="penghasilan_ayah" class="block font-space font-bold text-xs uppercase mb-2">Penghasilan Bulanan</label>
+                        <select id="penghasilan_ayah" name="penghasilan_ayah" autocomplete="off" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none appearance-none">
                             <option value="Tidak Berpenghasilan">Tidak Berpenghasilan</option><option value="Kurang dari Rp 1.000.000">Kurang dari Rp 1.000.000</option><option value="Rp 1.000.000 - Rp 3.000.000">Rp 1.000.000 - Rp 3.000.000</option><option value="Rp 3.000.000 - Rp 5.000.000">Rp 3.000.000 - Rp 5.000.000</option><option value="Lebih dari Rp 5.000.000">Lebih dari Rp 5.000.000</option>
                         </select>
                     </div>
@@ -174,21 +174,21 @@
                 <!-- Kolom Ibu -->
                 <div class="space-y-4">
                     <h5 class="font-syne font-black uppercase text-lg bg-black text-white px-3 py-1 inline-block">Data Ibu</h5>
-                    <div><label class="block font-space font-bold text-xs uppercase mb-2">Nama Ibu</label><input type="text" id="nama_ibu" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
-                    <div><label class="block font-space font-bold text-xs uppercase mb-2">NIK Ibu</label><input type="text" id="nik_ibu" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
-                    <div><label class="block font-space font-bold text-xs uppercase mb-2">Tahun Lahir</label><input type="text" id="tahun_lahir_ibu" placeholder="Cth: 1982" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
-                    <div><label class="block font-space font-bold text-xs uppercase mb-2">Pendidikan Terakhir</label><input type="text" id="pendidikan_ibu" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
-                    <div><label class="block font-space font-bold text-xs uppercase mb-2">Pekerjaan</label><input type="text" id="pekerjaan_ibu" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
-                    <div><label class="block font-space font-bold text-xs uppercase mb-2">Penghasilan Bulanan</label>
-                        <select id="penghasilan_ibu" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none appearance-none">
+                    <div><label for="nama_ibu" class="block font-space font-bold text-xs uppercase mb-2">Nama Ibu</label><input type="text" id="nama_ibu" name="nama_ibu" autocomplete="off" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
+                    <div><label for="nik_ibu" class="block font-space font-bold text-xs uppercase mb-2">NIK Ibu</label><input type="text" id="nik_ibu" name="nik_ibu" autocomplete="off" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
+                    <div><label for="tahun_lahir_ibu" class="block font-space font-bold text-xs uppercase mb-2">Tahun Lahir</label><input type="text" id="tahun_lahir_ibu" name="tahun_lahir_ibu" autocomplete="off" placeholder="Cth: 1982" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
+                    <div><label for="pendidikan_ibu" class="block font-space font-bold text-xs uppercase mb-2">Pendidikan Terakhir</label><input type="text" id="pendidikan_ibu" name="pendidikan_ibu" autocomplete="off" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
+                    <div><label for="pekerjaan_ibu" class="block font-space font-bold text-xs uppercase mb-2">Pekerjaan</label><input type="text" id="pekerjaan_ibu" name="pekerjaan_ibu" autocomplete="off" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none"></div>
+                    <div><label for="penghasilan_ibu" class="block font-space font-bold text-xs uppercase mb-2">Penghasilan Bulanan</label>
+                        <select id="penghasilan_ibu" name="penghasilan_ibu" autocomplete="off" class="w-full bg-white border-2 border-black px-3 py-2 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none appearance-none">
                             <option value="Tidak Berpenghasilan">Tidak Berpenghasilan</option><option value="Kurang dari Rp 1.000.000">Kurang dari Rp 1.000.000</option><option value="Rp 1.000.000 - Rp 3.000.000">Rp 1.000.000 - Rp 3.000.000</option><option value="Rp 3.000.000 - Rp 5.000.000">Rp 3.000.000 - Rp 5.000.000</option><option value="Lebih dari Rp 5.000.000">Lebih dari Rp 5.000.000</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="md:col-span-2 border-t-4 border-black pt-4 mt-2">
-                    <label class="block font-space font-bold text-xs uppercase mb-2">No. HP Orang Tua Darurat</label>
-                    <input type="text" id="no_hp_ortu" class="w-full bg-brutal-neutral border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="no_hp_ortu" class="block font-space font-bold text-xs uppercase mb-2">No. HP Orang Tua Darurat</label>
+                    <input type="text" id="no_hp_ortu" name="no_hp_ortu" autocomplete="tel" class="w-full bg-brutal-neutral border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
             </div>
         </div>
@@ -198,24 +198,24 @@
             <h4 class="absolute -top-5 left-6 bg-white border-4 border-black px-4 py-1.5 font-space font-bold uppercase text-sm shadow-[2px_2px_0_0_#000]">Data Wali (Opsional)</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Nama Wali</label>
-                    <input type="text" id="nama_wali" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="nama_wali" class="block font-space font-bold text-xs uppercase mb-2">Nama Wali</label>
+                    <input type="text" id="nama_wali" name="nama_wali" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">NIK Wali</label>
-                    <input type="text" id="nik_wali" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="nik_wali" class="block font-space font-bold text-xs uppercase mb-2">NIK Wali</label>
+                    <input type="text" id="nik_wali" name="nik_wali" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Hubungan Keluarga</label>
-                    <input type="text" id="hubungan_wali" placeholder="Cth: Paman, Kakek" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="hubungan_wali" class="block font-space font-bold text-xs uppercase mb-2">Hubungan Keluarga</label>
+                    <input type="text" id="hubungan_wali" name="hubungan_wali" autocomplete="off" placeholder="Cth: Paman, Kakek" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Pekerjaan Wali</label>
-                    <input type="text" id="pekerjaan_wali" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="pekerjaan_wali" class="block font-space font-bold text-xs uppercase mb-2">Pekerjaan Wali</label>
+                    <input type="text" id="pekerjaan_wali" name="pekerjaan_wali" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div class="md:col-span-2">
-                    <label class="block font-space font-bold text-xs uppercase mb-2">No. HP Wali</label>
-                    <input type="text" id="no_hp_wali" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="no_hp_wali" class="block font-space font-bold text-xs uppercase mb-2">No. HP Wali</label>
+                    <input type="text" id="no_hp_wali" name="no_hp_wali" autocomplete="tel" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
             </div>
         </div>
@@ -225,56 +225,56 @@
             <h4 class="absolute -top-5 left-6 bg-brutal-tertiary border-4 border-black px-4 py-1.5 font-space font-bold uppercase text-sm shadow-[2px_2px_0_0_#000]">Rekam Jejak & Akun e-Raport</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Status Murid</label>
-                    <select id="status_murid" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                    <label for="status_murid" class="block font-space font-bold text-xs uppercase mb-2">Status Murid</label>
+                    <select id="status_murid" name="status_murid" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
                         <option value="Siswa Baru">Siswa Baru</option><option value="Pindahan">Siswa Pindahan</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Asal Sekolah (Sebelumnya)</label>
-                    <input type="text" id="asal_sekolah" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="asal_sekolah" class="block font-space font-bold text-xs uppercase mb-2">Asal Sekolah (Sebelumnya)</label>
+                    <input type="text" id="asal_sekolah" name="asal_sekolah" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Nomor Ijazah Sebelumnya</label>
-                    <input type="text" id="no_ijazah" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="no_ijazah" class="block font-space font-bold text-xs uppercase mb-2">Nomor Ijazah Sebelumnya</label>
+                    <input type="text" id="no_ijazah" name="no_ijazah" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Nomor SKHUN</label>
-                    <input type="text" id="no_skhun" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="no_skhun" class="block font-space font-bold text-xs uppercase mb-2">Nomor SKHUN</label>
+                    <input type="text" id="no_skhun" name="no_skhun" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Tanggal Masuk Sekolah</label>
-                    <input type="date" id="tanggal_masuk" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all cursor-pointer">
+                    <label for="tanggal_masuk" class="block font-space font-bold text-xs uppercase mb-2">Tanggal Masuk Sekolah</label>
+                    <input type="date" id="tanggal_masuk" name="tanggal_masuk" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all cursor-pointer">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">URL Foto Profil Siswa</label>
-                    <input type="url" id="foto_profil" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="foto_profil" class="block font-space font-bold text-xs uppercase mb-2">URL Foto Profil Siswa</label>
+                    <input type="url" id="foto_profil" name="foto_profil" autocomplete="url" class="w-full bg-white border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 
                 <div class="md:col-span-2 border-t-4 border-black pt-6 mt-2">
                     <label class="block font-space font-bold text-xs uppercase mb-2 bg-black text-white inline-block px-3 py-1">Registrasi Sistem & Keaktifan</label>
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2 text-brutal-error">Wadah ID Rombel (Otomatis/Manual)</label>
-                    <input type="text" id="id_kelas" class="w-full bg-brutal-neutral border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all" placeholder="Biasanya dikelola di menu Rombel">
+                    <label for="id_kelas" class="block font-space font-bold text-xs uppercase mb-2 text-brutal-error">Wadah ID Rombel (Otomatis/Manual)</label>
+                    <input type="text" id="id_kelas" name="id_kelas" autocomplete="off" class="w-full bg-brutal-neutral border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all" placeholder="Biasanya dikelola di menu Rombel">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Nomor Absen</label>
-                    <input type="number" id="nomor_absen" class="w-full bg-brutal-neutral border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all" value="1">
+                    <label for="nomor_absen" class="block font-space font-bold text-xs uppercase mb-2">Nomor Absen</label>
+                    <input type="number" id="nomor_absen" name="nomor_absen" autocomplete="off" class="w-full bg-brutal-neutral border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all" value="1">
                 </div>
                 <div class="md:col-span-2">
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Status Keaktifan Murid</label>
-                    <select id="status_keaktifan" class="w-full bg-brutal-cyan border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                    <label for="status_keaktifan" class="block font-space font-bold text-xs uppercase mb-2">Status Keaktifan Murid</label>
+                    <select id="status_keaktifan" name="status_keaktifan" autocomplete="off" class="w-full bg-brutal-cyan border-2 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
                         <option value="Aktif">Aktif</option><option value="Lulus">Lulus</option><option value="Pindah">Pindah / Mutasi</option><option value="Dikeluarkan">Dikeluarkan (Drop Out)</option><option value="Meninggal">Meninggal Dunia</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Username Akses e-Raport Murid</label>
-                    <input type="text" id="username_murid" required class="w-full bg-white border-4 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all text-base" placeholder="Biasanya menggunakan NIS">
+                    <label for="username_murid" class="block font-space font-bold text-xs uppercase mb-2">Username Akses e-Raport Murid</label>
+                    <input type="text" id="username_murid" name="username_murid" autocomplete="username" required class="w-full bg-white border-4 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all text-base" placeholder="Biasanya menggunakan NIS">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Password Akses</label>
-                    <input type="text" id="password_murid" required class="w-full bg-white border-4 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all text-base" placeholder="Minimal 6 Karakter">
+                    <label for="password_murid" class="block font-space font-bold text-xs uppercase mb-2">Password Akses</label>
+                    <input type="password" id="password_murid" name="password_murid" autocomplete="new-password" required class="w-full bg-white border-4 border-black px-4 py-3 font-bold focus:shadow-[4px_4px_0_0_#000] outline-none transition-all text-base" placeholder="Minimal 6 Karakter">
                 </div>
             </div>
         </div>

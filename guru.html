@@ -46,57 +46,57 @@
     </div>
     
     <form id="formGuru" onsubmit="simpanDataGuru(event)" class="bg-white p-8 md:p-10 border-4 border-black shadow-brutal-lg font-inter space-y-10">
-        <input type="hidden" id="guru_id_hidden">
+        <input type="hidden" id="guru_id_hidden" name="guru_id_hidden" autocomplete="off">
         
         <!-- Identitas Diri -->
         <div class="border-4 border-black p-6 bg-brutal-surface relative mt-6">
             <h4 class="absolute -top-5 left-6 bg-brutal-secondary border-4 border-black px-4 py-1.5 font-space font-bold uppercase text-sm shadow-[2px_2px_0_0_#000]">Identitas Diri</h4>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-4">
                 <div class="md:col-span-3">
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Nama Lengkap (Sesuai Ijazah)</label>
-                    <input type="text" id="nama_lengkap" required class="w-full bg-white border-4 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all text-base">
+                    <label for="nama_lengkap" class="block font-space font-bold text-xs uppercase mb-2">Nama Lengkap (Sesuai Ijazah)</label>
+                    <input type="text" id="nama_lengkap" name="nama_lengkap" autocomplete="name" required class="w-full bg-white border-4 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all text-base">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Gelar Depan</label>
-                    <input type="text" id="gelar_depan" placeholder="Cth: Drs." class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="gelar_depan" class="block font-space font-bold text-xs uppercase mb-2">Gelar Depan</label>
+                    <input type="text" id="gelar_depan" name="gelar_depan" autocomplete="honorific-prefix" placeholder="Cth: Drs." class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Gelar Belakang</label>
-                    <input type="text" id="gelar_belakang" placeholder="Cth: S.Pd., M.Pd." class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="gelar_belakang" class="block font-space font-bold text-xs uppercase mb-2">Gelar Belakang</label>
+                    <input type="text" id="gelar_belakang" name="gelar_belakang" autocomplete="honorific-suffix" placeholder="Cth: S.Pd., M.Pd." class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">NIK (KTP)</label>
-                    <input type="text" id="nik" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="nik" class="block font-space font-bold text-xs uppercase mb-2">NIK (KTP)</label>
+                    <input type="text" id="nik" name="nik" autocomplete="off" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Jenis Kelamin</label>
-                    <select id="jenis_kelamin" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                    <label for="jenis_kelamin" class="block font-space font-bold text-xs uppercase mb-2">Jenis Kelamin</label>
+                    <select id="jenis_kelamin" name="jenis_kelamin" autocomplete="sex" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
                         <option value="Laki-laki">Laki-laki</option>
                         <option value="Perempuan">Perempuan</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Tempat Lahir</label>
-                    <input type="text" id="tempat_lahir" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="tempat_lahir" class="block font-space font-bold text-xs uppercase mb-2">Tempat Lahir</label>
+                    <input type="text" id="tempat_lahir" name="tempat_lahir" autocomplete="off" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Tanggal Lahir</label>
-                    <input type="date" id="tanggal_lahir" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all cursor-pointer">
+                    <label for="tanggal_lahir" class="block font-space font-bold text-xs uppercase mb-2">Tanggal Lahir</label>
+                    <input type="date" id="tanggal_lahir" name="tanggal_lahir" autocomplete="bday" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all cursor-pointer">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Agama</label>
-                    <select id="agama" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                    <label for="agama" class="block font-space font-bold text-xs uppercase mb-2">Agama</label>
+                    <select id="agama" name="agama" autocomplete="off" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
                         <option value="Islam">Islam</option><option value="Kristen">Kristen</option><option value="Katolik">Katolik</option>
                         <option value="Hindu">Hindu</option><option value="Buddha">Buddha</option><option value="Konghucu">Konghucu</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Golongan Darah</label>
-                    <input type="text" id="gol_darah" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="gol_darah" class="block font-space font-bold text-xs uppercase mb-2">Golongan Darah</label>
+                    <input type="text" id="gol_darah" name="gol_darah" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Status Pernikahan</label>
-                    <select id="status_pernikahan" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                    <label for="status_pernikahan" class="block font-space font-bold text-xs uppercase mb-2">Status Pernikahan</label>
+                    <select id="status_pernikahan" name="status_pernikahan" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
                         <option value="Belum Kawin">Belum Kawin</option><option value="Kawin">Kawin</option><option value="Cerai Hidup">Cerai Hidup</option><option value="Cerai Mati">Cerai Mati</option>
                     </select>
                 </div>
@@ -108,47 +108,47 @@
             <h4 class="absolute -top-5 left-6 bg-brutal-cyan border-4 border-black px-4 py-1.5 font-space font-bold uppercase text-sm shadow-[2px_2px_0_0_#000]">Data Kepegawaian</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">NUPTK</label>
-                    <input type="text" id="nuptk" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="nuptk" class="block font-space font-bold text-xs uppercase mb-2">NUPTK</label>
+                    <input type="text" id="nuptk" name="nuptk" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">NIP (PNS/PPPK)</label>
-                    <input type="text" id="nip" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="nip" class="block font-space font-bold text-xs uppercase mb-2">NIP (PNS/PPPK)</label>
+                    <input type="text" id="nip" name="nip" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">NIY / NIGK (Swasta)</label>
-                    <input type="text" id="niy_nigk" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="niy_nigk" class="block font-space font-bold text-xs uppercase mb-2">NIY / NIGK (Swasta)</label>
+                    <input type="text" id="niy_nigk" name="niy_nigk" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Status Kepegawaian</label>
-                    <select id="status_kepegawaian" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                    <label for="status_kepegawaian" class="block font-space font-bold text-xs uppercase mb-2">Status Kepegawaian</label>
+                    <select id="status_kepegawaian" name="status_kepegawaian" autocomplete="off" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
                         <option value="PNS">PNS</option><option value="PPPK">PPPK</option><option value="GTY/PTY">GTY/PTY (Guru Tetap Yayasan)</option>
                         <option value="GTT/PTT">GTT/PTT (Honor Daerah/Sekolah)</option><option value="Guru Bantu">Guru Bantu</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Jabatan (Tugas Utama)</label>
-                    <input type="text" id="jabatan" placeholder="Cth: Guru Kelas / Guru Mapel" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="jabatan" class="block font-space font-bold text-xs uppercase mb-2">Jabatan (Tugas Utama)</label>
+                    <input type="text" id="jabatan" name="jabatan" autocomplete="organization-title" placeholder="Cth: Guru Kelas / Guru Mapel" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Pangkat / Golongan</label>
-                    <input type="text" id="pangkat_golongan" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="pangkat_golongan" class="block font-space font-bold text-xs uppercase mb-2">Pangkat / Golongan</label>
+                    <input type="text" id="pangkat_golongan" name="pangkat_golongan" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">TMT Pengangkatan</label>
-                    <input type="date" id="tmt_pengangkatan" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all cursor-pointer">
+                    <label for="tmt_pengangkatan" class="block font-space font-bold text-xs uppercase mb-2">TMT Pengangkatan</label>
+                    <input type="date" id="tmt_pengangkatan" name="tmt_pengangkatan" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all cursor-pointer">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">SK Pengangkatan</label>
-                    <input type="text" id="sk_pengangkatan" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="sk_pengangkatan" class="block font-space font-bold text-xs uppercase mb-2">SK Pengangkatan</label>
+                    <input type="text" id="sk_pengangkatan" name="sk_pengangkatan" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Lembaga Pengangkat</label>
-                    <input type="text" id="lembaga_pengangkat" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="lembaga_pengangkat" class="block font-space font-bold text-xs uppercase mb-2">Lembaga Pengangkat</label>
+                    <input type="text" id="lembaga_pengangkat" name="lembaga_pengangkat" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">NPWP</label>
-                    <input type="text" id="npwp" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="npwp" class="block font-space font-bold text-xs uppercase mb-2">NPWP</label>
+                    <input type="text" id="npwp" name="npwp" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
             </div>
         </div>
@@ -158,26 +158,26 @@
             <h4 class="absolute -top-5 left-6 bg-brutal-tertiary border-4 border-black px-4 py-1.5 font-space font-bold uppercase text-sm shadow-[2px_2px_0_0_#000]">Riwayat Pendidikan</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Tingkat Pendidikan</label>
-                    <select id="tingkat_pendidikan" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                    <label for="tingkat_pendidikan" class="block font-space font-bold text-xs uppercase mb-2">Tingkat Pendidikan</label>
+                    <select id="tingkat_pendidikan" name="tingkat_pendidikan" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
                         <option value="S1">S1</option><option value="S2">S2</option><option value="S3">S3</option><option value="D4">D4</option><option value="D3">D3</option><option value="SMA/SMK">SMA/SMK Sederajat</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Gelar Akademik</label>
-                    <input type="text" id="gelar_akademik" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="gelar_akademik" class="block font-space font-bold text-xs uppercase mb-2">Gelar Akademik</label>
+                    <input type="text" id="gelar_akademik" name="gelar_akademik" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div class="md:col-span-2">
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Jurusan / Program Studi</label>
-                    <input type="text" id="jurusan" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="jurusan" class="block font-space font-bold text-xs uppercase mb-2">Jurusan / Program Studi</label>
+                    <input type="text" id="jurusan" name="jurusan" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Universitas / Instansi</label>
-                    <input type="text" id="universitas" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="universitas" class="block font-space font-bold text-xs uppercase mb-2">Universitas / Instansi</label>
+                    <input type="text" id="universitas" name="universitas" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Tahun Kelulusan</label>
-                    <input type="text" id="tahun_kelulusan" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="tahun_kelulusan" class="block font-space font-bold text-xs uppercase mb-2">Tahun Kelulusan</label>
+                    <input type="text" id="tahun_kelulusan" name="tahun_kelulusan" autocomplete="off" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
             </div>
         </div>
@@ -187,49 +187,49 @@
             <h4 class="absolute -top-5 left-6 bg-white border-4 border-black px-4 py-1.5 font-space font-bold uppercase text-sm shadow-[2px_2px_0_0_#000]">Kontak & Sistem Akun</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                 <div class="md:col-span-2">
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Alamat Lengkap</label>
-                    <input type="text" id="alamat_rumah" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="alamat_rumah" class="block font-space font-bold text-xs uppercase mb-2">Alamat Lengkap</label>
+                    <input type="text" id="alamat_rumah" name="alamat_rumah" autocomplete="street-address" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Kode Pos</label>
-                    <input type="text" id="kode_pos_guru" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="kode_pos_guru" class="block font-space font-bold text-xs uppercase mb-2">Kode Pos</label>
+                    <input type="text" id="kode_pos_guru" name="kode_pos_guru" autocomplete="postal-code" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Nomor HP / WA Aktif</label>
-                    <input type="text" id="no_hp" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="no_hp" class="block font-space font-bold text-xs uppercase mb-2">Nomor HP / WA Aktif</label>
+                    <input type="text" id="no_hp" name="no_hp" autocomplete="tel" required class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Email Pribadi</label>
-                    <input type="email" id="email_pribadi" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="email_pribadi" class="block font-space font-bold text-xs uppercase mb-2">Email Pribadi</label>
+                    <input type="email" id="email_pribadi" name="email_pribadi" autocomplete="email" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Email Institusi (Belajar.id)</label>
-                    <input type="email" id="email_institusi" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="email_institusi" class="block font-space font-bold text-xs uppercase mb-2">Email Institusi (Belajar.id)</label>
+                    <input type="email" id="email_institusi" name="email_institusi" autocomplete="email" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Link URL Foto Profil</label>
-                    <input type="url" id="foto_profil" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="foto_profil" class="block font-space font-bold text-xs uppercase mb-2">Link URL Foto Profil</label>
+                    <input type="url" id="foto_profil" name="foto_profil" autocomplete="url" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Status Keaktifan</label>
-                    <select id="status_keaktifan" class="w-full bg-brutal-neutral border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
+                    <label for="status_keaktifan" class="block font-space font-bold text-xs uppercase mb-2">Status Keaktifan</label>
+                    <select id="status_keaktifan" name="status_keaktifan" autocomplete="off" class="w-full bg-brutal-neutral border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all appearance-none cursor-pointer">
                         <option value="Aktif">Aktif Mengajar</option><option value="Cuti">Cuti</option><option value="Pensiun">Pensiun</option><option value="Pindah Tugas">Pindah Tugas / Mutasi</option>
                     </select>
                 </div>
                 <div class="md:col-span-2">
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Mata Pelajaran yang Diampu (Opsional jika bukan Wali Kelas)</label>
-                    <input type="text" id="mapel_diampu" placeholder="Pisahkan dengan koma, Cth: Matematika, IPA" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
+                    <label for="mapel_diampu" class="block font-space font-bold text-xs uppercase mb-2">Mata Pelajaran yang Diampu (Opsional jika bukan Wali Kelas)</label>
+                    <input type="text" id="mapel_diampu" name="mapel_diampu" autocomplete="off" placeholder="Pisahkan dengan koma, Cth: Matematika, IPA" class="w-full bg-white border-2 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all">
                 </div>
                 <div class="md:col-span-2 border-t-4 border-black pt-6 mt-2">
                     <label class="block font-space font-bold text-xs uppercase mb-2 bg-black text-white inline-block px-3 py-1">Konfigurasi Akses Sistem e-Raport</label>
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Username e-Raport</label>
-                    <input type="text" id="username_sistem" required class="w-full bg-brutal-neutral border-4 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all text-base" placeholder="Tanpa Spasi. Cth: budi123">
+                    <label for="username_sistem" class="block font-space font-bold text-xs uppercase mb-2">Username e-Raport</label>
+                    <input type="text" id="username_sistem" name="username_sistem" autocomplete="username" required class="w-full bg-brutal-neutral border-4 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all text-base" placeholder="Tanpa Spasi. Cth: budi123">
                 </div>
                 <div>
-                    <label class="block font-space font-bold text-xs uppercase mb-2">Password e-Raport</label>
-                    <input type="text" id="password_sistem" required class="w-full bg-brutal-neutral border-4 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all text-base" placeholder="Minimal 6 Karakter">
+                    <label for="password_sistem" class="block font-space font-bold text-xs uppercase mb-2">Password e-Raport</label>
+                    <input type="password" id="password_sistem" name="password_sistem" autocomplete="new-password" required class="w-full bg-brutal-neutral border-4 border-black px-4 py-3 font-bold text-black focus:shadow-[4px_4px_0_0_#000] outline-none transition-all text-base" placeholder="Minimal 6 Karakter">
                 </div>
             </div>
         </div>
